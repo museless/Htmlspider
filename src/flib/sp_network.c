@@ -14,7 +14,7 @@
 
 
 /*------------------------------------------
-                Include
+            Part Zero: Include
 --------------------------------------------*/
 
 #include "spinc.h"
@@ -25,14 +25,14 @@
 
 
 /*------------------------------------------
-                Include
+            Part One: Define
 --------------------------------------------*/
 
 #define ENDHTML_CHK_OFFSET 0x100
 
 
 /*------------------------------------------
-              Local function
+        Part Three: Local function
 --------------------------------------------*/
 
 /* Part Four */
@@ -54,10 +54,8 @@ int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)
 {
     struct  hostent *pHost;
 
-    while(!(pHost = gethostbyname(hostName))) {
-        if(h_errno)
-            return  FUN_RUN_END;
-    }
+    if (!(pHost = gethostbyname(hostName)))
+        return  FUN_RUN_END;
 
     sInfo->sin_family = AF_INET;
     sInfo->sin_port = htons(80);
@@ -120,8 +118,6 @@ int sp_net_sock_read(
     }
 
     savBuf[cont_offset] = 0;
-
-    printf("Total size: %d\n", cont_offset);
 
     return  cont_offset;
 }

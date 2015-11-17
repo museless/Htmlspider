@@ -41,26 +41,34 @@
 /*-----ubug_init_database-----*/
 void ubug_init_database(void)
 {
-	char	sqlName[SQL_DBNAME_LEN];
+	char	database_name[SQL_DBNAME_LEN];
 
-	if(mc_conf_read("urls_database_name", CONF_STR, sqlName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+	if (mc_conf_read(
+        "urls_database_name", CONF_STR,
+        database_name, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+
 		elog_write("urlbug", "configure file setting wrong",  "urls_database_name");
 		ubug_sig_error();
 	}
 
 	mysql_library_init(nrOpt, sqlOpt, NULL);
 
-	if(!mysql_init(&urlDataBase)) {
+	if (!mysql_init(&urlDataBase)) {
 		elog_write("ubug_init_database - mysql_init", "urlDataBase", "Failed");
 		ubug_sig_error();
 	}
 
-	if(!mysql_real_connect(&urlDataBase, NULL, DBUSRNAME, DBUSRKEY, sqlName, 0, NULL, 0)) {
-		elog_write("ubug_init_database - mysql_real_connect", "urlDataBase", "Failed");
-		ubug_sig_error();
+	if (!mysql_real_connect(
+        &urlDataBase, NULL, DBUSRNAME, DBUSRKEY, database_name, 0, NULL, 0)) {
+
+        elog_write(
+        "ubug_init_database - mysql_real_connect",
+        "urlDataBase", "Failed");
+
+	    ubug_sig_error();
 	}
 
-	if(mgc_add(urlGarCol, NULL_POINT, ubug_db_clean) == MGC_FAILED)
+	if (mgc_add(urlGarCol, NULL_POINT, ubug_db_clean) == MGC_FAILED)
 		ubug_perror("ubug_init_database - mgc_add", errno);
 
 	ubug_create_dbtable();

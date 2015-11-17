@@ -205,6 +205,9 @@ int     count_enter_num(const char *string);
 
 /* dboper/dboper.c */
 int	    mysql_string_exist_check(void *chkSql, char *chkCom);
+void   *mysql_return_result(void *sql_handle, const char *sql_string);
+int     mysql_simple_connect(
+        void *sql_handle, const char *database_name, const char *host, int port);
 
 /* sp_bufoper.c */
 

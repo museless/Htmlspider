@@ -2,7 +2,7 @@
 #define	_SPDB_H
 
 /*-----------------------------
-	include
+	        include
 -------------------------------*/
 
 #include <mysql.h>
@@ -11,11 +11,11 @@
 
 
 /*-----------------------------
-	define
+	        define
 -------------------------------*/
 
-#define	DBUSRNAME	"root"
-#define	DBUSRKEY	"WdSr0922"
+#define	DBUSRNAME	    "root"
+#define	DBUSRKEY	    "WdSr0922"
 
 #define	SQL_TCOM_LEN	0x80	/* tiny */
 #define	SQL_LICOM_LEN	0xC0	/* little */
