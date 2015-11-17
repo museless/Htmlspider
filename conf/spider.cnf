@@ -1,0 +1,28 @@
+# This is urlbug's configure file
+# Warning: 
+# 1. All file name should less than 128bytes
+# 2. Changing the next path if you want to startup
+# urlbug not at ../bin/urlbug
+
+# pthread num ( 1 ~ 3 )
+urlbug_pthread_num      = 3
+
+# max url len ( 128 ~ 256 )
+urlbug_max_ulen         = 128
+
+# ping
+ping_packet             = 16
+ping_host               = www.baidu.com
+
+# file locate
+urlbug_sem_key_file     = ../bin/urlbug
+default_tmpfile_locate  = ../text/url.tmp
+
+# error log
+urlbug_err_log          = ../log/UrlErrLog
+
+# for databases
+urls_database_name      = Crowdsource 
+
+# help file locate
+urlbug_help_document    = ../src/urlbug/urlbug.hlp

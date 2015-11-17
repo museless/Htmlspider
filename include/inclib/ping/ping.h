@@ -1,0 +1,51 @@
+#ifndef _PING_H
+#define _PING_H
+
+
+/*-----------------------------
+           include
+-------------------------------*/
+
+#include "icmp.h"
+#include "spinc.h"
+#include "spnet.h"
+#include <netinet/ip.h>
+#include <arpa/inet.h>
+
+
+/*-----------------------------
+            define
+-------------------------------*/
+
+#define MAX_PADDATA_LEN    64 
+
+
+/*-----------------------------
+           typedef 
+-------------------------------*/
+
+typedef struct  sockaddr_in SOCKIF;
+typedef struct  addrinfo    ADDRIF;
+
+typedef struct  ping_info   PINGIF;
+
+
+/*-----------------------------
+           typedef 
+-------------------------------*/
+
+struct  ping_info {
+    u_long  pi_rrt;
+    u_int   pi_ttl;
+    u_int   pi_seq;
+};
+
+
+/*-----------------------------
+        global function
+-------------------------------*/
+
+int     ping(PINGIF *ping_info, const char *host);
+
+
+#endif
