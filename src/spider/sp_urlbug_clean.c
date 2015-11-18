@@ -30,7 +30,7 @@ FBSTR	forbitStrList[] = {{"ad", 2}, {"blog", 4}, {"video", 5}, {"bbs", 3},
                            {"book", 4}, {"bj", 2}, {"photo", 5},
                            {"lady", 4}, {"kb", 2}, {"pic", 3}, {"", 0}};
 
-int	    procCommuFd, urlMaxLen;
+int	    procCommuFd, urlMaxLen, urlCatchNum;
 MATOS	writeStoreLock;
 
 

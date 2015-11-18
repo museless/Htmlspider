@@ -11,7 +11,6 @@
 	Part Six:	Running preparation
 	Part Seven:	Entrance
 	Part Eight:	Urlbug mainly work
-	Part Nine:	Message pluging
 
 --------------------------------------------*/
 
@@ -32,8 +31,6 @@
 	       Part One: Local data
 --------------------------------------------*/
 
-static	int	    nCatchNum;
-
 
 /*------------------------------------------
 	     Part Two: Local function
@@ -45,7 +42,6 @@ static	void	ubug_command_analyst(int nPara, char **pComm);
 /* Part Five */
 static	int	    mainly_init(void);
 static	int	    ubug_init_source_pool(void);
-static	void	ubug_init_datebuf(char *pTime);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static	void	ubug_init_weblist(void);
 static	int	    ubug_init_urllist(char *urlStr, WEB *webStu);
@@ -58,7 +54,6 @@ static	void	ubug_pthread_entrance(void *nParameter);
 /* Part Seven */
 static	void	ubug_main_entrance(void);
 static	void	ubug_text_abstract_cont(WEBIN *abPoint);
-static	void	ubug_text_store_content(WEBIN *stPoint);
 
 /* Part Eight */
 static	void	ubug_job(WEBIN *wPoint);
@@ -124,11 +119,6 @@ static void ubug_command_analyst(int nPara, char **pComm)
 			ubug_init_ubset(
             NULL, ubug_text_abstract_cont, ubug_tran_db, ubug_tran_db_whole,
 			ubug_download_website, RUN_PERN);
-
-		} else if (!strcmp(pComm[nCir], "--down_website") || !strcmp(pComm[nCir], "-l")) {
-			ubug_init_ubset(
-            NULL, ubug_text_store_content, NULL, NULL,
-			ubug_download_website, RUN_ONCE);
 
 		} else if (!strcmp(pComm[nCir], "-f")) {
 			procCommuFd = atoi(pComm[++nCir]);
@@ -252,7 +242,7 @@ static int ubug_init_source_pool(void)
 
 
 /*-----ubug_init_datebuf-----*/
-static void ubug_init_datebuf(char *pTime)
+void ubug_init_datebuf(char *pTime)
 {
 	TMS    *nowTime;
 	char	strYear[5];
@@ -282,26 +272,31 @@ static int ubug_init_dbuf(BUFF **pBuff)
 /*-----ubug_init_weblist-----*/
 static void ubug_init_weblist(void)
 {
-	MSLRES	*allRes;
+	MSLRES *allRes;
 	MSLROW	allRow;
-	WEBIN	**pList = &urlSaveList;
+	WEBIN **pList = &urlSaveList;
 
 	if (mysql_query(&urlDataBase, GET_DIRECTORY) != FUN_RUN_END) {
-		if (ubug_dberr(&urlDataBase, "ubug_init_weblist - mysql_query - GET_DIRECTORY") != FUN_RUN_OK)
+		if (ubug_dberr(
+            &urlDataBase, 
+            "ubug_init_weblist - mysql_query - GET_DIRECTORY") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 
 	if (!(allRes = mysql_store_result(&urlDataBase))) {
 		printf("Urlbug---> ubug_init_weblist - mysql_store_result - no web\n");
 
-		if (ubug_dberr(&urlDataBase, "ubug_init_weblist - mysql_store_result") != FUN_RUN_OK)
+		if (ubug_dberr(
+            &urlDataBase, "ubug_init_weblist - mysql_store_result") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 
 	while ((allRow = mysql_fetch_row(allRes))) {
 		if ((*pList = malloc(sizeof(WEBIN))) == NULL) {
-			elog_write("ubug_init_weblist - malloc",
-                        FUNCTION_STR, ERROR_STR);
+			elog_write(
+            "ubug_init_weblist - malloc",
+            FUNCTION_STR, ERROR_STR);
+
 			ubug_sig_error();
 		}
 
@@ -459,7 +454,6 @@ void ubug_pthread_entrance(void *nParameter)
 
         1. ubug_main_entrance
         2. ubug_text_abstract_cont
-        3. ubug_text_store_content
 
 --------------------------------------------*/
 
@@ -471,8 +465,8 @@ static void ubug_main_entrance(void)
 	do {
         ubug_ping();
 
-		for (nCatchNum = 0, webPoint = urlSaveList; webPoint != NULL;
-             webPoint = webPoint->w_next) {
+		for (urlCatchNum = 0, webPoint = urlSaveList;
+             webPoint != NULL; webPoint = webPoint->w_next) {
 	        ubug_create_pthread(webPoint);
 		}
 
@@ -494,13 +488,6 @@ static void ubug_text_abstract_cont(WEBIN *abPoint)
 {
 	abPoint->w_pattern = ubug_get_pattern(abPoint->w_ubuf.web_host);
 	ubug_job(abPoint);
-}
-
-
-/*-----ubug_text_store_content-----*/
-static void ubug_text_store_content(WEBIN *stPoint)
-{
-
 }
 
 
@@ -547,7 +534,7 @@ static void ubug_job(WEBIN *wPoint)
         url_layer_extract(&uData, pHttp, getLen);
 
         urlRunSet.ubs_fst(wPoint, &uData, pHttp, getLen);
-        nCatchNum++;
+        urlCatchNum++;
 	}
 }
 
@@ -673,39 +660,4 @@ char *ubug_reach_url_head(char *pSrc, char *pLimit)
 }
 
 
-/*------------------------------------------
-        Part Nine: Message pluging
 
-	    1. ubug_time_change
-	    2. ubug_send_message
-
---------------------------------------------*/
-
-/*-----ubug_time_change-----*/
-void ubug_time_change(void)
-{
-	mpc_thread_wait(ubugThreadPool);
-
-	urlRunSet.ubs_fstf();
-	ubug_init_datebuf(NULL);
-	ubug_create_dbtable();
-}
-
-
-/*-----ubug_send_message-----*/
-int ubug_send_message(int msgFd)
-{
-	PMSG	sendMsg;
-
-	if(nCatchNum) {
-		memset(&sendMsg, 0, MSG_LEN);
-		sp_msg_fill_stru(&sendMsg, PART_TEXTBUG, KEEP_WORKING);
-
-		if(sp_msg_write(msgFd, &sendMsg) == FUN_RUN_FAIL) {
-			elog_write("ubug_send_message - sp_msg_write", FUNCTION_STR, ERROR_STR);
-			return	FUN_RUN_FAIL;
-		}
-	}
-
-	return	FUN_RUN_OK;
-}

@@ -52,8 +52,7 @@ extern	UBSET	urlRunSet;
 extern	MYSQL	urlDataBase;
 extern  SPPING  ubugPingInfo;
 
-extern	int	    procCommuFd, urlMaxLen;
-
+extern	int	    procCommuFd, urlMaxLen, urlCatchNum;
 extern	MATOS	writeStoreLock;
 
 extern	FBSTR	forbitStrList[];

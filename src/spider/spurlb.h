@@ -29,9 +29,7 @@
 
 /* sp_urlbug.c */
 char   *ubug_reach_url_head(char *pSrc, char *pLimit);
-
-void    ubug_time_change(void);
-int     ubug_send_message(int msgFd);
+void    ubug_init_datebuf(char *pTime);
 
 /* sp_urlbug_rule.c */
 int     ubug_catch_normal_rule(char *content, char **ret_content_point);

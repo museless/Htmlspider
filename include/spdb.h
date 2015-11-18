@@ -43,7 +43,7 @@
 #define	SQL_NKILST_DEF	0x800
 
 /*-----------------------------
-	sql command
+         sql command
 -------------------------------*/
 
 #define	DROP_VIEW	"drop view V%s"
@@ -174,7 +174,7 @@ typedef	struct	fconf		SCONF;
 
 
 /*-----------------------------
-	struct
+	        struct
 -------------------------------*/
 
 struct	sstrlist {
@@ -195,7 +195,7 @@ struct	fconf {
 
 
 /*-----------------------------
-	extern data
+	      extern data
 -------------------------------*/
 
 extern	char   *sqlOpt[];
