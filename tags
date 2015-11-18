@@ -919,24 +919,24 @@ ubs_rtime	src/spider/spuglobal.h	/^	int     ubs_rtime;$/;"	m	struct:ubug_setting
 ubugPingInfo	src/spider/sp_urlbug_clean.c	/^SPPING  ubugPingInfo;$/;"	v
 ubugThreadPool	src/spider/sp_urlbug_clean.c	/^void	*ubugThreadPool;\/* PTHPOOL *\/$/;"	v
 ubug_catch_normal_rule	src/spider/sp_urlbug_rule.c	/^int ubug_catch_normal_rule(char *content, char **ret_content_point)$/;"	f
-ubug_check_separator	src/spider/sp_urlbug.c	/^static void ubug_check_separator(char *urlStr, int *uLen)$/;"	f	file:
-ubug_check_url_prefix	src/spider/sp_urlbug.c	/^static int ubug_check_url_prefix(char *preSrc, int nLen)$/;"	f	file:
+ubug_check_separator	src/spider/sp_urlbug_rule.c	/^void ubug_check_separator(char *urlStr, int *uLen)$/;"	f
+ubug_check_url_prefix	src/spider/sp_urlbug_rule.c	/^int ubug_check_url_prefix(char *preSrc, int nLen)$/;"	f
 ubug_command_analyst	src/spider/sp_urlbug.c	/^static void ubug_command_analyst(int nPara, char **pComm)$/;"	f	file:
-ubug_connect_head	src/spider/sp_urlbug.c	/^static char *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen)$/;"	f	file:
+ubug_connect_head	src/spider/sp_urlbug_rule.c	/^char *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen)$/;"	f
 ubug_create_dbtable	src/spider/sp_urlbug_db.c	/^void ubug_create_dbtable(void)$/;"	f
 ubug_create_pthread	src/spider/sp_urlbug.c	/^static void ubug_create_pthread(WEBIN *webNode)$/;"	f	file:
 ubug_db_clean	src/spider/sp_urlbug_clean.c	/^void ubug_db_clean(void *pNULL)$/;"	f
 ubug_dberr	src/spider/sp_urlbug_db.c	/^int ubug_dberr(MYSQL *sHandler, char *withStr)$/;"	f
 ubug_download_website	src/spider/sp_urlbug_network.c	/^int ubug_download_website(WEBIN *wInfo)$/;"	f
 ubug_free_weblist	src/spider/sp_urlbug_clean.c	/^void ubug_free_weblist(void *pNull)$/;"	f
-ubug_get_pattern	src/spider/sp_urlbug.c	/^static int ubug_get_pattern(const char *pHost)$/;"	f	file:
+ubug_get_pattern	src/spider/sp_urlbug_rule.c	/^int ubug_get_pattern(const char *host_string)$/;"	f
 ubug_init_database	src/spider/sp_urlbug_db.c	/^void ubug_init_database(void)$/;"	f
 ubug_init_datebuf	src/spider/sp_urlbug.c	/^void ubug_init_datebuf(char *pTime)$/;"	f
 ubug_init_dbuf	src/spider/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBuff)$/;"	f	file:
 ubug_init_pinginfo	src/spider/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f
 ubug_init_signal	src/spider/sp_urlbug_signal.c	/^void ubug_init_signal(void)$/;"	f
 ubug_init_source_pool	src/spider/sp_urlbug.c	/^static int ubug_init_source_pool(void)$/;"	f	file:
-ubug_init_ubset	src/spider/sp_urlbug.c	71;"	d	file:
+ubug_init_ubset	src/spider/sp_urlbug.c	66;"	d	file:
 ubug_init_urllist	src/spider/sp_urlbug.c	/^static int ubug_init_urllist(char *urlStr, WEB *webStu)$/;"	f	file:
 ubug_init_weblist	src/spider/sp_urlbug.c	/^static void ubug_init_weblist(void)$/;"	f	file:
 ubug_job	src/spider/sp_urlbug.c	/^static void ubug_job(WEBIN *wPoint)$/;"	f	file:
@@ -949,7 +949,7 @@ ubug_ping	src/spider/sp_urlbug_network.c	/^void ubug_ping(void)$/;"	f
 ubug_ping_default_init	src/spider/sp_urlbug_network.c	/^static void ubug_ping_default_init(SPPING *ping_info)$/;"	f	file:
 ubug_print_help	src/spider/sp_urlbug_disc.c	/^void ubug_print_help(void)$/;"	f
 ubug_pthread_entrance	src/spider/sp_urlbug.c	/^void ubug_pthread_entrance(void *nParameter)$/;"	f
-ubug_reach_url_head	src/spider/sp_urlbug.c	/^char *ubug_reach_url_head(char *pSrc, char *pLimit)$/;"	f
+ubug_reach_url_head	src/spider/sp_urlbug_rule.c	/^char *ubug_reach_url_head(char *pSrc, char *pLimit)$/;"	f
 ubug_send_httpreq	src/spider/sp_urlbug_network.c	/^int ubug_send_httpreq(int socket, WEBIN *wInfo)$/;"	f
 ubug_send_message	src/spider/sp_urlbug_msg.c	/^static int ubug_send_message(int msgFd)$/;"	f	file:
 ubug_setting	src/spider/spuglobal.h	/^struct ubug_setting {$/;"	s
@@ -962,7 +962,7 @@ ubug_tran_db_force	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_force(BUFF *pBu
 ubug_tran_db_real	src/spider/sp_urlbug_db.c	/^int ubug_tran_db_real(BUFF *pBuff)$/;"	f
 ubug_tran_db_whole	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_whole(void)$/;"	f
 ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *wInfo, char *url_string)$/;"	f	file:
-ubug_url_count_nlayer	src/spider/sp_urlbug.c	/^static int ubug_url_count_nlayer(char *strPath)$/;"	f	file:
+ubug_url_count_nlayer	src/spider/sp_urlbug_rule.c	/^int ubug_url_count_nlayer(char *strPath)$/;"	f
 ud_foff	include/spinc.h	/^        int     ud_foff;        \/* file offset *\/$/;"	m	struct:udata
 ud_poff	include/spinc.h	/^        int     ud_poff;        \/* path offset *\/$/;"	m	struct:udata
 udata	include/spinc.h	/^struct  udata {$/;"	s

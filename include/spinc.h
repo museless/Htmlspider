@@ -137,7 +137,7 @@ typedef struct	tm      TMS;
 typedef struct	timeval TMVAL;
 
 typedef struct	buff    BUFF;
-typedef struct  udata   UDATA;
+typedef struct  url_dat UDATA;
 
 typedef void	*(*mafun)(void *, int);
 typedef void	(*mafree)(void *);
@@ -155,9 +155,9 @@ struct	buff {
 	int     b_size;
 };
 
-struct  udata {
-        int     ud_poff;        /* path offset */
-        int     ud_foff;        /* file offset */
+struct  url_dat {
+    int     ud_poff;        /* path offset */
+    int     ud_foff;        /* file offset */
 };
 
 

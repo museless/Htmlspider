@@ -17,6 +17,9 @@ typedef void    (*fn_init)(void);			            /* module init function */
 typedef void    (*fn_st)(void *, void *, char *, int);	/* str = string tran */
 typedef void    (*fn_stf)(void);                	    /* str = string tran force */
 
+typedef int     (*fn_catch)(char *, char **); 
+typedef int     (*fn_locate)(WEBIN *, char **, char **);
+
 
 /*---------------------------
 	       struct
@@ -29,14 +32,17 @@ struct forbid_word {
 
 /* urlbug setting */
 struct ubug_setting {
-	fn_ent	ubs_fent;
-	fn_dway	ubs_dway;
+	fn_ent	    ubs_fent;
+	fn_dway	    ubs_dway;
 
-	fn_init	ubs_init;
-	fn_st	ubs_fst;
-	fn_stf	ubs_fstf;
+	fn_init	    ubs_init;
+	fn_st	    ubs_fst;
+	fn_stf	    ubs_fstf;
 
-	int     ubs_rtime;
+    fn_catch    ubs_catch;
+    fn_locate   ubs_locate;
+
+	int         ubs_rtime;
 };
 
 /*---------------------------

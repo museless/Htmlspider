@@ -88,7 +88,7 @@ struct	web_if {
 	BUFF   *w_buff;		            /* store url */
 
 	char   *w_url;			        /* store url (a temp value) */
-	char   *w_conbuf;		        /* store web content */
+	char   *w_conbuf;		        /* store website content */
 
 	SOCKIF	w_sockif;
 	WEB	    w_ubuf;

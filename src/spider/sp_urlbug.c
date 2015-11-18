@@ -1,5 +1,5 @@
 /*------------------------------------------
-	Source file content Eleven part
+	Source file content Nine part
 
 	Part Zero:	Include
 	Part One:	Local data
@@ -28,12 +28,12 @@
 
 
 /*------------------------------------------
-	       Part One: Local data
+	        Part One: Local data
 --------------------------------------------*/
 
 
 /*------------------------------------------
-	     Part Two: Local function
+	      Part Two: Local function          
 --------------------------------------------*/
 
 /* Part Four */
@@ -45,7 +45,6 @@ static	int	    ubug_init_source_pool(void);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static	void	ubug_init_weblist(void);
 static	int	    ubug_init_urllist(char *urlStr, WEB *webStu);
-static  int     ubug_url_count_nlayer(char *strPath);
 
 /* Part Six */
 static	void	ubug_create_pthread(WEBIN *webNode);
@@ -57,10 +56,6 @@ static	void	ubug_text_abstract_cont(WEBIN *abPoint);
 
 /* Part Eight */
 static	void	ubug_job(WEBIN *wPoint);
-static	char   *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen);
-static	int	    ubug_get_pattern(const char *pHost);
-static	void	ubug_check_separator(char *urlStr, int *uLen);
-static	int	    ubug_check_url_prefix(char *preSrc, int nLen);
 
 
 /*------------------------------------------
@@ -74,6 +69,11 @@ static	int	    ubug_check_url_prefix(char *preSrc, int nLen);
 	urlRunSet.ubs_fstf = fStf; \
 	urlRunSet.ubs_dway = fDway; \
 	urlRunSet.ubs_rtime = rTime; \
+}
+
+#define ubug_init_ubset_way(fun_catch, fun_locate) {\
+    urlRunSet.ubs_catch = fun_catch; \
+    urlRunSet.ubs_locate = fun_locate; \
 }
 
 
@@ -115,10 +115,13 @@ static void ubug_command_analyst(int nPara, char **pComm)
 			ubug_print_help();
 			exit(FUN_RUN_OK);
 
-		} else if (!strcmp(pComm[nCir], "--write_db") || !strcmp(pComm[nCir], "-d")) {
+        } else if (!strcmp(pComm[nCir], "--write_db")) {
 			ubug_init_ubset(
-            NULL, ubug_text_abstract_cont, ubug_tran_db, ubug_tran_db_whole,
-			ubug_download_website, RUN_PERN);
+            NULL, ubug_text_abstract_cont, ubug_tran_db,
+            ubug_tran_db_whole, ubug_download_website, RUN_PERN);
+
+            ubug_init_ubset_way(
+            ubug_catch_default_rule, ubug_locate_default_rule);
 
 		} else if (!strcmp(pComm[nCir], "-f")) {
 			procCommuFd = atoi(pComm[++nCir]);
@@ -135,21 +138,22 @@ static void ubug_command_analyst(int nPara, char **pComm)
 			exit(FUN_RUN_END);
 		}
 	}
+	
+    if (urlRunSet.ubs_fent == NULL) {
+        printf("Urlbug---> must have --write_db now\n");
+		exit(FUN_RUN_FAIL);    
+    }
 
-    const   char   *def_conf_path = "/MuseSp/conf/urlbug.cnf";
+    if (cOff == -1) {
+        printf("Urlbug---> configuration not existed\n");
+        exit(FUN_RUN_FAIL);
+    }
 
-	if (mc_conf_load(
-       "Urlbug", ((cOff == -1) ?  def_conf_path: pComm[cOff])) == FUN_RUN_FAIL) {
+	if (mc_conf_load("Urlbug", pComm[cOff]) == FUN_RUN_FAIL) {
 		printf("Urlbug---> load configure failed\n");
 		ubug_perror("ubug_command_analyst - mc_conf_load", errno);
 		mc_conf_unload();
 		exit(FUN_RUN_FAIL);
-	}
-
-	if (urlRunSet.ubs_fent == NULL) {
-		ubug_init_ubset(
-        NULL, ubug_text_abstract_cont, ubug_tran_db, ubug_tran_db_whole,
-		ubug_download_website, RUN_PERN);
 	}
 
 	if (!tFlags)
@@ -378,31 +382,6 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
 }
 
 
-/*-----ubug_url_count_nlayer-----*/
-static int ubug_url_count_nlayer(char *strPath)
-{
-    char   *pStr;
-    int     nLayer = 1;
-
-    if (!strPath)
-        return  0;
-
-    if (!strcmp(strPath, "/"))
-        return  nLayer;
-
-    for (pStr = strPath + 1; pStr; pStr++) {
-        if (*pStr == '/') {
-            if (*(pStr + 1) == '\0')
-                break;
-
-            nLayer++;
-        }
-    }
-
-    return  nLayer;
-}
-
-
 /*------------------------------------------
         Part Six: Running preparation
 
@@ -495,25 +474,22 @@ static void ubug_text_abstract_cont(WEBIN *abPoint)
 	    Part Eight: Urlbug mainly work
 
         1. ubug_job
-        2. ubug_get_pattern
-        3. ubug_check_separator
-        4. ubug_connect_head
-        5. ubug_check_url_prefix
-        6. ubug_reach_url_head
 
 --------------------------------------------*/
 
 /*-----ubug_job-----*/
 static void ubug_job(WEBIN *wPoint)
 {
-    char   *pHttp, *pBegin, *pSign;
-    UDATA   uData;
+    char   *content_begin, *content_end;
+    char   *pHttp, *pSign;
     int     getLen, hostLen = strlen(wPoint->w_ubuf.web_host);
 
-	pHttp = pBegin = wPoint->w_conbuf;
+    urlRunSet.ubs_locate(wPoint, &content_begin, &content_end);
 
-	for (; pBegin && pBegin < wPoint->w_conbuf + wPoint->w_size; pBegin = pSign) {
-		if ((getLen = ubug_catch_normal_rule(pBegin, &pSign)) == FUN_RUN_FAIL)
+	pHttp = content_begin;
+
+	for (; content_begin && content_begin < content_end; content_begin = pSign) {
+        if ((getLen = urlRunSet.ubs_catch(content_begin, &pSign)) == FUN_RUN_FAIL)
             return;
 
         if (getLen == FUN_RUN_END)
@@ -530,134 +506,14 @@ static void ubug_job(WEBIN *wPoint)
 
         if (ubug_check_url_prefix(pHttp, getLen))
             continue;
+    
+        UDATA   url_data;
 
-        url_layer_extract(&uData, pHttp, getLen);
+        url_layer_extract(&url_data, pHttp, getLen);
 
-        urlRunSet.ubs_fst(wPoint, &uData, pHttp, getLen);
+        urlRunSet.ubs_fst(wPoint, &url_data, pHttp, getLen);
         urlCatchNum++;
 	}
 }
-
-
-/*-----ubug_get_pattern-----*/
-static int ubug_get_pattern(const char *pHost)
-{
-	int     count;
-
-    for (count = 0; ; count++) {
-		if (strstr(pHost, perWebPatt[count]))
-			return	count;
-
-        if (!strcmp(perWebPatt[count], "ending"))
-            break;
-	}
-
-	return	FUN_RUN_FAIL;
-}
-
-
-/*-----ubug_check_separator-----*/
-static void ubug_check_separator(char *urlStr, int *uLen)
-{
-	char   *pBeg, *pEnter;
-    int     nDec;
-
-	if((pBeg = strnchr(urlStr, '\r', *uLen)) || (pBeg = strnchr(urlStr, '\n', *uLen))) {
-        nDec = ((*pBeg == '\r') ? MLINK_LEN : 1);
-        *uLen -= nDec;
-
-		/* only one "\r\n" existed */
-		if((pEnter = strnchr(pBeg + nDec, *pBeg, *uLen - (pBeg - urlStr))) == NULL) {
-			strncpy(pBeg, pBeg + nDec, *uLen - (pBeg - urlStr));
-
-		} else {
-			strncpy(pBeg, pEnter + nDec, *uLen - (pEnter - urlStr));
-			*uLen -= (pEnter - pBeg);
-		}
-	}
-}
-
-
-/*-----ubug_connect_head-----*/
-static char *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen)
-{
-	WEB    *wPt = &wInfo->w_ubuf;
-	char   *puBuf, *pEnd;
-	int     nLayer, pathLen;
-
-	memset(wInfo->w_url, 0, NAMBUF_LEN);
-	strcpy(wInfo->w_url, MATCH_HTTP);
-	strncpy(wInfo->w_url + MHTTP_LEN, wPt->web_host, hostLen);
-	puBuf = wInfo->w_url + MHTTP_LEN + hostLen;
-
-	/* directory resolving */
-	for (nLayer = wPt->web_nlayer; *fName == '.'; nLayer--) {
-		if (strncmp(fName, "../", 3)) {
-			if (!strncmp(fName, "./", 2)) {
-				fName += 2, (*fLen) -= 2;	
-				break;
-			}
-		}
-
-		fName += 3, (*fLen) -= 3;
-	}
-
-	/* three conditions, full layer, no layer, less layer */
-	if (nLayer == wPt->web_nlayer) {
-		pathLen = sprintf(puBuf, "%s", wPt->web_path);
-
-	} else if (nLayer == 0) {
-		pathLen = sprintf(puBuf, "/");
-
-	} else {
-		/* means how much '/' should pass */
-		nLayer += 1;
-
-		for (pEnd = wPt->web_path; nLayer; pEnd++) {
-			if (*pEnd == '/')
-				nLayer--;
-		}
-
-		pathLen = sprintf(puBuf, "%.*s",
-                (unsigned int)(pEnd -  wPt->web_path), wPt->web_path);
-	}
-
-	strncpy(puBuf + pathLen, fName, *fLen);
-	*fLen += (hostLen + MHTTP_LEN + pathLen);
-
-	return	wInfo->w_url;
-}
-
-
-/*-----ubug_check_url_prefix-----*/
-static int ubug_check_url_prefix(char *preSrc, int nLen)
-{
-	int     count;
-
-	preSrc += MHTTP_LEN;
-
-	for (count = 0; ; count++) {
-        if (!forbitStrList[count].fb_len)
-            break;
-
-		if (strnstr(preSrc, forbitStrList[count].fb_str, nLen))
-			return	FUN_RUN_OK;
-	}
-
-	return	FUN_RUN_END;
-}
-
-
-/*-----ubug_reach_url_head-----*/
-char *ubug_reach_url_head(char *pSrc, char *pLimit)
-{
-	for(; pSrc < pLimit; pSrc++) {
-		if (isalnum(*pSrc) || *pSrc == '/' || *pSrc == '.')
-			return	pSrc;
-	}
-
-	return	NULL;
-}
-
 
 
