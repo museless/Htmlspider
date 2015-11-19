@@ -1,18 +1,16 @@
-urlbug - one part of MuseSpider - charge in catching url
+urlbug - charge in catching url
 
-usage: urlbug <Parameter>
+usage: 
+    urlbug [options] parameters
 
-Parameter:
+options:
+    -c <configuration paths>    configuration's path
+    -d <ways name>              every website has its catch and locate ways
+    -t                          time - useless now
+    -h                          helping
 
-	* Main *
-	"-c" with [configure paths]
-	"--help" or "-h"
-	"--write_db"
-	"--down_website" or "-l"
-
-	* Slave *
-	"-f" [SOCKETPAIR FD]
-
-Warning:
-    You must use "--write_db" 
+list of ways name:    
+    normal
+    csto
+    coding
 

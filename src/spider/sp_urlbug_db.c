@@ -78,12 +78,8 @@ void ubug_init_database(void)
 /*-----ubug_create_dbtable-----*/
 void ubug_create_dbtable(void)
 {
-	char	creatSql[SQL_SCOM_LEN];
-
-	sprintf(creatSql, CREAT_URL_TAB, urlTabName, urlMaxLen);
-
-	if(mysql_query(&urlDataBase, creatSql) != FUN_RUN_END) {
-		if(ubug_dberr(&urlDataBase, "ubug_init_database - mysql_query - creatTab") != FUN_RUN_OK)
+    if (mysql_creat_table(&urlDataBase, CREAT_URL_TAB, urlTabName, urlMaxLen) != FUN_RUN_OK) {
+		if(ubug_dberr(&urlDataBase, "ubug_create_dbtable - creatTab") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 }
@@ -92,7 +88,7 @@ void ubug_create_dbtable(void)
 /*-----ubug_tran_db-----*/
 void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)
 {
-        WEBIN   *webInfo = (WEBIN *)pInfo;
+    WEBIN   *webInfo = (WEBIN *)pInfo;
 	UDATA	*pData = (UDATA *)uData;
         
 	if(!buff_size_enough(webInfo->w_buff, SQL_PERCOM_MLEN))

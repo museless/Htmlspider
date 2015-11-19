@@ -20,8 +20,9 @@ OURLB	= src/spider/sp_urlbug.c src/spider/sp_urlbug_db.c \
 		  src/spider/sp_urlbug_err.c src/spider/sp_urlbug_network.c \
 		  src/spider/sp_urlbug_rule.c \
 		  src/flib/sp_global.c src/flib/sp_bufoper.c src/flib/sp_misc.c \
-		  src/flib/sp_pfun.c src/flib/sp_message.c src/flib/sp_elog.c \
-		  src/flib/sp_network.c src/flib/sp_frame.c src/flib/chunkmpool/mpool_web.c \
+		  src/flib/sp_pfun.c src/flib/sp_message.c \
+	      src/flib/sp_elog.c src/flib/sp_network.c src/flib/sp_html.c \
+		  src/flib/sp_frame.c src/flib/chunkmpool/mpool_web.c \
 		  src/flib/dboper/dboper.c src/flib/mconfctl/museconfctl.c \
 		  src/flib/museato/museato.c src/flib/musegc/musegc.c \
 		  src/flib/museipc/muse_sem.c src/flib/musetpool/musepthctl.c \

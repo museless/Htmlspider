@@ -45,6 +45,8 @@ static	int	    ubug_init_source_pool(void);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static	void	ubug_init_weblist(void);
 static	int	    ubug_init_urllist(char *urlStr, WEB *webStu);
+static  void    ubug_load_config(const char *config_path);
+static  void    ubug_set_ubset(const char *way_option);
 
 /* Part Six */
 static	void	ubug_create_pthread(WEBIN *webNode);
@@ -108,56 +110,44 @@ int main(int argc, char *argv[])
 /*-----ubug_command_analyst-----*/
 static void ubug_command_analyst(int nPara, char **pComm)
 {
-	int	nCir, cOff, tFlags = 0;
+	int	    config_flags = 0;
+    char    ch;
 
-	for(cOff = -1, nCir = 1; nCir < nPara; nCir++) {
-		if (!strcmp(pComm[nCir], "--help") || !strcmp(pComm[nCir], "-h")) {
-			ubug_print_help();
-			exit(FUN_RUN_OK);
+    while (!(ch = getopt(nPara, pComm, "c:d:h"))) {
+        switch (ch) {
+            case 'c':	
+                ubug_load_config(optarg);
+                config_flags = 1;
+                break;
 
-        } else if (!strcmp(pComm[nCir], "--write_db")) {
-			ubug_init_ubset(
-            NULL, ubug_text_abstract_cont, ubug_tran_db,
-            ubug_tran_db_whole, ubug_download_website, RUN_PERN);
+            case 'h':
+                ubug_print_help();
+                exit(FUN_RUN_OK);    
+        
+            case 'd':
+                ubug_set_ubset(optarg);
+                break;
+            
+            case 't':
+                ubug_init_datebuf(optarg);
+                break;
 
-            ubug_init_ubset_way(
-            ubug_catch_default_rule, ubug_locate_default_rule);
+            case 'f':
+                procCommuFd = atoi(optarg);
+                break;
 
-		} else if (!strcmp(pComm[nCir], "-f")) {
-			procCommuFd = atoi(pComm[++nCir]);
-
-		} else if (!strcmp(pComm[nCir], "-t")) {
-			ubug_init_datebuf(pComm[++nCir]); tFlags = 1;
-
-		} else if (!strcmp(pComm[nCir], "-c")) {
-			cOff = ++nCir;
-
-		} else {
-			printf("Urlbug---> wrong command: %s\n \
-			\r--->please try \"-h\" or \"--help\"\n\n", pComm[nCir]);
-			exit(FUN_RUN_END);
-		}
-	}
-	
-    if (urlRunSet.ubs_fent == NULL) {
-        printf("Urlbug---> must have --write_db now\n");
+            default:
+			    printf(
+                "Urlbug---> wrong command: %c\n \
+			    \r--->please try \"-h\" or \"--help\"\n\n", ch);
+			    exit(FUN_RUN_END);
+        }
+    }
+    
+    if (urlRunSet.ubs_fent == NULL || !config_flags) {
+        printf("Urlbug---> must set [-d] and [-c]\n");
 		exit(FUN_RUN_FAIL);    
     }
-
-    if (cOff == -1) {
-        printf("Urlbug---> configuration not existed\n");
-        exit(FUN_RUN_FAIL);
-    }
-
-	if (mc_conf_load("Urlbug", pComm[cOff]) == FUN_RUN_FAIL) {
-		printf("Urlbug---> load configure failed\n");
-		ubug_perror("ubug_command_analyst - mc_conf_load", errno);
-		mc_conf_unload();
-		exit(FUN_RUN_FAIL);
-	}
-
-	if (!tFlags)
-		ubug_init_datebuf(NULL);
 }
 
 
@@ -170,8 +160,9 @@ static void ubug_command_analyst(int nPara, char **pComm)
         4. ubug_init_dbuf
         5. ubug_init_weblist
         6. ubug_init_urllist
-        7. ubug_url_count_nlayer
-
+        7. ubug_load_config
+        8. ubug_set_ubset
+         
 --------------------------------------------*/
 
 /*-----mainly_init-----*/
@@ -379,6 +370,30 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
 	printf("Urlbug---> ubug_init_urllist - strange url: %s\n", urlStr);
 
 	return	FUN_RUN_END;
+}
+
+
+/*-----ubug_load_config-----*/
+static void ubug_load_config(const char *config_path)
+{
+    if (mc_conf_load("Urlbug", config_path) == FUN_RUN_FAIL) {
+        printf("Urlbug---> load configure failed\n");
+        ubug_perror("ubug_load_config - mc_conf_load", errno);
+        mc_conf_unload();
+        exit(FUN_RUN_FAIL);
+    }
+}
+
+
+/*-----ubug_set_ubset-----*/
+static void ubug_set_ubset(const char *way_option)
+{
+    ubug_init_ubset(
+    NULL, ubug_text_abstract_cont, ubug_tran_db,
+    ubug_tran_db_whole, ubug_download_website, RUN_PERN);
+
+    ubug_init_ubset_way(
+    ubug_catch_default_rule, ubug_locate_default_rule);
 }
 
 

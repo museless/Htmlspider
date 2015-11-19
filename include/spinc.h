@@ -15,6 +15,7 @@
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>
+#include <stdarg.h>
 #include <signal.h>
 #include <time.h>
 #include <fcntl.h>
@@ -187,7 +188,7 @@ void	sp_stop_str(void);
 int	    readn(int rFd, void *rBuf, size_t bCount);
 int	    writen(int wFd, void *wBuf, size_t bCount);
 
-char   *strnstr(char *findBuf, char *needStr, int nLimit);
+char   *strnstr(char *findBuf, const char *needStr, int nLimit);
 char   *strnchr(char *findBuf, char needCh, int nLimit);
 int     select_read(int nSock, char *readBuf, int nRead, int nSec, long microSec);
 char   *strchrb(char *strBeg, int nLimit, char fCh);
@@ -208,6 +209,8 @@ int	    mysql_string_exist_check(void *chkSql, char *chkCom);
 void   *mysql_return_result(void *sql_handle, const char *sql_string);
 int     mysql_simple_connect(
         void *sql_handle, const char *database_name, const char *host, int port);
+
+int     mysql_creat_table(void *sql_handle, const char *creat_string, ...);
 
 /* sp_bufoper.c */
 

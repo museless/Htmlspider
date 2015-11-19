@@ -68,12 +68,28 @@ int mysql_string_exist_check(void *chkSql, char *chkCom)
 /*-----mysql_return_result-----*/
 void *mysql_return_result(void *sql_handle, const char *sql_string)
 {
-    MSLRES *result;
     char    string_buff[SQL_MCOM_LEN];
     int     str_len = snprintf(string_buff, SQL_MCOM_LEN, "%s", sql_string);
 
     if (mysql_real_query(sql_handle, string_buff, str_len))
         return  NULL;
 
-    return  (result = mysql_store_result(sql_handle));
+    return  mysql_store_result(sql_handle);
+}
+
+
+/*-----mysql_creat_table-----*/
+int mysql_creat_table(void *sql_handle, const char *creat_string, ...)
+{
+	char	creat_sql[SQL_MCOM_LEN];
+    va_list ap_list;
+
+    va_start(ap_list, creat_string);
+
+	if (mysql_real_query(
+        sql_handle, creat_sql, 
+        vsnprintf(creat_sql, SQL_MCOM_LEN, creat_string, ap_list)))
+        return  FUN_RUN_END;
+
+    return  FUN_RUN_OK;
 }

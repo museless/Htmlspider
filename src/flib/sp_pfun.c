@@ -79,7 +79,7 @@ int writen(int wFd, void *wBuf, size_t bCount)
 
 
 /*-----strnstr-----*/
-inline char *strnstr(char *findBuf, char *needStr, int nLimit)
+inline char *strnstr(char *findBuf, const char *needStr, int nLimit)
 {
 	char	*pStr, sChar;
 

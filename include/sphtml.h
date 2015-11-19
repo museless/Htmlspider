@@ -2,6 +2,8 @@
 #define	_SPHTML_H
 
 /* define */
+#define TAG_MIN_LEN 0x3
+#define TAG_MAX_LEN 0x10
 
 /* match mode */
 #define	MHIGH_LEN	2
