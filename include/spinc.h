@@ -184,6 +184,12 @@ void	mc_conf_print_err(char *pFind);
 void	sp_stop(void);
 void	sp_stop_str(void);
 
+/* sp_html.c */
+char   *sp_html_tag_range_locate(const char *html_string, int len);
+char   *sp_html_get_tag_string(char *tag_start, int *tag_len);
+char   *sp_html_code_location(
+        const char *html_text, int text_len, const char *html_code);
+
 /* sp_pfun.c */
 int	    readn(int rFd, void *rBuf, size_t bCount);
 int	    writen(int wFd, void *wBuf, size_t bCount);
