@@ -12,7 +12,7 @@
 
 
 /*------------------------------------------
-	Part Zero: Include
+	        Part Zero: Include
 --------------------------------------------*/
 
 #include "spinc.h"
@@ -51,19 +51,9 @@ void ubug_init_database(void)
 		ubug_sig_error();
 	}
 
-	mysql_library_init(nrOpt, sqlOpt, NULL);
-
-	if (!mysql_init(&urlDataBase)) {
-		elog_write("ubug_init_database - mysql_init", "urlDataBase", "Failed");
-		ubug_sig_error();
-	}
-
-	if (!mysql_real_connect(
-        &urlDataBase, NULL, DBUSRNAME, DBUSRKEY, database_name, 0, NULL, 0)) {
-
+    if (!mysql_simple_connect(&urlDataBase, database_name, NULL, 0)) {
         elog_write(
-        "ubug_init_database - mysql_real_connect",
-        "urlDataBase", "Failed");
+        "ubug_init_database - mysql_simple_connect", "urlDataBase", "Failed");
 
 	    ubug_sig_error();
 	}
@@ -105,10 +95,10 @@ void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)
 /*-----ubug_tran_db_whole-----*/
 void ubug_tran_db_whole(void)
 {
-        WEBIN   *pInfo;
+    WEBIN   *pInfo;
         
-        for (pInfo = urlSaveList; pInfo; pInfo = pInfo->w_next)
-                ubug_tran_db_force(pInfo->w_buff);
+    for (pInfo = urlSaveList; pInfo; pInfo = pInfo->w_next)
+        ubug_tran_db_force(pInfo->w_buff);
 }
 
 

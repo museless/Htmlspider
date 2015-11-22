@@ -73,9 +73,10 @@ static	void	ubug_job(WEBIN *wPoint);
 	urlRunSet.ubs_rtime = rTime; \
 }
 
-#define ubug_init_ubset_way(fun_catch, fun_locate) {\
+#define ubug_init_ubset_way(fun_catch, fun_locate, fn_creat) {\
     urlRunSet.ubs_catch = fun_catch; \
     urlRunSet.ubs_locate = fun_locate; \
+    urlRunSet.ubs_creat = fun_creat;
 }
 
 
@@ -128,10 +129,6 @@ static void ubug_command_analyst(int nPara, char **pComm)
                 ubug_set_ubset(optarg);
                 break;
             
-            case 't':
-                ubug_init_datebuf(optarg);
-                break;
-
             case 'f':
                 procCommuFd = atoi(optarg);
                 break;
@@ -156,7 +153,6 @@ static void ubug_command_analyst(int nPara, char **pComm)
 
         1. mainly_init
         2. ubug_init_source_pool
-        3. ubug_init_datebuf
         4. ubug_init_dbuf
         5. ubug_init_weblist
         6. ubug_init_urllist
@@ -236,19 +232,6 @@ static int ubug_init_source_pool(void)
 }
 
 
-/*-----ubug_init_datebuf-----*/
-void ubug_init_datebuf(char *pTime)
-{
-	TMS    *nowTime;
-	char	strYear[5];
-
-	nowTime = time_str_extract(pTime);
-
-	sprintf(strYear, "%d", nowTime->tm_year);
-	sprintf(urlTabName, "U%s%02d%02d", strYear, nowTime->tm_mon, nowTime->tm_mday);
-}
-
-
 /*-----ubug_init_dbuf-----*/
 static int ubug_init_dbuf(BUFF **pBuff)
 {
@@ -271,26 +254,16 @@ static void ubug_init_weblist(void)
 	MSLROW	allRow;
 	WEBIN **pList = &urlSaveList;
 
-	if (mysql_query(&urlDataBase, GET_DIRECTORY) != FUN_RUN_END) {
+    if (!(allRes = mysql_return_result(&urlDataBase, GET_DIRECTORY))) {
 		if (ubug_dberr(
-            &urlDataBase, 
-            "ubug_init_weblist - mysql_query - GET_DIRECTORY") != FUN_RUN_OK)
-			ubug_sig_error();
-	}
-
-	if (!(allRes = mysql_store_result(&urlDataBase))) {
-		printf("Urlbug---> ubug_init_weblist - mysql_store_result - no web\n");
-
-		if (ubug_dberr(
-            &urlDataBase, "ubug_init_weblist - mysql_store_result") != FUN_RUN_OK)
+            &urlDataBase, "ubug_init_weblist - mysql_return_result") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 
 	while ((allRow = mysql_fetch_row(allRes))) {
 		if ((*pList = malloc(sizeof(WEBIN))) == NULL) {
 			elog_write(
-            "ubug_init_weblist - malloc",
-            FUNCTION_STR, ERROR_STR);
+            "ubug_init_weblist - malloc", FUNCTION_STR, ERROR_STR);
 
 			ubug_sig_error();
 		}
@@ -392,8 +365,21 @@ static void ubug_set_ubset(const char *way_option)
     NULL, ubug_text_abstract_cont, ubug_tran_db,
     ubug_tran_db_whole, ubug_download_website, RUN_PERN);
 
-    ubug_init_ubset_way(
-    ubug_catch_default_rule, ubug_locate_default_rule);
+    if (!strncmp(way_option, "normal")) {
+        ubug_init_ubset_way(
+        ubug_catch_default_rule, 
+        ubug_locate_default_rule, ubug_set_tabname_default);
+
+    } else if (!strncmp(way_option, "csto")) {
+        ubug_init_ubset_way(
+        ubug_catch_csto_rule, ubug_locate_csto_rule, ubug_set_tabname_default);
+
+    } else {
+        printf("Urlbug---> -d requires an argument");
+        exit(FUN_RUN_FAIL);
+    }
+
+    urlRunSet.usb_creat();
 }
 
 

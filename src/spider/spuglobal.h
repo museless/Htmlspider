@@ -19,6 +19,7 @@ typedef void    (*fn_stf)(void);                	    /* str = string tran force 
 
 typedef int     (*fn_catch)(char *, char **); 
 typedef int     (*fn_locate)(WEBIN *, char **, char **);
+typedef void    (*fn_creat)(void);
 
 
 /*---------------------------
@@ -41,7 +42,8 @@ struct ubug_setting {
 
     fn_catch    ubs_catch;
     fn_locate   ubs_locate;
-
+    fn_creat    ubs_creat;
+  
 	int         ubs_rtime;
 };
 

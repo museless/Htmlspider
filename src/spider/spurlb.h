@@ -42,6 +42,8 @@ void	ubug_check_separator(char *urlStr, int *uLen);
 int	    ubug_check_url_prefix(char *preSrc, int nLen);
 int     ubug_url_count_nlayer(char *str_url);
 
+void    ubug_set_tabname_default(void);
+
 /* sp_urlbug_network.c */
 void    ubug_init_pinginfo(void);
 void    ubug_ping(void);

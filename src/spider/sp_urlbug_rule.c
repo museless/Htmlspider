@@ -8,6 +8,7 @@
 
 	Part Four:  URL catch rule - default
     Part Five:  URL check rules
+    Part Six:   URL table name 
 
 --------------------------------------------*/
 
@@ -238,3 +239,16 @@ int ubug_url_count_nlayer(char *str_url)
     return  nLayer;
 }
 
+
+/*------------------------------------------
+	     Part Six: URL table name
+
+         1. ubug_set_tabname_default
+
+--------------------------------------------*/
+
+/*-----ubug_set_tabname_default-----*/
+void ubug_set_tabname_default(void)
+{
+    sprintf(urlTabName, "%s", "t_all_url");
+}

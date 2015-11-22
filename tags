@@ -104,6 +104,7 @@ EXARR	tool/Makefile	/^EXARR	= bin\/arrage$/;"	m
 EXFORM	tool/Makefile	/^EXFORM	= bin\/format$/;"	m
 EXGA	tool/Makefile	/^EXGA	= bin\/gatool$/;"	m
 EXRM	tool/Makefile	/^EXRM	= bin\/sprm$/;"	m
+EXTEST	tool/Makefile	/^EXTEST	= bin\/test$/;"	m
 EXTOOL	tool/Makefile	/^EXTOOL	= bin\/sptool$/;"	m
 EXURLB	Makefile	/^EXURLB	= bin\/spider$/;"	m
 FBSTR	src/spider/spuglobal.h	/^typedef struct  forbid_word     FBSTR;$/;"	t	typeref:struct:forbid_word
@@ -165,36 +166,36 @@ LOC_LEN	tool/include/sptinc.h	17;"	d
 LOGBASE_LEN	include/spinc.h	75;"	d
 LOGBUF_LEN	include/spinc.h	74;"	d
 MALGO_H	include/inclib/musealgo/malgo.h	2;"	d
-MATCH_A	include/sphtml.h	46;"	d
-MATCH_B	include/sphtml.h	54;"	d
-MATCH_BR	include/sphtml.h	38;"	d
-MATCH_CHARSET	include/sphtml.h	32;"	d
-MATCH_DATE	include/sphtml.h	63;"	d
-MATCH_END	include/sphtml.h	56;"	d
-MATCH_ENDHG	include/sphtml.h	10;"	d
-MATCH_ENDHTML	include/sphtml.h	28;"	d
-MATCH_ETITLE	include/sphtml.h	36;"	d
-MATCH_FONT	include/sphtml.h	52;"	d
-MATCH_HIGH	include/sphtml.h	8;"	d
-MATCH_HREF	include/sphtml.h	26;"	d
-MATCH_HTM	include/sphtml.h	24;"	d
-MATCH_HTML	include/sphtml.h	20;"	d
-MATCH_HTP	include/sphtml.h	18;"	d
-MATCH_HTTP	include/sphtml.h	16;"	d
-MATCH_LAMD	include/sphtml.h	61;"	d
-MATCH_LBR	include/sphtml.h	40;"	d
-MATCH_LIBEG	include/sphtml.h	12;"	d
-MATCH_LIEND	include/sphtml.h	14;"	d
-MATCH_LINKBRK	include/sphtml.h	30;"	d
-MATCH_LOCA	include/sphtml.h	65;"	d
-MATCH_NOBR	include/sphtml.h	68;"	d
-MATCH_NOTE	include/sphtml.h	58;"	d
-MATCH_SHTML	include/sphtml.h	22;"	d
-MATCH_SPAN	include/sphtml.h	48;"	d
-MATCH_SRCIPT	include/sphtml.h	42;"	d
-MATCH_STRONG	include/sphtml.h	50;"	d
-MATCH_TITLE	include/sphtml.h	34;"	d
-MATCH_a	include/sphtml.h	44;"	d
+MATCH_A	include/sphtml.h	48;"	d
+MATCH_B	include/sphtml.h	56;"	d
+MATCH_BR	include/sphtml.h	40;"	d
+MATCH_CHARSET	include/sphtml.h	34;"	d
+MATCH_DATE	include/sphtml.h	65;"	d
+MATCH_END	include/sphtml.h	58;"	d
+MATCH_ENDHG	include/sphtml.h	12;"	d
+MATCH_ENDHTML	include/sphtml.h	30;"	d
+MATCH_ETITLE	include/sphtml.h	38;"	d
+MATCH_FONT	include/sphtml.h	54;"	d
+MATCH_HIGH	include/sphtml.h	10;"	d
+MATCH_HREF	include/sphtml.h	28;"	d
+MATCH_HTM	include/sphtml.h	26;"	d
+MATCH_HTML	include/sphtml.h	22;"	d
+MATCH_HTP	include/sphtml.h	20;"	d
+MATCH_HTTP	include/sphtml.h	18;"	d
+MATCH_LAMD	include/sphtml.h	63;"	d
+MATCH_LBR	include/sphtml.h	42;"	d
+MATCH_LIBEG	include/sphtml.h	14;"	d
+MATCH_LIEND	include/sphtml.h	16;"	d
+MATCH_LINKBRK	include/sphtml.h	32;"	d
+MATCH_LOCA	include/sphtml.h	67;"	d
+MATCH_NOBR	include/sphtml.h	70;"	d
+MATCH_NOTE	include/sphtml.h	60;"	d
+MATCH_SHTML	include/sphtml.h	24;"	d
+MATCH_SPAN	include/sphtml.h	50;"	d
+MATCH_SRCIPT	include/sphtml.h	44;"	d
+MATCH_STRONG	include/sphtml.h	52;"	d
+MATCH_TITLE	include/sphtml.h	36;"	d
+MATCH_a	include/sphtml.h	46;"	d
 MATOS	include/inclib/mato.h	/^typedef	struct	matos		MATOS;$/;"	t	typeref:struct:matos
 MATO_FALSE	include/inclib/mato.h	9;"	d
 MATO_TRUE	include/inclib/mato.h	10;"	d
@@ -202,32 +203,32 @@ MAX_PADDATA_LEN	include/inclib/ping/ping.h	20;"	d
 MAX_UNI_LEN	include/spdict.h	20;"	d
 MAX_URL_LEN	include/spnet.h	19;"	d
 MAX_UTF8_LEN	include/spdict.h	19;"	d
-MA_LEN	include/sphtml.h	45;"	d
-MBEG_LEN	include/sphtml.h	11;"	d
-MB_LEN	include/sphtml.h	53;"	d
-MCHARSET_LEN	include/sphtml.h	31;"	d
-MDATE_LEN	include/sphtml.h	62;"	d
+MA_LEN	include/sphtml.h	47;"	d
+MBEG_LEN	include/sphtml.h	13;"	d
+MB_LEN	include/sphtml.h	55;"	d
+MCHARSET_LEN	include/sphtml.h	33;"	d
+MDATE_LEN	include/sphtml.h	64;"	d
 MD_DNC_AOFF	tool/include/sptinc.h	21;"	d
 MD_MDPATT_AOFF	tool/include/sptinc.h	23;"	d
 MD_UPDOWN_AOFF	tool/include/sptinc.h	22;"	d
-MEHTML_LEN	include/sphtml.h	27;"	d
-MENDBR_LEN	include/sphtml.h	37;"	d
-MENDHG_LEN	include/sphtml.h	9;"	d
-MEND_LEN	include/sphtml.h	55;"	d
-METITLE_LEN	include/sphtml.h	35;"	d
-MFONT_LEN	include/sphtml.h	51;"	d
+MEHTML_LEN	include/sphtml.h	29;"	d
+MENDBR_LEN	include/sphtml.h	39;"	d
+MENDHG_LEN	include/sphtml.h	11;"	d
+MEND_LEN	include/sphtml.h	57;"	d
+METITLE_LEN	include/sphtml.h	37;"	d
+MFONT_LEN	include/sphtml.h	53;"	d
 MGC	include/inclib/mgc.h	/^typedef	struct	musegc	MGC;$/;"	t	typeref:struct:musegc
 MGCH	include/inclib/mgc.h	/^typedef	struct	musegch	MGCH;$/;"	t	typeref:struct:musegch
 MGCO	include/inclib/mgc.h	/^typedef	struct	musegco	MGCO;$/;"	t	typeref:struct:musegco
 MGC_END	include/inclib/mgc.h	7;"	d
 MGC_FAILED	include/inclib/mgc.h	8;"	d
 MGC_OK	include/inclib/mgc.h	6;"	d
-MHIGH_LEN	include/sphtml.h	7;"	d
-MHREF_LEN	include/sphtml.h	25;"	d
-MHTML_LEN	include/sphtml.h	19;"	d
-MHTM_LEN	include/sphtml.h	23;"	d
-MHTP_LEN	include/sphtml.h	17;"	d
-MHTTP_LEN	include/sphtml.h	15;"	d
+MHIGH_LEN	include/sphtml.h	9;"	d
+MHREF_LEN	include/sphtml.h	27;"	d
+MHTML_LEN	include/sphtml.h	21;"	d
+MHTM_LEN	include/sphtml.h	25;"	d
+MHTP_LEN	include/sphtml.h	19;"	d
+MHTTP_LEN	include/sphtml.h	17;"	d
 MICSEC_500000	include/spinc.h	116;"	d
 MICSEC_PER_SEC	include/spinc.h	114;"	d
 MICSEC_PER_SEC	include/spinc.h	120;"	d
@@ -239,29 +240,29 @@ MIPC_END	include/inclib/museipc/mipc.h	20;"	d
 MIPC_FAIL	include/inclib/museipc/mipc.h	21;"	d
 MIPC_OK	include/inclib/museipc/mipc.h	19;"	d
 MKRUN	include/spdict.h	/^typedef	struct	mkrun	MKRUN;$/;"	t	typeref:struct:mkrun
-MLAMD_LEN	include/sphtml.h	60;"	d
-MLBR_LEN	include/sphtml.h	39;"	d
-MLEDN_LEN	include/sphtml.h	13;"	d
-MLINK_LEN	include/sphtml.h	29;"	d
-MLOCA_LEN	include/sphtml.h	64;"	d
+MLAMD_LEN	include/sphtml.h	62;"	d
+MLBR_LEN	include/sphtml.h	41;"	d
+MLEDN_LEN	include/sphtml.h	15;"	d
+MLINK_LEN	include/sphtml.h	31;"	d
+MLOCA_LEN	include/sphtml.h	66;"	d
 MMDP_NO_ERROR	include/inclib/mmdpool/mmdperr.h	5;"	d
-MNOBR_LEN	include/sphtml.h	67;"	d
-MNOTE_LEN	include/sphtml.h	57;"	d
+MNOBR_LEN	include/sphtml.h	69;"	d
+MNOTE_LEN	include/sphtml.h	59;"	d
 MSEM	include/inclib/museipc/msem.h	/^typedef struct semsave	MSEM;$/;"	t	typeref:struct:semsave
 MSFLAGS	tool/Makefile	/^MSFLAGS	= -I \/usr\/local\/include\/mysql -L \/usr\/local\/lib\/mysql -lmysqlclient$/;"	m
 MSGSET	include/spmsg.h	/^typedef	struct	msgset	MSGSET;$/;"	t	typeref:struct:msgset
 MSG_LEN	include/spmsg.h	51;"	d
 MSHM	include/inclib/museipc/mshm.h	/^typedef	struct mshm	MSHM;$/;"	t	typeref:struct:mshm
-MSHTML_LEN	include/sphtml.h	21;"	d
+MSHTML_LEN	include/sphtml.h	23;"	d
 MSLRES	include/spdb.h	/^typedef	MYSQL_RES           MSLRES;$/;"	t
 MSLROW	include/spdb.h	/^typedef	MYSQL_ROW           MSLROW;$/;"	t
-MSPAN_LEN	include/sphtml.h	47;"	d
-MSRCIPT_LEN	include/sphtml.h	41;"	d
-MSTRONG_LEN	include/sphtml.h	49;"	d
-MTITLE_LEN	include/sphtml.h	33;"	d
+MSPAN_LEN	include/sphtml.h	49;"	d
+MSRCIPT_LEN	include/sphtml.h	43;"	d
+MSTRONG_LEN	include/sphtml.h	51;"	d
+MTITLE_LEN	include/sphtml.h	35;"	d
 MYERR_STR	include/spinc.h	95;"	d
 MYFLAGS	Makefile	/^MYFLAGS = -L \/usr\/local\/lib\/mysql -lmysqlclient -I \/usr\/local\/include\/mysql -lz$/;"	m
-Ma_LEN	include/sphtml.h	43;"	d
+Ma_LEN	include/sphtml.h	45;"	d
 NAMBUF_LEN	include/spinc.h	71;"	d
 NEWDB	tool/include/sptinc.h	8;"	d
 NMFLAGS	Makefile	/^NMFLAGS	= -rdynamic -g -Wall -I include\/inclib -I include\/inclib\/mmdpool -I include\/ -fstack-protector-all$/;"	m
@@ -271,7 +272,7 @@ NOTIT_STATE	include/spdb.h	101;"	d
 NO_MSG	include/spmsg.h	20;"	d
 NPAPER_LEN	include/spinc.h	78;"	d
 NULL_POINT	include/inclib/mgc.h	16;"	d
-OTFLAGS	tool/Makefile	/^OTFLAGS = -I ..\/include\/ -I ..\/include\/inclib -I ..\/include\/inclib\/musealgo$/;"	m
+OTFLAGS	tool/Makefile	/^OTFLAGS = -I ..\/include\/ -I ..\/include\/inclib -I ..\/include\/inclib\/musealgo \\$/;"	m
 OTH_RDWR	include/inclib/museipc/mipc.h	35;"	d
 OTH_READ	include/inclib/museipc/mipc.h	33;"	d
 OTH_WRITE	include/inclib/museipc/mipc.h	34;"	d
@@ -369,6 +370,7 @@ SRCFORM	tool/Makefile	/^SRCFORM	= src\/sp_format.c ..\/src\/flib\/sp_global.c ..
 SRCGA	tool/Makefile	/^SRCGA	= src\/sp_gather.c ..\/src\/flib\/sp_global.c ..\/src\/flib\/malgo\/sort_algo.c $/;"	m
 SRCRM	tool/Makefile	/^SRCRM	= src\/sp_remove.c$/;"	m
 SRCSTR_LEN	tool/include/sptinc.h	19;"	d
+SRCTEST	tool/Makefile	/^SRCTEST = src\/sp_funtest.c \\$/;"	m
 SRCTOOL	tool/Makefile	/^SRCTOOL	= src\/sp_tool.c ..\/src\/flib\/mconfctl\/museconfctl.c ..\/src\/flib\/sp_global.c ..\/src\/flib\/sp_pfun.c \\$/;"	m
 SSORTS	include/inclib/musealgo/malgo.h	/^typedef	struct	shellsort	SSORTS;$/;"	t	typeref:struct:shellsort
 SSTRL	include/spdb.h	/^typedef	struct	sstrlist	SSTRL;$/;"	t	typeref:struct:sstrlist
@@ -377,6 +379,8 @@ STACK	include/inclib/container/container.h	/^typedef struct  stack   STACK;$/;"	
 STACK_DEF_SIZE	include/inclib/container/container.h	15;"	d
 STACK_FRAME_DEF_SIZE	include/inclib/container/container.h	14;"	d
 STAT	include/spinc.h	/^typedef struct	stat    STAT;$/;"	t	typeref:struct:stat
+TAG_MAX_LEN	include/sphtml.h	6;"	d
+TAG_MIN_LEN	include/sphtml.h	5;"	d
 TAKE_A_EYECLOSE	include/spinc.h	105;"	d
 TAKE_A_LLSLP	include/spinc.h	111;"	d
 TAKE_A_LONGSLP	include/spinc.h	110;"	d
@@ -623,6 +627,7 @@ mafun	include/spinc.h	/^typedef void	*(*mafun)(void *, int);$/;"	t
 main	src/spider/sp_urlbug.c	/^int main(int argc, char *argv[])$/;"	f
 main	tool/src/danalysis/sp_danalysis.c	/^int main(int argc, char *argv[])$/;"	f
 main	tool/src/sp_format.c	/^int main(int argc, char **argv)$/;"	f
+main	tool/src/sp_funtest.c	/^int main(int argc, char **argv)$/;"	f
 main	tool/src/sp_gather.c	/^int main(int argc, char *argv[])$/;"	f
 main	tool/src/sp_remove.c	/^int main(void)$/;"	f
 main	tool/src/sp_tool.c	/^int main(int argc, char *argv[])$/;"	f
@@ -741,7 +746,7 @@ mssend	include/spmsg.h	/^typedef	int	(*mssend)(int);$/;"	t
 musegc	include/inclib/mgc.h	/^struct	musegc {$/;"	s
 musegch	include/inclib/mgc.h	/^struct	musegch {$/;"	s
 musegco	include/inclib/mgc.h	/^struct	musegco {$/;"	s
-mysql_creat_table	src/flib/dboper/dboper.c	/^int mysql_creat_table(MYSQL *sql_handle, const char *creat_string, ...)$/;"	f
+mysql_creat_table	src/flib/dboper/dboper.c	/^int mysql_creat_table(void *sql_handle, const char *creat_string, ...)$/;"	f
 mysql_return_result	src/flib/dboper/dboper.c	/^void *mysql_return_result(void *sql_handle, const char *sql_string)$/;"	f
 mysql_simple_connect	src/flib/dboper/dboper.c	/^int mysql_simple_connect($/;"	f
 mysql_string_exist_check	src/flib/dboper/dboper.c	/^int mysql_string_exist_check(void *chkSql, char *chkCom)$/;"	f
@@ -753,6 +758,7 @@ pFileSaver	tool/src/sp_format.c	/^static	char   *pFileSaver;$/;"	v	file:
 p_host	include/spnet.h	/^    char    p_host[SMALL_BUF];$/;"	m	struct:sp_ping_info
 p_packnum	include/spnet.h	/^    int     p_packnum;$/;"	m	struct:sp_ping_info
 p_time	include/spnet.h	/^    TMVAL   p_time;$/;"	m	struct:sp_ping_info
+para_analysis	tool/src/sp_funtest.c	/^static int para_analysis(int argc, char **argv)$/;"	f	file:
 pattr_t	include/spinc.h	/^typedef pthread_attr_t  pattr_t;$/;"	t
 pcd_t	include/inclib/mpctl.h	/^typedef	pthread_cond_t	        pcd_t;$/;"	t
 pe_cond	include/inclib/mpctl.h	/^	pcd_t	pe_cond;$/;"	m	struct:pthread_entity
@@ -816,6 +822,11 @@ shm_start	include/inclib/museipc/mshm.h	/^	void	*shm_start;$/;"	m	struct:mshm
 sigIntLock	src/spider/sp_urlbug_signal.c	/^static	pmut_t	sigIntLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
 sigSegLock	src/spider/sp_urlbug_signal.c	/^static	pmut_t	sigSegLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
 sigfun	include/spinc.h	/^typedef void	(*sigfun)(int);$/;"	t
+sp_html_code_location	src/flib/sp_html.c	/^char *sp_html_code_location($/;"	f
+sp_html_get_tag_string	src/flib/sp_html.c	/^char *sp_html_get_tag_string(char *tag_start, int *tag_len)$/;"	f
+sp_html_is_tag	src/flib/sp_html.c	/^static int sp_html_is_tag(const char *tag_start, int tag_len)$/;"	f	file:
+sp_html_is_tag_end	src/flib/sp_html.c	/^static int sp_html_is_tag_end(const char *tag_string)$/;"	f	file:
+sp_html_tag_range_locate	src/flib/sp_html.c	/^char *sp_html_tag_range_locate(const char *html_string, int len)$/;"	f
 sp_http_interact	src/flib/sp_network.c	/^int sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int bufSize)$/;"	f
 sp_msg_command	src/flib/sp_message.c	/^inline int sp_msg_command(PMSG *pMsg)$/;"	f
 sp_msg_exam_command	src/flib/sp_message.c	/^int sp_msg_exam_command(PMSG *mStru, int nComm)$/;"	f
@@ -878,10 +889,12 @@ stack_push	src/flib/container/container.c	/^int stack_push(STACK *stack_stu, voi
 stack_top	include/inclib/container/container.h	/^    Byte   *stack_top;$/;"	m	struct:stack
 strchrb	src/flib/sp_pfun.c	/^char *strchrb(char *strBeg, int nLimit, char fCh)$/;"	f
 strnchr	src/flib/sp_pfun.c	/^inline char *strnchr(char *findBuf, char needCh, int nLimit)$/;"	f
-strnstr	src/flib/sp_pfun.c	/^inline char *strnstr(char *findBuf, char *needStr, int nLimit)$/;"	f
+strnstr	src/flib/sp_pfun.c	/^inline char *strnstr(char *findBuf, const char *needStr, int nLimit)$/;"	f
 strstrn	tool/src/sp_remove.c	/^static char *strstrn(char *pBuf, char *pFind, int fLimit)$/;"	f	file:
 syncForceLock	src/flib/sp_elog.c	/^static	MATOS	syncForceLock;$/;"	v	file:
 tbNameBuf	src/flib/sp_global.c	/^char	tbNameBuf[] = {"TextBug"};$/;"	v
+test_part	tool/src/sp_funtest.c	/^static void test_part(void)$/;"	f	file:
+textContent	tool/src/sp_funtest.c	/^char    textContent[0x100] = {$/;"	v
 time_str_extract	src/flib/sp_pfun.c	/^TMS *time_str_extract(char *timStr)$/;"	f
 toolSqlHandler	tool/src/sp_tool.c	/^static	MYSQL	*toolSqlHandler;$/;"	v	file:
 tool_check_file	tool/src/sp_remove.c	/^static void tool_check_file(char *fName)$/;"	f	file:
@@ -931,11 +944,11 @@ ubug_connect_head	src/spider/sp_urlbug_rule.c	/^char *ubug_connect_head(WEBIN *w
 ubug_create_dbtable	src/spider/sp_urlbug_db.c	/^void ubug_create_dbtable(void)$/;"	f
 ubug_create_pthread	src/spider/sp_urlbug.c	/^static void ubug_create_pthread(WEBIN *webNode)$/;"	f	file:
 ubug_db_clean	src/spider/sp_urlbug_clean.c	/^void ubug_db_clean(void *pNULL)$/;"	f
+ubug_dberr	src/spider/sp_urlbug_db.c	/^int ubug_dberr(MYSQL *sHandler, char *withStr)$/;"	f
 ubug_download_website	src/spider/sp_urlbug_network.c	/^int ubug_download_website(WEBIN *wInfo)$/;"	f
 ubug_free_weblist	src/spider/sp_urlbug_clean.c	/^void ubug_free_weblist(void *pNull)$/;"	f
 ubug_get_pattern	src/spider/sp_urlbug_rule.c	/^int ubug_get_pattern(const char *host_string)$/;"	f
 ubug_init_database	src/spider/sp_urlbug_db.c	/^void ubug_init_database(void)$/;"	f
-ubug_init_datebuf	src/spider/sp_urlbug.c	/^void ubug_init_datebuf(char *pTime)$/;"	f
 ubug_init_dbuf	src/spider/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBuff)$/;"	f	file:
 ubug_init_pinginfo	src/spider/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f
 ubug_init_signal	src/spider/sp_urlbug_signal.c	/^void ubug_init_signal(void)$/;"	f
@@ -965,6 +978,10 @@ ubug_sig_error	src/spider/sp_urlbug_err.c	/^void ubug_sig_error(void)$/;"	f
 ubug_signal_handler	src/spider/sp_urlbug_signal.c	/^void ubug_signal_handler(int nSign)$/;"	f
 ubug_text_abstract_cont	src/spider/sp_urlbug.c	/^static void ubug_text_abstract_cont(WEBIN *abPoint)$/;"	f	file:
 ubug_time_change	src/spider/sp_urlbug_msg.c	/^static void ubug_time_change(void)$/;"	f	file:
+ubug_tran_db	src/spider/sp_urlbug_db.c	/^void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)$/;"	f
+ubug_tran_db_force	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_force(BUFF *pBuff)$/;"	f
+ubug_tran_db_real	src/spider/sp_urlbug_db.c	/^int ubug_tran_db_real(BUFF *pBuff)$/;"	f
+ubug_tran_db_whole	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_whole(void)$/;"	f
 ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *wInfo, char *url_string)$/;"	f	file:
 ubug_url_count_nlayer	src/spider/sp_urlbug_rule.c	/^int ubug_url_count_nlayer(char *str_url)$/;"	f
 ud_foff	include/spinc.h	/^    int     ud_foff;        \/* file offset *\/$/;"	m	struct:url_dat

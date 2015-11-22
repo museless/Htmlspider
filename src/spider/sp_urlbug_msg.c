@@ -84,7 +84,6 @@ static void ubug_time_change(void)
 	mpc_thread_wait(ubugThreadPool);
 
 	urlRunSet.ubs_fstf();
-	ubug_init_datebuf(NULL);
 	ubug_create_dbtable();
 }
 
