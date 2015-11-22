@@ -7,6 +7,7 @@
     Part Three: Local function
 
     Part Four:  Mysql operate
+    Part Five:  Operate assist
 
 --------------------------------------------*/
 
@@ -17,6 +18,14 @@
 
 #include "spinc.h"
 #include "spdb.h"
+
+
+/*------------------------------------------
+          Part Three: Local function
+--------------------------------------------*/
+
+/* Part Five */
+static  int     mysql_execl_query(void *sql_handle, const char *sql_string, ...);
 
 
 /*------------------------------------------
@@ -66,12 +75,9 @@ int mysql_string_exist_check(void *chkSql, char *chkCom)
 
 
 /*-----mysql_return_result-----*/
-void *mysql_return_result(void *sql_handle, const char *sql_string)
+void *mysql_return_result(void *sql_handle, const char *sql_string, ...)
 {
-    char    string_buff[SQL_MCOM_LEN];
-    int     str_len = snprintf(string_buff, SQL_MCOM_LEN, "%s", sql_string);
-
-    if (mysql_real_query(sql_handle, string_buff, str_len))
+    if (mysql_execl_query(sql_handle, sql_string))
         return  NULL;
 
     return  mysql_store_result(sql_handle);
@@ -81,15 +87,29 @@ void *mysql_return_result(void *sql_handle, const char *sql_string)
 /*-----mysql_creat_table-----*/
 int mysql_creat_table(void *sql_handle, const char *creat_string, ...)
 {
-	char	creat_sql[SQL_MCOM_LEN];
-    va_list ap_list;
-
-    va_start(ap_list, creat_string);
-
-	if (mysql_real_query(
-        sql_handle, creat_sql, 
-        vsnprintf(creat_sql, SQL_MCOM_LEN, creat_string, ap_list)))
+	if (mysql_execl_query(sql_handle, creat_string))
         return  FUN_RUN_END;
 
     return  FUN_RUN_OK;
+}
+
+
+/*------------------------------------------
+	     Part Five: Operate assist
+
+	     1. mysql_execl_query 
+
+--------------------------------------------*/
+
+/*-----mysql_creat_table-----*/
+static int mysql_execl_query(void *sql_handle, const char *sql_string, ...)
+{
+	char	sql_sentence[SQL_MCOM_LEN];
+    va_list ap_list;
+
+    va_start(ap_list, sql_string);
+
+	return  mysql_real_query(
+            sql_handle, sql_sentence, 
+            vsnprintf(sql_sentence, SQL_MCOM_LEN, sql_string, ap_list));
 }

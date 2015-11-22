@@ -23,6 +23,7 @@ urlbug_err_log          = ../log/UrlErrLog
 
 # for databases
 urls_database_name      = Crowdsource 
+urls_store_table_name   = t_url_news
 
 # help file locate
 urlbug_help_document    = ../src/urlbug/urlbug.hlp

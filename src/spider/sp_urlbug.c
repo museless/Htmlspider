@@ -45,6 +45,7 @@ static	int	    ubug_init_source_pool(void);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static	void	ubug_init_weblist(void);
 static	int	    ubug_init_urllist(char *urlStr, WEB *webStu);
+static  WEBIN  *ubug_list_entity_set(MSLROW data_row);
 static  void    ubug_load_config(const char *config_path);
 static  void    ubug_set_ubset(const char *way_option);
 
@@ -73,10 +74,10 @@ static	void	ubug_job(WEBIN *wPoint);
 	urlRunSet.ubs_rtime = rTime; \
 }
 
-#define ubug_init_ubset_way(fun_catch, fun_locate, fn_creat) {\
+#define ubug_init_ubset_way(fun_catch, fun_locate, fun_creat) {\
     urlRunSet.ubs_catch = fun_catch; \
     urlRunSet.ubs_locate = fun_locate; \
-    urlRunSet.ubs_creat = fun_creat;
+    urlRunSet.ubs_creat = fun_creat; \
 }
 
 
@@ -158,7 +159,8 @@ static void ubug_command_analyst(int nPara, char **pComm)
         6. ubug_init_urllist
         7. ubug_load_config
         8. ubug_set_ubset
-         
+        9. ubug_list_entity_set 
+
 --------------------------------------------*/
 
 /*-----mainly_init-----*/
@@ -250,44 +252,22 @@ static int ubug_init_dbuf(BUFF **pBuff)
 /*-----ubug_init_weblist-----*/
 static void ubug_init_weblist(void)
 {
+    char    url_store_table_name[MIDDLE_BUF];
 	MSLRES *allRes;
 	MSLROW	allRow;
 	WEBIN **pList = &urlSaveList;
 
-    if (!(allRes = mysql_return_result(&urlDataBase, GET_DIRECTORY))) {
+    if (!(allRes = 
+          mysql_return_result(
+          &urlDataBase, GET_DIRECTORY, url_store_table_name))) {
 		if (ubug_dberr(
             &urlDataBase, "ubug_init_weblist - mysql_return_result") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 
 	while ((allRow = mysql_fetch_row(allRes))) {
-		if ((*pList = malloc(sizeof(WEBIN))) == NULL) {
-			elog_write(
-            "ubug_init_weblist - malloc", FUNCTION_STR, ERROR_STR);
-
-			ubug_sig_error();
-		}
-
-		if(!ubug_init_urllist(allRow[0], &((*pList)->w_ubuf)))
-			ubug_sig_error();
-
-		if (allRow[1]) {
-			(*pList)->w_latest[strlen(allRow[1])] = 0;
-			strcpy((*pList)->w_latest, allRow[1]);
-		}
-
-		(*pList)->w_latestcnt = 0;
-
-        if (!ubug_init_dbuf(&((*pList)->w_buff))) {
-                elog_write("ubug_init_weblist - ubug_init_dbuf", FUNCTION_STR, ERROR_STR);
-                ubug_sig_error();
-        }
-
-		if (!sp_net_set_sockif((*pList)->w_ubuf.web_host, &(*pList)->w_sockif)) {
-			elog_write("ubug_init_weblist - sp_net_set_sockif", FUNCTION_STR, ERROR_STR);
-			free(*pList);
-			continue;
-		}
+        if (!(*pList = ubug_list_entity_set(allRow)))
+            continue;
 
 		pList = &((*pList)->w_next);
 		(*pList) = NULL;
@@ -299,6 +279,47 @@ static void ubug_init_weblist(void)
 
 	if(mgc_add(urlGarCol, NULL_POINT, ubug_free_weblist) == MGC_FAILED)
 		ubug_perror("ubug_init_weblist - mgc_add", errno);
+}
+
+
+/*-----ubug_list_entity_set-----*/
+static WEBIN *ubug_list_entity_set(MSLROW data_row)
+{
+    WEBIN   *list_point;
+
+    if ((list_point = malloc(sizeof(WEBIN))) == NULL) {
+        elog_write(
+        "ubug_list_entity_set - malloc", FUNCTION_STR, ERROR_STR);
+        ubug_sig_error();
+    }
+
+    if (!ubug_init_urllist(data_row[0], &((list_point)->w_ubuf)))
+	    ubug_sig_error();
+
+    if (data_row[1]) {
+	    (list_point)->w_latest[strlen(data_row[1])] = 0;
+	    strcpy((list_point)->w_latest, data_row[1]);
+	}
+
+    (list_point)->w_latestcnt = 0;
+
+    if (!ubug_init_dbuf(&((list_point)->w_buff))) {
+        elog_write(
+        "ubug_list_entity_set - ubug_init_dbuf", FUNCTION_STR, ERROR_STR);
+
+        ubug_sig_error();
+    }
+
+    if (!sp_net_set_sockif(
+        (list_point)->w_ubuf.web_host, &(list_point)->w_sockif)) {
+        elog_write(
+        "ubug_list_entity_set - sp_net_set_sockif", FUNCTION_STR, ERROR_STR);
+
+		free(list_point);
+		return  NULL;
+	}
+
+    return  list_point;
 }
 
 
@@ -365,12 +386,12 @@ static void ubug_set_ubset(const char *way_option)
     NULL, ubug_text_abstract_cont, ubug_tran_db,
     ubug_tran_db_whole, ubug_download_website, RUN_PERN);
 
-    if (!strncmp(way_option, "normal")) {
+    if (!strcmp(way_option, "normal")) {
         ubug_init_ubset_way(
         ubug_catch_default_rule, 
         ubug_locate_default_rule, ubug_set_tabname_default);
 
-    } else if (!strncmp(way_option, "csto")) {
+    } else if (!strcmp(way_option, "csto")) {
         ubug_init_ubset_way(
         ubug_catch_csto_rule, ubug_locate_csto_rule, ubug_set_tabname_default);
 
@@ -379,7 +400,7 @@ static void ubug_set_ubset(const char *way_option)
         exit(FUN_RUN_FAIL);
     }
 
-    urlRunSet.usb_creat();
+    urlRunSet.ubs_creat();
 }
 
 

@@ -54,7 +54,7 @@
 	      for urlbug
 -------------------------------*/
 
-#define	GET_DIRECTORY	"select Url, Latest from UALL where Blockmask=1"
+#define	GET_DIRECTORY	"select Url, Latest from %s where Blockmask=1"
 #define	CREAT_URL_TAB	"create table if not exists %s\
 (ID bigint(32) not null primary key auto_increment, \
 Url char(%d) unique not null, Poff tinyint(4), Foff tinyint(4), \

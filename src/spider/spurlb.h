@@ -36,6 +36,10 @@ int     ubug_catch_default_rule(char *content, char **ret_content_point);
 int     ubug_locate_default_rule(
         WEBIN *web_point, char **content_beg, char **content_end);
 
+int     ubug_catch_csto_rule(char *content, char **ret_content_point);
+int     ubug_locate_csto_rule(
+        WEBIN *web_point, char **content_beg, char **content_end); 
+
 char   *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen);
 int	    ubug_get_pattern(const char *host_string);
 void	ubug_check_separator(char *urlStr, int *uLen);

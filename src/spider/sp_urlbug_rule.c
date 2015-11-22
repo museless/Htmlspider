@@ -80,6 +80,21 @@ int ubug_locate_default_rule(
 }
 
 
+/*-----ubug_catch_csto_rule-----*/
+int ubug_catch_csto_rule(char *content, char **ret_content_point)
+{
+    return  FUN_RUN_OK;
+}
+
+
+/*-----ubug_locate_csto_rule-----*/
+int ubug_locate_csto_rule(
+    WEBIN *web_point, char **content_beg, char **content_end)
+{
+    return  FUN_RUN_OK;
+}
+
+
 /*------------------------------------------
 	    Part Five: URL check rules
 
