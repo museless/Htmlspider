@@ -25,7 +25,8 @@
 --------------------------------------------*/
 
 /* Part Five */
-static  int     mysql_execl_query(void *sql_handle, const char *sql_string, ...);
+static  int     mysql_execl_query(
+                void *sql_handle, const char *sql_string, va_list ap_list); 
 
 
 /*------------------------------------------
@@ -34,6 +35,7 @@ static  int     mysql_execl_query(void *sql_handle, const char *sql_string, ...)
 	     1. mysql_string_exist_check
          2. mysql_return_result
          3. mysql_simple_connect
+         4. mysql_creat_table
 
 --------------------------------------------*/
 
@@ -77,7 +79,11 @@ int mysql_string_exist_check(void *chkSql, char *chkCom)
 /*-----mysql_return_result-----*/
 void *mysql_return_result(void *sql_handle, const char *sql_string, ...)
 {
-    if (mysql_execl_query(sql_handle, sql_string))
+    va_list ap_list;
+
+    va_start(ap_list, sql_string);
+
+    if (mysql_execl_query(sql_handle, sql_string, ap_list))
         return  NULL;
 
     return  mysql_store_result(sql_handle);
@@ -87,7 +93,11 @@ void *mysql_return_result(void *sql_handle, const char *sql_string, ...)
 /*-----mysql_creat_table-----*/
 int mysql_creat_table(void *sql_handle, const char *creat_string, ...)
 {
-	if (mysql_execl_query(sql_handle, creat_string))
+    va_list ap_list;
+
+    va_start(ap_list, creat_string);
+
+	if (mysql_execl_query(sql_handle, creat_string, ap_list))
         return  FUN_RUN_END;
 
     return  FUN_RUN_OK;
@@ -102,12 +112,10 @@ int mysql_creat_table(void *sql_handle, const char *creat_string, ...)
 --------------------------------------------*/
 
 /*-----mysql_creat_table-----*/
-static int mysql_execl_query(void *sql_handle, const char *sql_string, ...)
+static int mysql_execl_query(
+           void *sql_handle, const char *sql_string, va_list ap_list)
 {
 	char	sql_sentence[SQL_MCOM_LEN];
-    va_list ap_list;
-
-    va_start(ap_list, sql_string);
 
 	return  mysql_real_query(
             sql_handle, sql_sentence, 

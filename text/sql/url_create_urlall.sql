@@ -1,9 +1,17 @@
 /*-----------------------------
+     first drop all table
+-------------------------------*/
+
+drop table if exists t_url_news;
+drop table if exists t_url_csto;
+
+
+/*-----------------------------
         url all create
 -------------------------------*/
 
 create table if not exists t_url_news(
-    ID          bigint(32) not null primary key auto_increment,
+    Url         char(128) not null primary key,
     Latest      char(64) DEFAULT NULL,
     Blockmask   tinyint(1) DEFAULT '1'
 );

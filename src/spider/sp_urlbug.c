@@ -90,7 +90,7 @@ static	void	ubug_job(WEBIN *wPoint);
 --------------------------------------------*/
 
 /*-----main-----*/
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
 	ubug_command_analyst(argc, argv);
 
@@ -99,6 +99,8 @@ int main(int argc, char *argv[])
 		ubug_init_database();
 		ubug_init_weblist();
 	    ubug_init_pinginfo();
+
+        sp_stop_str();
 
 		ubug_main_entrance();
 	}
@@ -115,7 +117,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
 	int	    config_flags = 0;
     char    ch;
 
-    while (!(ch = getopt(nPara, pComm, "c:d:h"))) {
+    while ((ch = getopt(nPara, pComm, "c:d:h")) != FUN_RUN_FAIL) {
         switch (ch) {
             case 'c':	
                 ubug_load_config(optarg);
@@ -141,7 +143,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
 			    exit(FUN_RUN_END);
         }
     }
-    
+
     if (urlRunSet.ubs_fent == NULL || !config_flags) {
         printf("Urlbug---> must set [-d] and [-c]\n");
 		exit(FUN_RUN_FAIL);    
@@ -253,19 +255,26 @@ static int ubug_init_dbuf(BUFF **pBuff)
 static void ubug_init_weblist(void)
 {
     char    url_store_table_name[MIDDLE_BUF];
-	MSLRES *allRes;
-	MSLROW	allRow;
-	WEBIN **pList = &urlSaveList;
 
-    if (!(allRes = 
-          mysql_return_result(
-          &urlDataBase, GET_DIRECTORY, url_store_table_name))) {
+    if (mc_conf_read(
+        "urls_store_table_name", CONF_STR,
+        url_store_table_name, MIDDLE_BUF) == FUN_RUN_FAIL) {
+        mc_conf_print_err("urls_store_table_name");
+		ubug_sig_error();
+    }
+
+    WEBIN **pList = &urlSaveList;
+	MSLROW	allRow;
+    MSLRES *data_result= 
+            mysql_return_result(&urlDataBase, GET_DIRECTORY, url_store_table_name);
+
+    if (!data_result) {
 		if (ubug_dberr(
             &urlDataBase, "ubug_init_weblist - mysql_return_result") != FUN_RUN_OK)
 			ubug_sig_error();
 	}
 
-	while ((allRow = mysql_fetch_row(allRes))) {
+	while ((allRow = mysql_fetch_row(data_result))) {
         if (!(*pList = ubug_list_entity_set(allRow)))
             continue;
 
@@ -273,7 +282,7 @@ static void ubug_init_weblist(void)
 		(*pList) = NULL;
 	}
 
-	mysql_free_result(allRes);
+	mysql_free_result(data_result);
 
 	(*pList) = NULL;
 
@@ -349,14 +358,16 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
                        webStu->web_file, "%.*s", 
                        urlLen - nBack - 1, &urlStr[nBack + 1]);
 
-                webStu->web_file[nOff] = 0;
+            webStu->web_file[nOff] = 0;
         }
 
         sprintf(webStu->web_path, "%.*s", nBack - nCir + 1, &urlStr[nCir]);
         webStu->web_nlayer = ubug_url_count_nlayer(webStu->web_path);
 
-        //printf("%s - %s - %s - %d\n", webStu->web_host, webStu->web_path,
-        //webStu->web_file, webStu->web_nlayer);
+        printf(
+        "Host: %s - Path: %s - File: %s - Layer num: %d\n", 
+        webStu->web_host, webStu->web_path,
+        webStu->web_file, webStu->web_nlayer);
 
         return	FUN_RUN_OK;
     }

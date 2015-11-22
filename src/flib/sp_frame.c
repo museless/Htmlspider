@@ -7,6 +7,7 @@
 	Part Three:	Local function
 
 	Part Four:	Sp init frame
+    Part Five:  Sp error print
 
 --------------------------------------------*/
 
@@ -20,50 +21,75 @@
 
 
 /*------------------------------------------
-	Part Two: Local data
+	        Part Two: Local data
 --------------------------------------------*/
 
 static	char	ownNameSave[OWN_NAME_LEN];
 
 
 /*------------------------------------------
-	Part Four: Sp init frame
+	     Part Three: Local function
+--------------------------------------------*/
 
-	1. sp_normal_init
+static  void    sp_normal_error(char *error_string);
+
+
+/*------------------------------------------
+	      Part Four: Sp init frame
+
+	      1. sp_normal_init
 
 --------------------------------------------*/
 
 /*-----sp_normal_init-----*/
-int sp_normal_init(char *pOwn, MGCH **garCol, MSGSET **msgSet, msginit minitFun, char *errLoc, int msgFd)
+int sp_normal_init(
+    char *owner_name, MGCH **garCol, MSGSET **msgSet, 
+    msginit minitFun, char *errLoc, int msgFd)
 {
-	snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", pOwn);
+	snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", owner_name);
 
 	if((*garCol = mgc_init()) == NULL) {
-		printf("%s---> sp_normal_init - mgc_init: %s", pOwn, strerror(errno));
+        sp_normal_error("sp_normal_init - mgc_init");
 		exit(FUN_RUN_END);
 	}
 
 	if(mgc_add(*garCol, NULL_POINT, (gcfun)mc_conf_unload) == MGC_FAILED)
-		printf("%s---> sp_normal_init - mgc_add - mc_conf: %s", pOwn, strerror(errno));
+        sp_normal_error("sp_normal_init - mgc_add - mc_conf_unload");
 
 	if(msgFd) {
 		if(!(*msgSet = minitFun(msgFd))) {
-			printf("%s---> sp_normal_init - msg_init: %s", pOwn, strerror(errno));
+            sp_normal_error("sp_normal_init - msg_init");
 			return	FUN_RUN_END;
 		}
 	
 		if(mgc_add(*garCol, *msgSet, (gcfun)sp_msg_frame_destroy) == MGC_FAILED)
-			printf("%s---> sp_normal_init - mgc_add - msg_init: %s", pOwn, strerror(errno));
+			sp_normal_error("sp_normal_init - mgc_add - msg_init");
 	}
 
 	/* elog init */
-	if(elog_init(errLoc) == FUN_RUN_FAIL) {
-		printf("%s---> sp_normal_init - elog_init - %s: %s", pOwn, errLoc, strerror(errno));
+    if (elog_init(errLoc) == FUN_RUN_FAIL) {
+		sp_normal_error("sp_normal_init - elog_init"); 
 		return	FUN_RUN_END;
 	}
 
-	if(mgc_add(*garCol, NULL_POINT, (gcfun)elog_destroy) == MGC_FAILED)
-		printf("%s---> sp_normal_init - mgc_add - elog: %s", pOwn, strerror(errno));
+    if (mgc_add(*garCol, NULL_POINT, (gcfun)elog_destroy) == MGC_FAILED)
+        sp_normal_error("sp_normal_init - mgc_add - elog");
 
 	return	FUN_RUN_OK;
 }
+
+
+/*------------------------------------------
+	      Part Four: Sp error print
+
+	      1. sp_normal_error
+
+--------------------------------------------*/
+
+/*-----sp_normal_error-----*/
+/* should wait ownNameSave was inited */
+static void sp_normal_error(char *error_string)
+{
+    printf("%s---> %s: %s\n", ownNameSave, error_string, strerror(errno));
+}
+

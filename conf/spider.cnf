@@ -19,11 +19,9 @@ urlbug_sem_key_file     = ../bin/urlbug
 default_tmpfile_locate  = ../text/url.tmp
 
 # error log
-urlbug_err_log          = ../log/UrlErrLog
+urlbug_err_log          = ../log/urlerr.log
 
 # for databases
 urls_database_name      = Crowdsource 
-urls_store_table_name   = t_url_news
+urls_store_table_name   = t_url_csto
 
-# help file locate
-urlbug_help_document    = ../src/urlbug/urlbug.hlp

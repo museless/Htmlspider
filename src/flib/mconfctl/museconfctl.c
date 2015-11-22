@@ -48,26 +48,29 @@ int mc_conf_load(const char *pUser, const char *confPath)
 /*-----mc_conf_read-----*/
 int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
 {
-	char	*pStr, *pEnd;
-	int	nMul = 0;
+	char   *pStr, *pEnd;
+	int	    nMul = 0;
 
-	if(!(pStr = strstr(confctlBuff.b_start, findStr)))
+	if (!(pStr = strstr(confctlBuff.b_start, findStr)))
 		return	FUN_RUN_FAIL;
 
-	if((pStr = strchr(pStr, '=')) == NULL)
+	if ((pStr = strchr(pStr, '=')) == NULL)
 		return	FUN_RUN_FAIL;
 
-	for(pStr += 1; isspace(*pStr); pStr++)
+	for (pStr += 1; isspace(*pStr); pStr++)
 		;	/* nothing */
 
-	if((pEnd = strchr(pStr, '\n')) == NULL)
+	if ((pEnd = strchr(pStr, '\n')) == NULL)
 		return	FUN_RUN_FAIL;
 
-	if(dType == CONF_NUM) {
-		for(; isspace(*pEnd) || isalpha(*pEnd); pEnd--)
+    for(; isspace(*(pEnd - 1)); pEnd--)
 			;	/* nothing */
-	
-		pEnd++;
+
+	if (dType == CONF_NUM) {
+        for (; isalpha(*pEnd); pEnd--)
+            ;   /* nothing */
+
+        pEnd++;
 
 		if(*pEnd == 'M'|| *pEnd == 'm')
 			nMul = 20;
@@ -76,10 +79,10 @@ int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
 
 		*(int *)dBuf = ((int)strtol(pStr, NULL, 0)) << nMul;
 
-	} else if(dType == CONF_STR) {
-		dLen = (((pEnd - pStr) > dLen) ? dLen : pEnd - pStr);
-		strncpy((char *)dBuf, pStr, dLen);
-		((char *)dBuf)[dLen] = 0;
+	} else if (dType == CONF_STR) {
+        dLen = (((pEnd - pStr) > dLen) ? dLen : pEnd - pStr);
+        strncpy((char *)dBuf, pStr, dLen);
+        ((char *)dBuf)[dLen] = 0;
 
 	} else {
 		return	FUN_RUN_FAIL;
