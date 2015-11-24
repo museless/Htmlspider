@@ -294,7 +294,7 @@ static void ubug_init_weblist(void)
 
 	(*pList) = NULL;
 
-	if(mgc_add(urlGarCol, NULL_POINT, ubug_free_weblist) == MGC_FAILED)
+	if (mgc_add(urlGarCol, NULL_POINT, ubug_free_weblist) == MGC_FAILED)
 		ubug_perror("ubug_init_weblist - mgc_add", errno);
 }
 
@@ -328,7 +328,7 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
     }
 
     if (!sp_net_set_sockif(
-        (list_point)->w_ubuf.web_host, &(list_point)->w_sockif)) {
+       (list_point)->w_ubuf.web_host, &(list_point)->w_sockif)) {
         elog_write(
         "ubug_list_entity_set - sp_net_set_sockif", FUNCTION_STR, ERROR_STR);
 

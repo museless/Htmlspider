@@ -62,11 +62,10 @@ int writen(int wFd, void *wBuf, size_t bCount)
 	int	fRet, nCir = 0;
 
 	while(FUN_RUN_OK) {
-		if((fRet = write(wFd, wBuf + nCir, bCount)) == bCount || fRet == 0) {
-			nCir += fRet;
-			return	nCir;
+        if ((fRet = write(wFd, wBuf + nCir, bCount)) == bCount || fRet == 0) {
+			return	(nCir += fRet);
 
-		} else if(fRet >= 0 && fRet < bCount) {
+		} else if (fRet >= 0 && fRet < bCount) {
 			nCir += fRet;
 			bCount -= fRet;
 

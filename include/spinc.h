@@ -60,6 +60,7 @@
 #define	URL_LEN		    (UHOST_LEN + UPATH_LEN + UFILE_LEN)
 
 #define	RECE_DATA	    0x1000
+#define	HTTP_RECALL	    0x400 
 
 #define	DATE_CMODE	    0x7
 
@@ -76,8 +77,6 @@
 #define	DATEBUF_LEN	    0x8
 
 #define	NPAPER_LEN	    0x40
-
-#define	HTTP_RECALL	    RECE_DATA
 
 #define FILE_OPERATION  (O_RDWR | O_CREAT | O_TRUNC)
 #define	FILE_AUTHOR     (S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)
@@ -122,8 +121,8 @@
 
 
 /*---------------------------
-	       typedef
------------------------------*/
+ *         typedef
+ *---------------------------*/
 
 typedef pthread_t       pth_t;
 typedef pthread_attr_t  pattr_t;
@@ -146,8 +145,8 @@ typedef void	(*sigfun)(int);
 
 
 /*---------------------------
-	struct
------------------------------*/
+ *          struct
+ *---------------------------*/
 
 struct	buff {
 	void   *b_start;
@@ -163,7 +162,7 @@ struct  url_dat {
 
 
 /*---------------------------
-	extern data
+	     extern data
 -----------------------------*/
 
 extern	char	kerNameBuf[], ubNameBuf[];
@@ -171,7 +170,7 @@ extern	char	tbNameBuf[], ebNameBuf[];
 
 
 /*---------------------------
-	global function
+	   global function
 -----------------------------*/
 
 /* kern_conf.c */

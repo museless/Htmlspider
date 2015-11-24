@@ -142,26 +142,59 @@ static int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
         Part Five: Http protocal
 
         1. sp_http_interact
+        2. sp_http_header_locate
 
 --------------------------------------------*/
 
 /*-----sp_http_interact-----*/
-int sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int bufSize)
+int sp_http_interact(
+    WEB *wbStru, int nSock, char *strBuf, int *bufSize)
 {
-    short   strSize, rdSize;
+    short   strSize, read_size;
 
-    strSize = sprintf(strBuf, HTTP_GFILE_STR, wbStru->web_path, 
-                        wbStru->web_file, wbStru->web_host, rPac);
+    if (*bufSize < MIN_HTTP_RESPONE_LEN) {
+        errno = EINVAL;
+        return  FUN_RUN_END;
+    }
+
+    strSize = sprintf(
+              strBuf, HTTP_GFILE_STR, wbStru->web_path, 
+              wbStru->web_file, wbStru->web_host, rPac);
     
-    if(write(nSock, strBuf, strSize) != strSize) 
+    if (write(nSock, strBuf, strSize) != strSize) 
         return  FUN_RUN_END;
 
-    if((rdSize = select_read(nSock, strBuf, bufSize, TAKE_A_SEC, 0)) < FRET_VAL)
+    read_size = select_read(nSock, strBuf, *bufSize, TAKE_A_SEC, 0);
+
+    if (read_size < FRET_VAL)
         return  FUN_RUN_END;
 
-    strBuf[rdSize] = 0;
+    *bufSize = read_size;
+    strBuf[read_size] = 0;
 
-    return  rdSize;
+    return  atoi(strBuf + 9);
+}
+
+
+/*-----sp_http_header_locate-----*/
+char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
+{
+    char   *location, *locate_end;
+
+    if (!(location = strnstr(data_buff, http_header, *data_size))) {
+        locate_end = strnstr(
+                     location, "\r\n", 
+                     *data_size - (location - data_buff));
+
+        if (!locate_end)
+            return  NULL;
+
+        *data_size = locate_end - location;
+
+        return  location;
+    }
+
+    return  NULL;
 }
 
 

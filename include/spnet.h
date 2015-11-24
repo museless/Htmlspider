@@ -32,7 +32,11 @@
 
 #define	HTTP_GFILE_STR          "GET %s%s HTTP/1.1\r\nHost: %s\r\n%s"
 
-/* server respone */
+/* http server respone */
+#define MAX_DIRECT_TIMES        0x10
+
+#define MIN_HTTP_RESPONE_LEN    0x80 
+
 #define	RESP_CONNECT_OK         200
 #define	RESP_CONNECT_ACCEPT     202
 
@@ -90,6 +94,7 @@ struct	web_if {
 	char   *w_url;			        /* store url (a temp value) */
 	char   *w_conbuf;		        /* store website content */
 
+    int     w_sock;
 	SOCKIF	w_sockif;
 	WEB	    w_ubuf;
 
@@ -141,9 +146,17 @@ extern	char	*rPac;
 /* sp_network.c */
 int     sp_net_set_sockif(const char *hostName, SOCKIF *sInfo);
 int     sp_net_sock_connect(SOCKIF *sockInfo);
-int     sp_net_sock_read(int nSock, char *savBuf, int bufLimit,
-                         int readTimes, int nSec, long microSec);
 
-int     sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int bufSize);
+int     sp_net_sock_read(
+        int nSock, char *savBuf, int bufLimit,
+        int readTimes, int nSec, long microSec);
+
+int     sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int *bufSize);
+
+char   *sp_http_header_locate(
+        char *http_header, char *data_buff, int *data_size);
+
 long    sp_net_speed_ping(const char *ping_host, int num_pack);
+
 #endif
+
