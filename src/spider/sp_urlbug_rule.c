@@ -1,3 +1,13 @@
+/*---------------------------------------------
+ *     modification time: 2015-11-23 23:34:41
+ *     mender: Muse
+ *---------------------------------------------*/
+
+/*---------------------------------------------
+ *     creation time: 
+ *     author: Muse 
+ *---------------------------------------------*/
+
 /*------------------------------------------
 	Source file content Eleven part
 
@@ -6,7 +16,7 @@
 	Part Two:	Local function
 	Part Three:	Define
 
-	Part Four:  URL catch rule - default
+	Part Four:  URL catch rule
     Part Five:  URL check rules
     Part Six:   URL table name 
 
@@ -29,7 +39,7 @@
 
 
 /*------------------------------------------
-	 Part Four: URL catch rule - default
+	    Part Four: URL catch rule
 
         1. ubug_catch_default_rule
         2. ubug_locate_default_rule
@@ -82,7 +92,8 @@ int ubug_locate_default_rule(
 
 /*-----ubug_catch_csto_rule-----*/
 int ubug_catch_csto_rule(char *content, char **ret_content_point)
-{
+{    
+
     return  FUN_RUN_OK;
 }
 
@@ -91,6 +102,24 @@ int ubug_catch_csto_rule(char *content, char **ret_content_point)
 int ubug_locate_csto_rule(
     WEBIN *web_point, char **content_beg, char **content_end)
 {
+    printf("get in here\n");
+
+    if (!(*content_beg = 
+          sp_html_code_location(
+          web_point->w_conbuf, web_point->w_size,
+          "<div class=\"talent_list \" id=\"list_shwores\">"))) {
+        printf("Urlbug---> csto's location wrong\n");
+        sp_stop_str();
+    }
+
+    if (!(*content_end = 
+          sp_html_tag_range_locate(
+          *content_beg, 
+          web_point->w_size - ((*content_beg) - web_point->w_conbuf)))) {
+        printf("Urlbug---> csto cannot get location end\n");
+        sp_stop_str();
+    }
+
     return  FUN_RUN_OK;
 }
 
@@ -265,5 +294,5 @@ int ubug_url_count_nlayer(char *str_url)
 /*-----ubug_set_tabname_default-----*/
 void ubug_set_tabname_default(void)
 {
-    sprintf(urlTabName, "%s", "t_all_url");
+    sprintf(urlTabName, "%s", "t_crowdsrc_url");
 }

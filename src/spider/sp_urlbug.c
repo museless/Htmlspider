@@ -1,18 +1,28 @@
-/*------------------------------------------
-	Source file content Nine part
+/*---------------------------------------------
+ *     modification time: 2015-11-23 23:14:59
+ *     mender: Muse
+ *---------------------------------------------*/
 
-	Part Zero:	Include
-	Part One:	Local data
-	Part Two:	Local function
-	Part Three:	Define
+/*---------------------------------------------
+ *     creation time: 
+ *     author: 
+ *---------------------------------------------*/
 
-	Part Four:  Urlbug main
-	Part Five:	Initialization
-	Part Six:	Running preparation
-	Part Seven:	Entrance
-	Part Eight:	Urlbug mainly work
-
---------------------------------------------*/
+/*---------------------------------------------
+ *        Source file content Nine part
+ *
+ *       Part Zero:  Include
+ *       Part One:   Define 
+ *       Part Two:   Local data
+ *       Part Three: Local function
+ *
+ *       Part Four:  Urlbug main
+ *       Part Five:  Initialization
+ *       Part Six:   Running preparation
+ *       Part Seven: Entrance
+ *       Part Eight: Urlbug mainly work
+ *
+ *---------------------------------------------*/
 
 /*------------------------------------------
 	        Part Zero: Include
@@ -100,8 +110,6 @@ int main(int argc, char **argv)
 		ubug_init_weblist();
 	    ubug_init_pinginfo();
 
-        sp_stop_str();
-
 		ubug_main_entrance();
 	}
 
@@ -139,7 +147,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
             default:
 			    printf(
                 "Urlbug---> wrong command: %c\n \
-			    \r--->please try \"-h\" or \"--help\"\n\n", ch);
+			    \rUrlbug--->please try \"-h\"\n\n", ch);
 			    exit(FUN_RUN_END);
         }
     }
@@ -487,7 +495,7 @@ static void ubug_main_entrance(void)
 		if(procCommuFd)
 			sp_msg_frame_run(urlMsgSet, NULL);
 
-		sleep(TAKE_A_REST);
+		sleep(TAKE_A_SLEEP);
 
 	} while(urlRunSet.ubs_rtime);
 

@@ -38,6 +38,7 @@
 static  void    ubug_ping_default_init(SPPING *ping_info);
 
 /* Part Five */
+static  int     ubug_handle_httpreq(int sock, WEBIN *web_info);
 static  void    ubug_update_latest_time(WEBIN *wInfo, char *url_string);
 
 
@@ -106,11 +107,12 @@ static void ubug_ping_default_init(SPPING *ping_info)
 
 
 /*------------------------------------------
-           Part Six: Network
+           Part Five: Network event
 
 	       1. ubug_download_website
-	       2. ubug_send_httpreq
-           3. ubug_update_latest_time
+           2. ubug_handle_httpreq
+	       3. ubug_send_httpreq
+           4. ubug_update_latest_time
 
 --------------------------------------------*/
 
@@ -125,7 +127,7 @@ int ubug_download_website(WEBIN *wInfo)
 		return	FUN_RUN_END;
 	}
 
-	if ((cont_offset = ubug_send_httpreq(sock, wInfo)) == FUN_RUN_FAIL) {
+    if ((cont_offset = ubug_handle_httpreq(sock, wInfo)) == FUN_RUN_FAIL) {
 		close(sock);
 		return	FUN_RUN_FAIL;
 	}
@@ -139,6 +141,13 @@ int ubug_download_website(WEBIN *wInfo)
     close(sock);
 
 	return	cont_offset;
+}
+
+
+/*-----ubug_handle_httpreq-----*/
+static int ubug_handle_httpreq(int sock, WEBIN *web_info)
+{
+
 }
 
 
