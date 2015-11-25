@@ -144,6 +144,7 @@ extern	char	*rPac;
 -----------------------*/
 
 /* sp_network.c */
+int     sp_net_sock_init(WEBIN *web_stu);
 int     sp_net_set_sockif(const char *hostName, SOCKIF *sInfo);
 int     sp_net_sock_connect(SOCKIF *sockInfo);
 
@@ -151,10 +152,14 @@ int     sp_net_sock_read(
         int nSock, char *savBuf, int bufLimit,
         int readTimes, int nSec, long microSec);
 
+
 int     sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int *bufSize);
 
 char   *sp_http_header_locate(
         char *http_header, char *data_buff, int *data_size);
+
+int     sp_url_seperate(char *url, int url_len, WEB *web_info);
+int     sp_url_path_count_nlayer(char *url);
 
 long    sp_net_speed_ping(const char *ping_host, int num_pack);
 

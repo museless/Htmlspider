@@ -52,7 +52,7 @@ void    ubug_set_tabname_default(void);
 void    ubug_init_pinginfo(void);
 void    ubug_ping(void);
 
-int     ubug_download_website(WEBIN *wInfo);
+int     ubug_html_download(WEBIN *wInfo);
 int     ubug_send_httpreq(int socket, WEBIN *wInfo);
 
 /* sp_urlbug_db.c */

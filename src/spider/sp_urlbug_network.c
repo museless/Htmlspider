@@ -109,7 +109,7 @@ static void ubug_ping_default_init(SPPING *ping_info)
 /*------------------------------------------
            Part Five: Network event
 
-	       1. ubug_download_website
+	       1. ubug_html_download
            2. ubug_handle_httpreq
 	       3. ubug_send_httpreq
            4. ubug_catch_http_retcode
@@ -117,29 +117,28 @@ static void ubug_ping_default_init(SPPING *ping_info)
 
 --------------------------------------------*/
 
-/*-----ubug_download_website-----*/
-int ubug_download_website(WEBIN *wInfo)
+/*-----ubug_html_download-----*/
+int ubug_html_download(WEBIN *wInfo)
 {
 	int	cont_offset, byte_read;
 
-	if (!(wInfo->w_sock = sp_net_sock_connect(&wInfo->w_sockif))) {
-		printf("Urlbug---> sp_net_sock_connect: %s%s\n%s\n",
-		wInfo->w_ubuf.web_host, wInfo->w_ubuf.web_file, strerror(errno));
-		return	FUN_RUN_END;
-	}
+    if (sp_net_sock_init(wInfo) == FRET_N) {
+        ubug_perror("ubug_html_download - sp_net_sock_init", errno);
+        return  FRET_N;
+    }
 
     if ((cont_offset = ubug_handle_httpreq(wInfo)) == FUN_RUN_FAIL) {
-		close(sock);
-		return	FUN_RUN_FAIL;
+		close(wInfo->w_sock);
+		return	FRET_N;
 	}
 
     byte_read = sp_net_sock_read(
-                sock, wInfo->w_conbuf + cont_offset,
+                wInfo->w_sock, wInfo->w_conbuf + cont_offset,
                 WMP_PAGESIZE - cont_offset, UBUG_NREAD, 
                 ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
     cont_offset += (byte_read == FUN_RUN_FAIL) ? 0 : byte_read;
-    close(sock);
+    close(wInfo->w_sock);
 
 	return	wInfo->w_sock;
 }
@@ -224,7 +223,7 @@ static int ubug_handle_http_recode(
                    &web_info->w_ubuf, web_info->w_sock, buff, &data_size);
 
     if (http_retcode != RESP_PERM_MOVE || http_retcode != RESP_TEMP_MOVE)
-        http_retcode = sp_http_handle_30x(web_info, buff, *buff_size);
+        ;   /* nothing */
 
     return  http_retcode;
 }

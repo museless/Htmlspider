@@ -7,8 +7,9 @@
     Part Three: Local function
 
     Part Four:  Socket control
-    Part Five:  Http protocal 
-    Part Six:   Ping
+    Part Five:  Http protocal
+    Part Six:   Url string operation
+    Part Seven: Ping
 
 --------------------------------------------*/
 
@@ -46,6 +47,7 @@ static  int     sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
         2. sp_net_sock_connect
         3. sp_net_sock_read
         4. sp_net_sock_settimer
+        5. sp_net_sock_init
 
 --------------------------------------------*/
 
@@ -110,7 +112,7 @@ int sp_net_sock_read(
         check_point = savBuf + (cont_offset - (str_size > ENDHTML_CHK_OFFSET) ? 
                       ENDHTML_CHK_OFFSET : str_size);
 
-        if ((check_point = strnstr(check_point, MATCH_ENDHTML, ENDHTML_CHK_OFFSET)))
+        if (strnstr(check_point, MATCH_ENDHTML, ENDHTML_CHK_OFFSET))
             break;
 
         if (cont_offset + RECE_DATA > bufLimit)
@@ -135,6 +137,19 @@ static int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
     time_val.tv_usec = uSec;
 
     return  setsockopt(socket, SOL_SOCKET, nFlags, &time_val, sizeof(time_val));
+}
+
+
+/*-----sp_net_sock_init-----*/
+int sp_net_sock_init(WEBIN *web_stu)
+{
+    if (!sp_net_set_sockif(web_stu->w_ubuf.web_host, &web_stu->w_sockif))
+        return  FRET_N;
+
+	if (!(web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)))
+        return  FRET_N;
+
+    return  FRET_P;
 }
 
 
@@ -199,7 +214,87 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 
 
 /*------------------------------------------
-        Part Six: Ping
+        Part Six: Url string operation
+
+        1. sp_url_seperate
+        2. sp_url_count_nlayer
+
+--------------------------------------------*/
+
+/*-----sp_url_seperate-----*/
+int sp_url_seperate(char *url, int url_len, WEB *web_info)
+{
+    char   *url_point;
+
+    memset(web_info, 0, sizeof(WEB));
+
+	if (strncmp(url, MATCH_HTTP, MHTTP_LEN)) {
+        if (!(url_point = strnstr(url, "//", url_len)))
+            return  FRET_Z;
+
+        url_point += 2;
+        url_len -= (url_point - url);
+    }
+
+	web_info->web_port = HTTP_PORT;
+
+    char   *slash_point = strnchr(url_point, '/', url_len);
+    int     host_len, file_name_offset; 
+
+    if (slash_point) {
+        host_len = slash_point - url_point;
+        sprintf(web_info->web_host, "%.*s", host_len, url_point);
+
+        if ((slash_point = strchrb(url_point, url_len, '/'))) {
+            /* url likes 'xxx.com/', I think it no file name at this url */
+            if ((file_name_offset = slash_point - url_point) != host_len)
+                sprintf(
+                web_info->web_file, "%.*s", 
+                url_len - file_name_offset - 1,
+                &url_point[file_name_offset + 1]); 
+        }
+
+        sprintf(
+        web_info->web_path, "%.*s", 
+        file_name_offset - host_len + 1, &url_point[host_len]);
+
+        web_info->web_nlayer = sp_url_path_count_nlayer(web_info->web_path);
+
+        return  FRET_P;
+    }
+
+    return  FRET_Z;
+}
+
+
+/*-----sp_url_path_count_nlayer-----*/
+int sp_url_path_count_nlayer(char *url)
+{
+    int     layer_num = 1;
+
+    if (!url)
+        return  0;
+
+    if (!strcmp(url, "/"))
+        return  layer_num;
+
+    char    *url_point;
+
+    for (url_point = url + 1; url_point; url_point++) {
+        if (*url_point == '/') {
+            if (*(url_point + 1) == '\0')
+                break;
+
+            layer_num++;
+        }
+    }
+
+    return  layer_num;
+}
+
+
+/*------------------------------------------
+        Part Seven: Ping
 
         1. sp_net_speed_ping
 

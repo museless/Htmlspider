@@ -5,10 +5,6 @@
 	    define
 -----------------------*/
 
-#define FRET_P              1
-#define FRET_Z              0
-#define FRET_N              -1
-
 #define	FSCEL_WORD_OFF		0x2628
 
 #define	UTF8_WORD_LEN		0x3

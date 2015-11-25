@@ -327,15 +327,6 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
         ubug_sig_error();
     }
 
-    if (!sp_net_set_sockif(
-       (list_point)->w_ubuf.web_host, &(list_point)->w_sockif)) {
-        elog_write(
-        "ubug_list_entity_set - sp_net_set_sockif", FUNCTION_STR, ERROR_STR);
-
-		free(list_point);
-		return  NULL;
-	}
-
     return  list_point;
 }
 
@@ -343,38 +334,10 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
 /*-----ubug_init_urllist-----*/
 static int ubug_init_urllist(char *urlStr, WEB *webStu)
 {
-    char   *pSlash;
-	int	    nCir, nBack, urlLen, nOff = 0;
-
-	bzero(webStu, sizeof(WEB));
-
-	if (strncmp(urlStr, MATCH_HTTP, MHTTP_LEN)) {
-		printf("Urlbug---> ubug_init_urllist - lack of http: %s\n", urlStr);
-		return	FUN_RUN_END;
-	}
-
-	webStu->web_port = HTTP_PORT;
-	urlLen = strlen(urlStr += MHTTP_LEN);
-
-    if ((pSlash = strnchr(urlStr, '/', urlLen))) {
-        nCir = pSlash - urlStr;
-        sprintf(webStu->web_host, "%.*s", nCir, urlStr);
-
-        if ((pSlash = strchrb(urlStr, urlLen, '/'))) {
-            if ((nBack = pSlash - urlStr) != nCir)
-                nOff = sprintf(
-                       webStu->web_file, "%.*s", 
-                       urlLen - nBack - 1, &urlStr[nBack + 1]);
-
-            webStu->web_file[nOff] = 0;
-        }
-
-        sprintf(webStu->web_path, "%.*s", nBack - nCir + 1, &urlStr[nCir]);
-        webStu->web_nlayer = ubug_url_count_nlayer(webStu->web_path);
-
+    if (sp_url_seperate(urlStr, strlen(urlStr), webStu) != FRET_P) {
         printf(
         "Host: %s - Path: %s - File: %s - Layer num: %d\n", 
-        webStu->web_host, webStu->web_path,
+        webStu->web_host, webStu->web_path, 
         webStu->web_file, webStu->web_nlayer);
 
         return	FUN_RUN_OK;
@@ -403,7 +366,7 @@ static void ubug_set_ubset(const char *way_option)
 {
     ubug_init_ubset(
     NULL, ubug_text_abstract_cont, ubug_tran_db,
-    ubug_tran_db_whole, ubug_download_website, RUN_PERN);
+    ubug_tran_db_whole, ubug_html_download, RUN_PERN);
 
     if (!strcmp(way_option, "normal")) {
         ubug_init_ubset_way(
