@@ -152,11 +152,13 @@ int     sp_net_sock_read(
         int nSock, char *savBuf, int bufLimit,
         int readTimes, int nSec, long microSec);
 
-
 int     sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int *bufSize);
 
 char   *sp_http_header_locate(
         char *http_header, char *data_buff, int *data_size);
+
+char   *sp_http_compare_latest(
+        const char *last_time, char *http_buff, int *buff_len);
 
 int     sp_url_seperate(char *url, int url_len, WEB *web_info);
 int     sp_url_path_count_nlayer(char *url);

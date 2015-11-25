@@ -45,6 +45,7 @@
 #define FRET_P          1
 #define FRET_Z          0
 #define FRET_N          -1
+#define FRET_UNIQUE     -2
 
 #define	FRET_VAL	    FUN_RUN_OK
 #define	FRET_NULL	    FUN_RUN_END

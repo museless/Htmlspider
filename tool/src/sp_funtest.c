@@ -1,5 +1,5 @@
 /*----------------------------------------------
-    modification time: 2015.11.19 21:45
+    modification time: 2015.11.25 22:10
     mender: Muse
 ------------------------------------------------*/
 /*----------------------------------------------
@@ -44,6 +44,12 @@ char    textContent[0x100] = {
              \r</div>\n</html>\n"
         };
 
+char    httpContent[0x100] = {
+            "HTTP/1.0 200 OK\r\n\
+             \rDate: 2015.11.25 22:18\r\n\
+             \rServer: NCSA/1.3\r\n\r\n"
+        };
+
 
 /*----------------------------------------------
            Part Three: Local function
@@ -66,10 +72,13 @@ static  void    test_part(void);
 /*-----main-----*/
 int main(int argc, char **argv)
 {
-   para_analysis(argc, argv);
-   test_part();
+    int     string_size = strlen(httpContent);
+    char   *locate = sp_http_compare_latest("2015.11.25 22:18", httpContent, &string_size);
 
-   return   -1;
+    printf("size: %d - string: %.*s\n", string_size, string_size, locate);
+    perror("sp_http_compare_latest");
+
+    return   -1;
 }
 
 

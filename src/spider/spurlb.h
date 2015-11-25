@@ -53,7 +53,6 @@ void    ubug_init_pinginfo(void);
 void    ubug_ping(void);
 
 int     ubug_html_download(WEBIN *wInfo);
-int     ubug_send_httpreq(int socket, WEBIN *wInfo);
 
 /* sp_urlbug_db.c */
 void    ubug_init_database(void);
@@ -78,7 +77,7 @@ void    ubug_free_weblist(void *pNull);
 void    ubug_db_clean(void *pNULL);
 
 /* sp_urlbug_msg.c */
-void    *ubug_msg_init(int msgFd);
+void   *ubug_msg_init(int msgFd);
 
 /* sp_urlbug.err.c */
 void    ubug_sig_error(void);

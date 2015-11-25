@@ -158,6 +158,7 @@ int sp_net_sock_init(WEBIN *web_stu)
 
         1. sp_http_interact
         2. sp_http_header_locate
+        3. sp_http_compare_latest
 
 --------------------------------------------*/
 
@@ -196,7 +197,7 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 {
     char   *location, *locate_end;
 
-    if (!(location = strnstr(data_buff, http_header, *data_size))) {
+    if ((location = strnstr(data_buff, http_header, *data_size))) {
         locate_end = strnstr(
                      location, "\r\n", 
                      *data_size - (location - data_buff));
@@ -210,6 +211,31 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
     }
 
     return  NULL;
+}
+
+
+/*-----sp_http_compare_latest-----*/
+char *sp_http_compare_latest(
+      const char *last_time, char *http_buff, int *buff_len)
+{
+    int     string_size = *buff_len;
+    char   *header = sp_http_header_locate(MATCH_LAMD, http_buff, &string_size);
+
+    if (!header) {
+        header = sp_http_header_locate(MATCH_DATE, http_buff, &string_size);
+
+        if (!header) {
+            errno = ENODATA;
+            return  NULL;
+        }
+    }
+
+	if(!strncmp(header + string_size, last_time, string_size))
+		return	NULL;
+
+    *buff_len = string_size;
+
+    return  header;
 }
 
 

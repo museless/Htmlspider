@@ -5,12 +5,12 @@
 !_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
 !_TAG_PROGRAM_VERSION	5.8	//
 ADDRIF	include/inclib/ping/ping.h	/^typedef struct  addrinfo    ADDRIF;$/;"	t	typeref:struct:addrinfo
-ADD_LIMIT	include/spdict.h	68;"	d
+ADD_LIMIT	include/spdict.h	64;"	d
 ALGOINC	Makefile	/^ALGOINC = -I include\/inclib\/musealgo$/;"	m
 ALL_READ	include/inclib/museipc/mipc.h	37;"	d
 ALL_WRITE	include/inclib/museipc/mipc.h	38;"	d
 BELE	include/inclib/musealgo/malgo.h	/^typedef	struct	belement	BELE;$/;"	t	typeref:struct:belement
-BIG_BUF	include/spinc.h	69;"	d
+BIG_BUF	include/spinc.h	73;"	d
 BUCKET	include/inclib/musealgo/malgo.h	/^typedef	struct	bucket		BUCKET;$/;"	t	typeref:struct:bucket
 BUFF	include/spinc.h	/^typedef struct	buff    BUFF;$/;"	t	typeref:struct:buff
 BUFF_LEN	tool/include/sptinc.h	12;"	d
@@ -18,7 +18,7 @@ Byte	include/inclib/container/container.h	/^typedef unsigned char   Byte;$/;"	t
 CC	Makefile	/^CC		= gcc$/;"	m
 CC	tool/Makefile	/^CC	= gcc$/;"	m
 CHANGE_TIME	include/spmsg.h	22;"	d
-CHARSET_LEN	include/spinc.h	50;"	d
+CHARSET_LEN	include/spinc.h	54;"	d
 CHECK_IND_EXI	include/spdb.h	84;"	d
 CODE_ECHO	include/inclib/icmp/icmp.h	49;"	d
 CODE_ECHO_REPLY	include/inclib/icmp/icmp.h	27;"	d
@@ -42,8 +42,8 @@ CONBEG_LEN	tool/include/sptinc.h	15;"	d
 CONEND_LEN	tool/include/sptinc.h	16;"	d
 CONF_DLOCKS	tool/include/sptinc.h	27;"	d
 CONF_NMEM	tool/include/sptinc.h	11;"	d
-CONF_NUM	include/spinc.h	98;"	d
-CONF_STR	include/spinc.h	97;"	d
+CONF_NUM	include/spinc.h	102;"	d
+CONF_STR	include/spinc.h	101;"	d
 CREAT_CONFTAB	tool/include/sptinc.h	32;"	d
 CREAT_KEY_TAB	include/spdb.h	138;"	d
 CREAT_NEWS_TAB	include/spdb.h	86;"	d
@@ -51,8 +51,8 @@ CREAT_UALLTAB	tool/include/sptinc.h	35;"	d
 CREAT_URLSTAB	tool/include/sptinc.h	30;"	d
 CREAT_URL_TAB	include/spdb.h	58;"	d
 CR_NEW_VIEW	include/spdb.h	109;"	d
-DATEBUF_LEN	include/spinc.h	77;"	d
-DATE_CMODE	include/spinc.h	65;"	d
+DATEBUF_LEN	include/spinc.h	81;"	d
+DATE_CMODE	include/spinc.h	69;"	d
 DBKEY	tool/include/sptinc.h	6;"	d
 DBNAME	tool/include/sptinc.h	7;"	d
 DBURL_ID_LEN	include/spnet.h	23;"	d
@@ -73,33 +73,33 @@ DMPBB	include/inclib/mmdpool/mmdpool.h	/^typedef	struct	dmp_bigbody	DMPBB;$/;"	t
 DMPH	include/inclib/mmdpool/mmdpool.h	/^typedef	struct	dmp_handler	DMPH;$/;"	t	typeref:struct:dmp_handler
 DOMAIN_LEN	tool/include/sptinc.h	14;"	d
 DOWN_KEEP_WD	include/spdb.h	153;"	d
-DOWN_LIMIT	include/spdict.h	69;"	d
+DOWN_LIMIT	include/spdict.h	65;"	d
 DOWN_WD_NO_ST	include/spdb.h	132;"	d
 DOWN_WD_ST	include/spdb.h	131;"	d
 DOWN_WORD_IDF	include/spdb.h	152;"	d
 DROP_TABLE	include/spdb.h	50;"	d
 DROP_VIEW	include/spdb.h	49;"	d
-DR_ADD	include/spdict.h	35;"	d
-DR_ALL_PHRASE	include/spdict.h	42;"	d
-DR_DELETE	include/spdict.h	39;"	d
-DR_DOWN	include/spdict.h	36;"	d
-DR_IN_STATE	include/spdict.h	55;"	d
-DR_MSCRIPT	include/spdict.h	38;"	d
-DR_NORMAL_FILE	include/spdict.h	48;"	d
-DR_NOUN_PHRASE	include/spdict.h	43;"	d
-DR_NOUN_STATE	include/spdict.h	57;"	d
-DR_NO_STATE	include/spdict.h	54;"	d
-DR_RELIST	include/spdict.h	37;"	d
-DR_SCEL_FILE	include/spdict.h	49;"	d
-DR_UNDETE_STATE	include/spdict.h	56;"	d
-DR_VERB_STATE	include/spdict.h	58;"	d
-DR_WITHOUT_STATE	include/spdict.h	60;"	d
-DR_WITH_STATE	include/spdict.h	61;"	d
-DR_WITH_TIMES	include/spdict.h	62;"	d
-DR_WRONG	include/spdict.h	34;"	d
-EMPTY_OBJ_STR	include/spinc.h	89;"	d
-ENDHTML_CHK_OFFSET	src/flib/sp_network.c	31;"	d	file:
-ERROR_STR	include/spinc.h	92;"	d
+DR_ADD	include/spdict.h	31;"	d
+DR_ALL_PHRASE	include/spdict.h	38;"	d
+DR_DELETE	include/spdict.h	35;"	d
+DR_DOWN	include/spdict.h	32;"	d
+DR_IN_STATE	include/spdict.h	51;"	d
+DR_MSCRIPT	include/spdict.h	34;"	d
+DR_NORMAL_FILE	include/spdict.h	44;"	d
+DR_NOUN_PHRASE	include/spdict.h	39;"	d
+DR_NOUN_STATE	include/spdict.h	53;"	d
+DR_NO_STATE	include/spdict.h	50;"	d
+DR_RELIST	include/spdict.h	33;"	d
+DR_SCEL_FILE	include/spdict.h	45;"	d
+DR_UNDETE_STATE	include/spdict.h	52;"	d
+DR_VERB_STATE	include/spdict.h	54;"	d
+DR_WITHOUT_STATE	include/spdict.h	56;"	d
+DR_WITH_STATE	include/spdict.h	57;"	d
+DR_WITH_TIMES	include/spdict.h	58;"	d
+DR_WRONG	include/spdict.h	30;"	d
+EMPTY_OBJ_STR	include/spinc.h	93;"	d
+ENDHTML_CHK_OFFSET	src/flib/sp_network.c	32;"	d	file:
+ERROR_STR	include/spinc.h	96;"	d
 EXARR	tool/Makefile	/^EXARR	= bin\/arrage$/;"	m
 EXFORM	tool/Makefile	/^EXFORM	= bin\/format$/;"	m
 EXGA	tool/Makefile	/^EXGA	= bin\/gatool$/;"	m
@@ -108,20 +108,20 @@ EXTEST	tool/Makefile	/^EXTEST	= bin\/test$/;"	m
 EXTOOL	tool/Makefile	/^EXTOOL	= bin\/sptool$/;"	m
 EXURLB	Makefile	/^EXURLB	= bin\/spider$/;"	m
 FBSTR	src/spider/spuglobal.h	/^typedef struct  forbid_word     FBSTR;$/;"	t	typeref:struct:forbid_word
-FILE_AUTHOR	include/spinc.h	82;"	d
-FILE_OPERATION	include/spinc.h	81;"	d
-FNAME_LEN	include/spinc.h	73;"	d
+FILE_AUTHOR	include/spinc.h	86;"	d
+FILE_OPERATION	include/spinc.h	85;"	d
+FNAME_LEN	include/spinc.h	77;"	d
 FRET_N	include/inclib/icmp/icmp.h	18;"	d
-FRET_N	include/spdict.h	10;"	d
-FRET_NULL	include/spinc.h	46;"	d
+FRET_N	include/spinc.h	47;"	d
+FRET_NULL	include/spinc.h	50;"	d
 FRET_P	include/inclib/icmp/icmp.h	16;"	d
-FRET_P	include/spdict.h	8;"	d
-FRET_VAL	include/spinc.h	45;"	d
+FRET_P	include/spinc.h	45;"	d
+FRET_VAL	include/spinc.h	49;"	d
 FRET_Z	include/inclib/icmp/icmp.h	17;"	d
-FRET_Z	include/spdict.h	9;"	d
-FSCEL_WORD_OFF	include/spdict.h	12;"	d
+FRET_Z	include/spinc.h	46;"	d
+FSCEL_WORD_OFF	include/spdict.h	8;"	d
 FSV	tool/src/sp_format.c	/^typedef	struct	formatsave	FSV;$/;"	t	typeref:struct:formatsave	file:
-FUNCTION_STR	include/spinc.h	90;"	d
+FUNCTION_STR	include/spinc.h	94;"	d
 FUNWG_STATE	include/spdb.h	100;"	d
 FUN_RUN_END	include/spinc.h	42;"	d
 FUN_RUN_FAIL	include/spinc.h	43;"	d
@@ -137,16 +137,16 @@ GRP_RDWR	include/inclib/museipc/mipc.h	29;"	d
 GRP_READ	include/inclib/museipc/mipc.h	27;"	d
 GRP_WRITE	include/inclib/museipc/mipc.h	28;"	d
 HBET	include/inclib/musealgo/malgo.h	/^typedef	struct	hashbucket	HBET;$/;"	t	typeref:struct:hashbucket
-HEAD_LEN	include/spinc.h	52;"	d
-HERROR_STR	include/spinc.h	93;"	d
+HEAD_LEN	include/spinc.h	56;"	d
+HERROR_STR	include/spinc.h	97;"	d
 HTTP_GFILE_STR	include/spnet.h	33;"	d
 HTTP_PORT	include/spnet.h	49;"	d
-HTTP_RECALL	include/spinc.h	63;"	d
-HUGE_BUF	include/spinc.h	70;"	d
+HTTP_RECALL	include/spinc.h	67;"	d
+HUGE_BUF	include/spinc.h	74;"	d
 ICMP	include/inclib/icmp/icmp.h	/^typedef struct  internet_ctl_msg_protocal   ICMP;$/;"	t	typeref:struct:internet_ctl_msg_protocal
 ICMPECHO	include/inclib/icmp/icmp.h	/^typedef struct  icmp_type_echo              ICMPECHO;$/;"	t	typeref:struct:icmp_type_echo
 INC_ERRT	include/spdb.h	104;"	d
-INDEX_STRING	include/spdict.h	24;"	d
+INDEX_STRING	include/spdict.h	20;"	d
 INSERT_CONFTAB	tool/include/sptinc.h	39;"	d
 INSERT_KEYWD	include/spdb.h	149;"	d
 INSERT_KW_NEXT	include/spdb.h	150;"	d
@@ -154,17 +154,17 @@ INSERT_UALLTAB	tool/include/sptinc.h	40;"	d
 INSERT_URLSTAB	tool/include/sptinc.h	38;"	d
 IPCINC	Makefile	/^IPCINC	= -I include\/inclib\/museipc$/;"	m
 KEEP_WORKING	include/spmsg.h	21;"	d
-LATEST_LEN	include/spinc.h	54;"	d
+LATEST_LEN	include/spinc.h	58;"	d
 LATEST_UPGRADE_LIMIT	include/spnet.h	21;"	d
-LEVEL_BITS	include/spdict.h	30;"	d
-LEVEL_FOUR_MASK	include/spdict.h	64;"	d
-LEVEL_FOUR_SHIFT	include/spdict.h	65;"	d
-LEVEL_MASK	include/spdict.h	31;"	d
-LEVEL_THREE_MASK	include/spdict.h	51;"	d
-LEVEL_TWO_MASK	include/spdict.h	45;"	d
+LEVEL_BITS	include/spdict.h	26;"	d
+LEVEL_FOUR_MASK	include/spdict.h	60;"	d
+LEVEL_FOUR_SHIFT	include/spdict.h	61;"	d
+LEVEL_MASK	include/spdict.h	27;"	d
+LEVEL_THREE_MASK	include/spdict.h	47;"	d
+LEVEL_TWO_MASK	include/spdict.h	41;"	d
 LOC_LEN	tool/include/sptinc.h	17;"	d
-LOGBASE_LEN	include/spinc.h	76;"	d
-LOGBUF_LEN	include/spinc.h	75;"	d
+LOGBASE_LEN	include/spinc.h	80;"	d
+LOGBUF_LEN	include/spinc.h	79;"	d
 MALGO_H	include/inclib/musealgo/malgo.h	2;"	d
 MATCH_A	include/sphtml.h	48;"	d
 MATCH_B	include/sphtml.h	56;"	d
@@ -201,9 +201,9 @@ MATO_FALSE	include/inclib/mato.h	9;"	d
 MATO_TRUE	include/inclib/mato.h	10;"	d
 MAX_DIRECT_TIMES	include/spnet.h	36;"	d
 MAX_PADDATA_LEN	include/inclib/ping/ping.h	20;"	d
-MAX_UNI_LEN	include/spdict.h	20;"	d
+MAX_UNI_LEN	include/spdict.h	16;"	d
 MAX_URL_LEN	include/spnet.h	19;"	d
-MAX_UTF8_LEN	include/spdict.h	19;"	d
+MAX_UTF8_LEN	include/spdict.h	15;"	d
 MA_LEN	include/sphtml.h	47;"	d
 MBEG_LEN	include/sphtml.h	13;"	d
 MB_LEN	include/sphtml.h	55;"	d
@@ -230,12 +230,12 @@ MHTML_LEN	include/sphtml.h	21;"	d
 MHTM_LEN	include/sphtml.h	25;"	d
 MHTP_LEN	include/sphtml.h	19;"	d
 MHTTP_LEN	include/sphtml.h	17;"	d
-MICSEC_500000	include/spinc.h	115;"	d
-MICSEC_PER_SEC	include/spinc.h	113;"	d
-MICSEC_PER_SEC	include/spinc.h	119;"	d
-MIDDLE_BUF	include/spinc.h	68;"	d
-MILLISEC_500	include/spinc.h	114;"	d
-MILSEC_PER_SEC	include/spinc.h	120;"	d
+MICSEC_500000	include/spinc.h	119;"	d
+MICSEC_PER_SEC	include/spinc.h	117;"	d
+MICSEC_PER_SEC	include/spinc.h	123;"	d
+MIDDLE_BUF	include/spinc.h	72;"	d
+MILLISEC_500	include/spinc.h	118;"	d
+MILSEC_PER_SEC	include/spinc.h	124;"	d
 MIN_HTTP_RESPONE_LEN	include/spnet.h	38;"	d
 MIN_URL_LEN	include/spnet.h	18;"	d
 MIPC_END	include/inclib/museipc/mipc.h	20;"	d
@@ -262,24 +262,24 @@ MSPAN_LEN	include/sphtml.h	49;"	d
 MSRCIPT_LEN	include/sphtml.h	43;"	d
 MSTRONG_LEN	include/sphtml.h	51;"	d
 MTITLE_LEN	include/sphtml.h	35;"	d
-MYERR_STR	include/spinc.h	94;"	d
+MYERR_STR	include/spinc.h	98;"	d
 MYFLAGS	Makefile	/^MYFLAGS = -L \/usr\/local\/lib\/mysql -lmysqlclient -I \/usr\/local\/include\/mysql -lz$/;"	m
 Ma_LEN	include/sphtml.h	45;"	d
-NAMBUF_LEN	include/spinc.h	72;"	d
+NAMBUF_LEN	include/spinc.h	76;"	d
 NEWDB	tool/include/sptinc.h	8;"	d
 NMFLAGS	Makefile	/^NMFLAGS	= -rdynamic -g -Wall -I include\/inclib -I include\/inclib\/mmdpool -I include\/ -fstack-protector-all$/;"	m
 NMFLAGS	tool/Makefile	/^NMFLAGS = -g -Wall -I include\/$/;"	m
 NOCONT_STATE	include/spdb.h	102;"	d
 NOTIT_STATE	include/spdb.h	101;"	d
 NO_MSG	include/spmsg.h	20;"	d
-NPAPER_LEN	include/spinc.h	79;"	d
+NPAPER_LEN	include/spinc.h	83;"	d
 NULL_POINT	include/inclib/mgc.h	16;"	d
 OTFLAGS	tool/Makefile	/^OTFLAGS = -I ..\/include\/ -I ..\/include\/inclib -I ..\/include\/inclib\/musealgo \\$/;"	m
 OTH_RDWR	include/inclib/museipc/mipc.h	35;"	d
 OTH_READ	include/inclib/museipc/mipc.h	33;"	d
 OTH_WRITE	include/inclib/museipc/mipc.h	34;"	d
 OURLB	Makefile	/^OURLB	= src\/spider\/sp_urlbug.c src\/spider\/sp_urlbug_db.c \\$/;"	m
-OWN_NAME_LEN	include/spinc.h	48;"	d
+OWN_NAME_LEN	include/spinc.h	52;"	d
 PART_CTIME	include/spmsg.h	9;"	d
 PART_EXTBUG	include/spmsg.h	16;"	d
 PART_IC	include/spmsg.h	10;"	d
@@ -289,16 +289,16 @@ PART_OUTBUG	include/spmsg.h	17;"	d
 PART_TEXTBUG	include/spmsg.h	15;"	d
 PART_UNINIT	include/spmsg.h	7;"	d
 PART_URLBUG	include/spmsg.h	14;"	d
-PATH_LEN	include/spinc.h	55;"	d
-PATTERN_LEN	include/spinc.h	74;"	d
-PER_MP_BLOCK_SIZE	include/spdict.h	27;"	d
+PATH_LEN	include/spinc.h	59;"	d
+PATTERN_LEN	include/spinc.h	78;"	d
+PER_MP_BLOCK_SIZE	include/spdict.h	23;"	d
 PGFLAGS	Makefile	/^PGFLAGS = -I include\/inclib\/ping -I include\/inclib\/icmp$/;"	m
 PG_SIZE_SHF	include/inclib/museipc/mshm.h	17;"	d
 PINGIF	include/inclib/ping/ping.h	/^typedef struct  ping_info   PINGIF;$/;"	t	typeref:struct:ping_info
 PMSG	include/spmsg.h	/^typedef	struct	pmsg	PMSG;$/;"	t	typeref:struct:pmsg
 PROC_ERROR	include/sperr.h	5;"	d
-PROJ_PTH_CTL	include/spinc.h	85;"	d
-PROJ_SHM_CTL	include/spinc.h	86;"	d
+PROJ_PTH_CTL	include/spinc.h	89;"	d
+PROJ_SHM_CTL	include/spinc.h	90;"	d
 PTFLAGS	Makefile	/^PTFLAGS	= -pthread -lcrypt -lnsl -lm -lc $/;"	m
 PTFLAGS	tool/Makefile	/^PTFLAGS = -rdynamic -pthread -lz -lcrypt -lnsl -lm$/;"	m
 PTHENT	include/inclib/mpctl.h	/^typedef	struct pthread_entity	PTHENT;$/;"	t	typeref:struct:pthread_entity
@@ -316,8 +316,8 @@ PTH_RUN_OK	include/inclib/mpctl.h	26;"	d
 PTH_RUN_PERMANENT	include/inclib/mpctl.h	30;"	d
 PTH_WAS_KILLED	src/flib/musetpool/musepthctl.c	/^    PTH_WAS_KILLED,$/;"	e	enum:PTHREAD_STATE	file:
 PWSTRS	include/spdict.h	/^typedef	struct	wstr*	PWSTRS;$/;"	t	typeref:struct:wstr
-RECE_DATA	include/spinc.h	62;"	d
-RELIST_LIMIT	include/spdict.h	70;"	d
+RECE_DATA	include/spinc.h	66;"	d
+RELIST_LIMIT	include/spdict.h	66;"	d
 RESP_CONNECT_ACCEPT	include/spnet.h	41;"	d
 RESP_CONNECT_OK	include/spnet.h	40;"	d
 RESP_PERM_MOVE	include/spnet.h	43;"	d
@@ -341,7 +341,7 @@ SEMUN	include/inclib/museipc/msem.h	/^typedef	union semun	SEMUN;$/;"	t	typeref:u
 SET_KEYWD_FLAGS	include/spdb.h	161;"	d
 SET_NEWS_FLAGS	include/spdb.h	143;"	d
 SLEEP_A_SEC	include/inclib/mgc.h	14;"	d
-SMALL_BUF	include/spinc.h	67;"	d
+SMALL_BUF	include/spinc.h	71;"	d
 SOCKAD	include/spnet.h	/^typedef struct  sockaddr        SOCKAD;$/;"	t	typeref:struct:sockaddr
 SOCKIF	include/inclib/ping/ping.h	/^typedef struct  sockaddr_in SOCKIF;$/;"	t	typeref:struct:sockaddr_in
 SOCKIF	include/spnet.h	/^typedef	struct	sockaddr_in	    SOCKIF;$/;"	t	typeref:struct:sockaddr_in
@@ -383,20 +383,20 @@ STACK_FRAME_DEF_SIZE	include/inclib/container/container.h	14;"	d
 STAT	include/spinc.h	/^typedef struct	stat    STAT;$/;"	t	typeref:struct:stat
 TAG_MAX_LEN	include/sphtml.h	6;"	d
 TAG_MIN_LEN	include/sphtml.h	5;"	d
-TAKE_A_EYECLOSE	include/spinc.h	104;"	d
-TAKE_A_LLSLP	include/spinc.h	110;"	d
-TAKE_A_LONGSLP	include/spinc.h	109;"	d
-TAKE_A_NAP	include/spinc.h	106;"	d
-TAKE_A_NO	include/spinc.h	101;"	d
-TAKE_A_NOTHING	include/spinc.h	103;"	d
-TAKE_A_REST	include/spinc.h	107;"	d
-TAKE_A_SEC	include/spinc.h	102;"	d
-TAKE_A_SHNAP	include/spinc.h	105;"	d
-TAKE_A_SLEEP	include/spinc.h	108;"	d
+TAKE_A_EYECLOSE	include/spinc.h	108;"	d
+TAKE_A_LLSLP	include/spinc.h	114;"	d
+TAKE_A_LONGSLP	include/spinc.h	113;"	d
+TAKE_A_NAP	include/spinc.h	110;"	d
+TAKE_A_NO	include/spinc.h	105;"	d
+TAKE_A_NOTHING	include/spinc.h	107;"	d
+TAKE_A_REST	include/spinc.h	111;"	d
+TAKE_A_SEC	include/spinc.h	106;"	d
+TAKE_A_SHNAP	include/spinc.h	109;"	d
+TAKE_A_SLEEP	include/spinc.h	112;"	d
 TEXT	include/spnet.h	/^typedef	struct	web_txt		    TEXT;$/;"	t	typeref:struct:web_txt
-THREAD_STR	include/spinc.h	91;"	d
+THREAD_STR	include/spinc.h	95;"	d
 TIMBEG_LEN	tool/include/sptinc.h	18;"	d
-TINY_USEC	include/spinc.h	116;"	d
+TINY_USEC	include/spinc.h	120;"	d
 TMS	include/spinc.h	/^typedef struct	tm      TMS;$/;"	t	typeref:struct:tm
 TMVAL	include/spinc.h	/^typedef struct	timeval TMVAL;$/;"	t	typeref:struct:timeval
 TRAN_NEWS	include/spdb.h	96;"	d
@@ -415,7 +415,7 @@ TYPE_ECHO_MIN_LEN	include/inclib/icmp/icmp.h	50;"	d
 TYPE_ECHO_REPLY	include/inclib/icmp/icmp.h	26;"	d
 TYPE_ECHO_REPLY_MIN_LEN	include/inclib/icmp/icmp.h	28;"	d
 TYPE_ERROR	include/inclib/icmp/icmp.h	30;"	d
-U8WORD_DEBUG	include/spdict.h	22;"	d
+U8WORD_DEBUG	include/spdict.h	18;"	d
 UALL_DLOCKS	tool/include/sptinc.h	28;"	d
 UBSET	src/spider/spuglobal.h	/^typedef struct  ubug_setting    UBSET;$/;"	t	typeref:struct:ubug_setting
 UBUGINC	Makefile	/^UBUGINC = -I src\/spider$/;"	m
@@ -425,24 +425,24 @@ UBUG_PTHREAD_MIN	src/spider/spurlb.h	19;"	d
 UBUG_READ_MICROSEC	src/spider/spurlb.h	23;"	d
 UBUG_READ_SEC	src/spider/spurlb.h	22;"	d
 UDATA	include/spinc.h	/^typedef struct  url_dat UDATA;$/;"	t	typeref:struct:url_dat
-UFILE_LEN	include/spinc.h	59;"	d
+UFILE_LEN	include/spinc.h	63;"	d
 UG_RDWR	include/inclib/museipc/mipc.h	31;"	d
-UHOST_LEN	include/spinc.h	57;"	d
-UPATH_LEN	include/spinc.h	58;"	d
+UHOST_LEN	include/spinc.h	61;"	d
+UPATH_LEN	include/spinc.h	62;"	d
 UPDATE_KEEP_WD	include/spdb.h	147;"	d
 UPDATE_LATEST	include/spdb.h	69;"	d
 UPDATE_URL	include/spdb.h	106;"	d
 UPDATE_WORD_IDF	include/spdb.h	146;"	d
 URLS_DLOCKS	tool/include/sptinc.h	26;"	d
 URL_ID_LEN	include/spdb.h	75;"	d
-URL_LEN	include/spinc.h	60;"	d
+URL_LEN	include/spinc.h	64;"	d
 USING_STATE	include/spdb.h	103;"	d
 USR_RDWR	include/inclib/museipc/mipc.h	25;"	d
 USR_READ	include/inclib/museipc/mipc.h	23;"	d
 USR_WRITE	include/inclib/museipc/mipc.h	24;"	d
-UTF8_BUF_SIZE	include/spdict.h	18;"	d
-UTF8_WORD_CNT	include/spdict.h	15;"	d
-UTF8_WORD_LEN	include/spdict.h	14;"	d
+UTF8_BUF_SIZE	include/spdict.h	14;"	d
+UTF8_WORD_CNT	include/spdict.h	11;"	d
+UTF8_WORD_LEN	include/spdict.h	10;"	d
 WEB	include/spnet.h	/^typedef	struct	web		        WEB;$/;"	t	typeref:struct:web
 WEBIN	include/spnet.h	/^typedef	struct	web_if		    WEBIN;$/;"	t	typeref:struct:web_if
 WEB_CONTEXT_LEN	include/spnet.h	25;"	d
@@ -461,7 +461,7 @@ WMP_MAPBIT_SHI	include/spmpool.h	6;"	d
 WMP_PAGESIZE	include/spmpool.h	8;"	d
 WMP_PSIZE_BOR	include/spmpool.h	7;"	d
 WORDS	include/spdict.h	/^typedef	struct	dword	WORDS;$/;"	t	typeref:struct:dword
-WORD_NUM_LIMIT	include/spdict.h	16;"	d
+WORD_NUM_LIMIT	include/spdict.h	12;"	d
 WPOOL	include/spmpool.h	/^}WPOOL;$/;"	t	typeref:struct:w_mempool
 WSTRS	include/spdict.h	/^typedef	struct	wstr	WSTRS;$/;"	t	typeref:struct:wstr
 _CONTAINER_H	include/inclib/container/container.h	2;"	d
@@ -606,6 +606,7 @@ hbcmp	include/inclib/musealgo/malgo.h	/^typedef	int	(*hbcmp)(void *, void *, int
 hbcreat	include/inclib/musealgo/malgo.h	/^typedef	void	*(*hbcreat)(void *, int, void *);$/;"	t
 hbhash	include/inclib/musealgo/malgo.h	/^typedef	uLong	(*hbhash)(void *, int);$/;"	t
 hcheck_start	tool/src/sp_word_arrange.c	/^static void hcheck_start(char *content)$/;"	f	file:
+httpContent	tool/src/sp_funtest.c	/^char    httpContent[0x100] = {$/;"	v
 icmp_checksum	include/inclib/icmp/icmp.h	/^    u_short icmp_checksum;$/;"	m	struct:internet_ctl_msg_protocal
 icmp_checksum	src/flib/icmp/icmp.c	/^static u_short icmp_checksum(u_short *addr, int byte_num)$/;"	f	file:
 icmp_code	include/inclib/icmp/icmp.h	/^    u_char  icmp_code;$/;"	m	struct:internet_ctl_msg_protocal
@@ -831,6 +832,7 @@ sp_html_get_tag_string	src/flib/sp_html.c	/^char *sp_html_get_tag_string(char *t
 sp_html_is_tag	src/flib/sp_html.c	/^static int sp_html_is_tag(const char *tag_start, int tag_len)$/;"	f	file:
 sp_html_is_tag_end	src/flib/sp_html.c	/^static int sp_html_is_tag_end(const char *tag_string)$/;"	f	file:
 sp_html_tag_range_locate	src/flib/sp_html.c	/^char *sp_html_tag_range_locate(const char *html_string, int len)$/;"	f
+sp_http_compare_latest	src/flib/sp_network.c	/^int sp_http_compare_latest($/;"	f
 sp_http_header_locate	src/flib/sp_network.c	/^char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)$/;"	f
 sp_http_interact	src/flib/sp_network.c	/^int sp_http_interact($/;"	f
 sp_msg_command	src/flib/sp_message.c	/^inline int sp_msg_command(PMSG *pMsg)$/;"	f
@@ -852,6 +854,7 @@ sp_msg_unfill_comm	src/flib/sp_message.c	/^void sp_msg_unfill_comm(PMSG *pMsg)$/
 sp_msg_write	src/flib/sp_message.c	/^int sp_msg_write(int msgFd, PMSG *pMessage)$/;"	f
 sp_net_set_sockif	src/flib/sp_network.c	/^int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)$/;"	f
 sp_net_sock_connect	src/flib/sp_network.c	/^int sp_net_sock_connect(SOCKIF *sockInfo)$/;"	f
+sp_net_sock_init	src/flib/sp_network.c	/^int sp_net_sock_init(WEBIN *web_stu)$/;"	f
 sp_net_sock_read	src/flib/sp_network.c	/^int sp_net_sock_read($/;"	f
 sp_net_sock_settimer	src/flib/sp_network.c	/^static int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)$/;"	f	file:
 sp_net_speed_ping	src/flib/sp_network.c	/^long sp_net_speed_ping(const char *ping_host, int num_pack)$/;"	f
@@ -867,6 +870,8 @@ sp_soc_run	src/flib/sp_socket.c	/^inline int sp_soc_run(SOC *pSoc, void *bufStor
 sp_soc_set	src/flib/sp_socket.c	/^void sp_soc_set(SOC *socStru, int nSock, uLong nSec, uLong uSec, int setFlags, int libFlags)$/;"	f
 sp_stop	src/flib/sp_misc.c	/^void sp_stop(void)$/;"	f
 sp_stop_str	src/flib/sp_misc.c	/^void sp_stop_str(void)$/;"	f
+sp_url_path_count_nlayer	src/flib/sp_network.c	/^int sp_url_path_count_nlayer(char *url)$/;"	f
+sp_url_seperate	src/flib/sp_network.c	/^int sp_url_seperate(char *url, int url_len, WEB *web_info)$/;"	f
 spconf	tool/include/sptinc.h	/^struct	spconf {$/;"	s
 spfun	include/spdict.h	/^typedef	int	    (*spfun)(char *, int, char *, int);$/;"	t
 sqlDataBase	tool/src/sp_gather.c	/^static	MYSQL	sqlDataBase;$/;"	v	file:
@@ -945,6 +950,7 @@ ubugPingInfo	src/spider/sp_urlbug_clean.c	/^SPPING  ubugPingInfo;$/;"	v
 ubugThreadPool	src/spider/sp_urlbug_clean.c	/^void	*ubugThreadPool;\/* PTHPOOL *\/$/;"	v
 ubug_catch_csto_rule	src/spider/sp_urlbug_rule.c	/^int ubug_catch_csto_rule(char *content, char **ret_content_point)$/;"	f
 ubug_catch_default_rule	src/spider/sp_urlbug_rule.c	/^int ubug_catch_default_rule(char *content, char **ret_content_point)$/;"	f
+ubug_catch_http_retcode	src/spider/sp_urlbug_network.c	/^static int ubug_catch_http_retcode($/;"	f	file:
 ubug_check_separator	src/spider/sp_urlbug_rule.c	/^void ubug_check_separator(char *urlStr, int *uLen)$/;"	f
 ubug_check_url_prefix	src/spider/sp_urlbug_rule.c	/^int ubug_check_url_prefix(char *preSrc, int nLen)$/;"	f
 ubug_command_analyst	src/spider/sp_urlbug.c	/^static void ubug_command_analyst(int nPara, char **pComm)$/;"	f	file:
@@ -953,11 +959,10 @@ ubug_create_dbtable	src/spider/sp_urlbug_db.c	/^void ubug_create_dbtable(void)$/
 ubug_create_pthread	src/spider/sp_urlbug.c	/^static void ubug_create_pthread(WEBIN *webNode)$/;"	f	file:
 ubug_db_clean	src/spider/sp_urlbug_clean.c	/^void ubug_db_clean(void *pNULL)$/;"	f
 ubug_dberr	src/spider/sp_urlbug_db.c	/^int ubug_dberr(MYSQL *sHandler, char *withStr)$/;"	f
-ubug_download_website	src/spider/sp_urlbug_network.c	/^int ubug_download_website(WEBIN *wInfo)$/;"	f
 ubug_free_weblist	src/spider/sp_urlbug_clean.c	/^void ubug_free_weblist(void *pNull)$/;"	f
 ubug_get_pattern	src/spider/sp_urlbug_rule.c	/^int ubug_get_pattern(const char *host_string)$/;"	f
-ubug_handle_http_recode	src/spider/sp_urlbug_network.c	/^static int ubug_handle_http_recode($/;"	f	file:
 ubug_handle_httpreq	src/spider/sp_urlbug_network.c	/^static int ubug_handle_httpreq(WEBIN *web_info)$/;"	f	file:
+ubug_html_download	src/spider/sp_urlbug_network.c	/^int ubug_html_download(WEBIN *wInfo)$/;"	f
 ubug_init_database	src/spider/sp_urlbug_db.c	/^void ubug_init_database(void)$/;"	f
 ubug_init_dbuf	src/spider/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBuff)$/;"	f	file:
 ubug_init_pinginfo	src/spider/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f

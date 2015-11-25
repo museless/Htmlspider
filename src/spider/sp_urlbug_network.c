@@ -112,25 +112,26 @@ static void ubug_ping_default_init(SPPING *ping_info)
 	       1. ubug_html_download
            2. ubug_handle_httpreq
 	       3. ubug_send_httpreq
-           4. ubug_catch_http_retcode
-           4. ubug_update_latest_time
+           4. ubug_handle_http_retcode
+           5. ubug_update_latest_time
 
 --------------------------------------------*/
 
 /*-----ubug_html_download-----*/
 int ubug_html_download(WEBIN *wInfo)
 {
-	int	cont_offset, byte_read;
+	int	    cont_offset, byte_read;
+    int     redirect_times = 0;
 
-    if (sp_net_sock_init(wInfo) == FRET_N) {
-        ubug_perror("ubug_html_download - sp_net_sock_init", errno);
-        return  FRET_N;
+    for (; redirect_times < MAX_DIRECT_TIMES; redirect_times++) {
+        if (sp_net_sock_init(wInfo) == FRET_N) {
+            elog_write(
+            "ubug_html_download - sp_net_sock_init",
+            FUNCTION_STR, HERROR_STR);
+
+            return  FRET_N;
+        }
     }
-
-    if ((cont_offset = ubug_handle_httpreq(wInfo)) == FUN_RUN_FAIL) {
-		close(wInfo->w_sock);
-		return	FRET_N;
-	}
 
     byte_read = sp_net_sock_read(
                 wInfo->w_sock, wInfo->w_conbuf + cont_offset,
@@ -140,92 +141,87 @@ int ubug_html_download(WEBIN *wInfo)
     cont_offset += (byte_read == FUN_RUN_FAIL) ? 0 : byte_read;
     close(wInfo->w_sock);
 
-	return	wInfo->w_sock;
+	return	cont_offset;
 }
 
 
 /*-----ubug_handle_httpreq-----*/
-static int ubug_handle_httpreq(WEBIN *web_info)
-{
-    return  FUN_RUN_OK;
-}
-
-
-/*-----ubug_send_httpreq-----*/
-int ubug_send_httpreq(WEBIN *wInfo)
+int ubug_handle_httpreq(WEBIN *wInfo)
 {
 	char	urlStr[URL_LEN], rwData[HTTP_RECALL];
 	WEB    *urlInfo = &wInfo->w_ubuf;
-	char   *pChar, *pEnd;
 
     sprintf(
     urlStr, "%s%s%s%s", MATCH_HTTP,
     urlInfo->web_host, urlInfo->web_path, urlInfo->web_file);
 
-    int     httpChk, datLen = HTTP_RECALL;
+    int     datLen = HTTP_RECALL;
+    int     http_ret_code = 
+            sp_http_interact(urlInfo, wInfo->w_sock, rwData, &datLen);
 
-    if (!(httpChk = sp_http_interact(urlInfo, wInfo->w_sock, rwData, &datLen))) {
-        elog_write(
-        "ubug_send_httpreq - sp_http_interact", 
-	    urlStr, HERROR_STR);
+    
+    char   *string_point;
+    int     string_size;
 
-        return	FUN_RUN_FAIL;
-	}
-
-	if(httpChk != RESP_CONNECT_OK) {
-        char    http_code_string[SMALL_BUF];
-
-		sprintf(http_code_string, "%d", httpChk);
-		elog_write("cannot download website", urlStr, http_code_string);
-		return	FUN_RUN_FAIL;
-	}
-
-    if (!(pChar = strstr(rwData, "\r\n\r\n"))) {
-        elog_write("ubug_send_httpreq - httpret", urlStr, "httpret wrong");
+    if (!(string_point = strstr(rwData, "\r\n\r\n"))) {
+        elog_write("ubug_send_httpreq - httpret", urlStr, "httpret not complete");
         return	FUN_RUN_FAIL;
     }
 
-    strcpy(wInfo->w_conbuf, pChar);
-    datLen -= (pChar - rwData);
+    strcpy(wInfo->w_conbuf, string_point);
+    datLen -= (string_point - rwData);
 
-	/* move offset "Last-Modified:" or "Date:" */
-	if((pChar = strstr(rwData, MATCH_LAMD))) {
-		pChar += MLAMD_LEN;
+    string_size = datLen;
+    string_point = sp_http_compare_latest(
+                   wInfo->w_latest, string_point, &string_size);
 
-	} else if((pChar = strstr(rwData, MATCH_DATE))) {
-		pChar += MDATE_LEN;
-	}
-
-    if (pChar == NULL)
-        return  FUN_RUN_END;
-
-	/* if there're no "\r\n" at the end, returing */
-	if((pEnd = strstr(pChar, MATCH_LINKBRK)) == NULL)
-		return	FUN_RUN_FAIL;
-
-	if(!strncmp(pChar, wInfo->w_latest, pEnd - pChar))
-		return	FUN_RUN_FAIL;
-
-    sprintf(wInfo->w_latest, "%.*s", (int)(pEnd - pChar), pChar);
-    ubug_update_latest_time(wInfo, urlStr);
+    if (!string_point) {
+        sprintf(wInfo->w_latest, "%.*s", string_size, string_point);
+        ubug_update_latest_time(wInfo, urlStr);
+    }
 
 	return	datLen;
 }
 
 
 /*-----ubug_handle_http_retcode-----*/
-static int ubug_handle_http_recode(
-           int sock, WEBIN *web_info, char *buff, int *buff_size)
+static int ubug_handle_http_retcode(
+           char *http_buff, int buff_size, 
+           int http_ret_code, WEBIN *web_info, const char *url)
 {
-    int     http_retcode, data_size = *buff_size;
+    if (http_ret_code == FUN_RUN_END) {
+        elog_write(
+        "ubug_send_httpreq - sp_http_interact", url, HERROR_STR);
 
-    http_retcode = sp_http_interact(
-                   &web_info->w_ubuf, web_info->w_sock, buff, &data_size);
+        return	FRET_N;
+	}
 
-    if (http_retcode != RESP_PERM_MOVE || http_retcode != RESP_TEMP_MOVE)
-        ;   /* nothing */
+    if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE) {
+        ubug_handle_http_30x(http_buff, buff_size, web_info);
+        return  FRET_N;
+    }
 
-    return  http_retcode;
+	if (http_ret_code != RESP_CONNECT_OK) {
+		sprintf((char *)&http_ret_code, "%d", http_ret_code);
+		elog_write("cannot download website", url, (char *)&http_ret_code);
+
+		return	FRET_N;
+	}
+
+    return  FRET_P;
+}
+
+
+/*-----ubug_handle_http_30x-----*/
+int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)
+{
+    int     url_len = buff_size;
+    char   *new_url = sp_http_header_locate(MATCH_LOCA, buff_size, &url_len);
+
+    if (!new_url || sp_url_seperate(new_url, url_len, web_info) != FRET_P)
+        return  FRET_N;
+
+    return  FRET_UNIQUE;
 }
 
 
