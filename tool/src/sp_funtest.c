@@ -47,7 +47,8 @@ char    textContent[0x100] = {
 char    httpContent[0x100] = {
             "HTTP/1.0 200 OK\r\n\
              \rDate: 2015.11.25 22:18\r\n\
-             \rServer: NCSA/1.3\r\n\r\n"
+             \rServer: NCSA/1.3\r\n\
+             \rLocation: www.fucker.com\r\n\r\n"
         };
 
 
@@ -58,6 +59,15 @@ char    httpContent[0x100] = {
 /* Part Four */
 static  int     para_analysis(int argc, char **argv);
 static  void    test_part(void);
+
+static  int     ubug_html_download(WEBIN *wInfo);
+static  int     ubug_handle_httpreq(WEBIN *wInfo);
+
+static  int     ubug_handle_http_retcode(
+                char *http_buff, int buff_size, 
+                int http_ret_code, WEBIN *web_info, const char *url);
+
+static  int     ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info);
 
 
 /*----------------------------------------------
@@ -72,13 +82,27 @@ static  void    test_part(void);
 /*-----main-----*/
 int main(int argc, char **argv)
 {
-    int     string_size = strlen(httpContent);
-    char   *locate = sp_http_compare_latest("2015.11.25 22:18", httpContent, &string_size);
+    WEBIN   web_stu;
+    char    url[0x40] = "http://www.csto.com/project/list?page=1";
 
-    printf("size: %d - string: %.*s\n", string_size, string_size, locate);
-    perror("sp_http_compare_latest");
+    if (sp_url_seperate(url, strlen(url), &web_stu.w_ubuf) != FRET_P) {
+        perror("sp_url_seperate");
+        return  -1;
+    }
 
-    return   -1;
+    printf("%d\n", ubug_html_download(&web_stu));
+
+    return  -1;
+
+    printf("%s - %s - %s\n", web_stu.w_ubuf.web_host, web_stu.w_ubuf.web_path, web_stu.w_ubuf.web_file); 
+    int     ret_num = ubug_handle_http_retcode(
+                      httpContent, strlen(httpContent), 200,
+                      &web_stu, url);
+
+    printf("%s - %s\n", web_stu.w_ubuf.web_host, web_stu.w_ubuf.web_path);
+    printf("ret: %d\n", ret_num);
+
+    return  -1;
 }
 
 
@@ -92,11 +116,105 @@ static int para_analysis(int argc, char **argv)
 /*-----test_part-----*/
 static void test_part(void)
 {
-    char   *tag_string = &textContent[7];
-    int     content_size = strlen(textContent) - 7;
 
-    if (!(tag_string = sp_html_tag_range_locate(tag_string, content_size)))
-        perror("sp_html_get_tag_string");
-    
-    printf("%.*s\n", content_size, tag_string);
 }
+
+
+/*-----ubug_html_download-----*/
+static int ubug_html_download(WEBIN *wInfo)
+{
+	int	    cont_offset;
+    int     redirect_times = 0;
+
+    for (; redirect_times < MAX_DIRECT_TIMES; redirect_times++) {
+        if (sp_net_sock_init(wInfo) == FRET_N) {
+            elog_write(
+            "ubug_html_download - sp_net_sock_init",
+            FUNCTION_STR, HERROR_STR);
+
+            return  FRET_N;
+        }
+
+        if ((cont_offset = ubug_handle_httpreq(wInfo)) == FRET_P)
+            break;
+        
+        else if (cont_offset > FRET_UNIQUE)
+            return  FRET_N;
+
+        printf(
+        "%s - %s - %s\n", 
+        wInfo->w_ubuf.web_host, wInfo->w_ubuf.web_path, wInfo->w_ubuf.web_file);
+
+        close(wInfo->w_sock);
+    }
+
+    close(wInfo->w_sock);
+
+	return	cont_offset;
+}
+
+
+/*-----ubug_handle_httpreq-----*/
+static int ubug_handle_httpreq(WEBIN *wInfo)
+{
+	char	urlStr[URL_LEN], rwData[HTTP_RECALL];
+	WEB    *urlInfo = &wInfo->w_ubuf;
+
+    sprintf(
+    urlStr, "%s%s%s%s", MATCH_HTTP,
+    urlInfo->web_host, urlInfo->web_path, urlInfo->web_file);
+
+    int     ret, datLen = HTTP_RECALL;
+    int     http_ret_code = 
+            sp_http_interact(urlInfo, wInfo->w_sock, rwData, &datLen);
+
+    if ((ret = ubug_handle_http_retcode(rwData, datLen, http_ret_code, wInfo, urlStr)) != FRET_P)
+        return  ret;
+    
+    char   *string_point;
+
+    if (!(string_point = strstr(rwData, "\r\n\r\n"))) {
+        elog_write("ubug_send_httpreq - httpret", urlStr, "httpret not complete");
+        return	FUN_RUN_FAIL;
+    }
+
+	return	datLen;
+}
+
+
+/*-----ubug_handle_http_retcode-----*/
+static int ubug_handle_http_retcode(
+           char *http_buff, int buff_size, 
+           int http_ret_code, WEBIN *web_info, const char *url)
+{
+    if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE)
+        return  ubug_handle_http_30x(http_buff, buff_size, web_info);
+
+	if (http_ret_code != RESP_CONNECT_OK) {
+		sprintf((char *)&http_ret_code, "%d", http_ret_code);
+        printf("http_ret_code: %s\n", (char *)&http_ret_code);
+
+		return	FRET_N;
+	}
+
+    return  FRET_P;
+}
+
+
+/*-----ubug_handle_http_30x-----*/
+static int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)
+{
+    int     url_len = buff_size;
+    char   *new_url = sp_http_header_locate(MATCH_LOCA, http_buff, &url_len);
+
+    if (!new_url)
+        return  FRET_N;
+
+    new_url += MLOCA_LEN;
+
+    if (sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
+        return  FRET_N;
+
+    return  FRET_UNIQUE;
+}
+

@@ -196,10 +196,8 @@ static int ubug_handle_http_retcode(
         return	FRET_N;
 	}
 
-    if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE) {
-        ubug_handle_http_30x(http_buff, buff_size, web_info);
-        return  FRET_N;
-    }
+    if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE)
+        return  ubug_handle_http_30x(http_buff, buff_size, web_info);
 
 	if (http_ret_code != RESP_CONNECT_OK) {
 		sprintf((char *)&http_ret_code, "%d", http_ret_code);
@@ -216,9 +214,9 @@ static int ubug_handle_http_retcode(
 int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)
 {
     int     url_len = buff_size;
-    char   *new_url = sp_http_header_locate(MATCH_LOCA, buff_size, &url_len);
+    char   *new_url = sp_http_header_locate(MATCH_LOCA, http_buff, &url_len);
 
-    if (!new_url || sp_url_seperate(new_url, url_len, web_info) != FRET_P)
+    if (!new_url || sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
         return  FRET_N;
 
     return  FRET_UNIQUE;

@@ -250,11 +250,11 @@ char *sp_http_compare_latest(
 /*-----sp_url_seperate-----*/
 int sp_url_seperate(char *url, int url_len, WEB *web_info)
 {
-    char   *url_point;
+    char   *url_point = url;
 
     memset(web_info, 0, sizeof(WEB));
 
-	if (strncmp(url, MATCH_HTTP, MHTTP_LEN)) {
+	if (!strncmp(url, MATCH_HTTP, MHTTP_LEN)) {
         if (!(url_point = strnstr(url, "//", url_len)))
             return  FRET_Z;
 
@@ -265,31 +265,28 @@ int sp_url_seperate(char *url, int url_len, WEB *web_info)
 	web_info->web_port = HTTP_PORT;
 
     char   *slash_point = strnchr(url_point, '/', url_len);
-    int     host_len, file_name_offset; 
+    int     host_len = (slash_point) ? slash_point - url_point : url_len; 
+    int     file_name_offset = 0;
 
-    if (slash_point) {
-        host_len = slash_point - url_point;
-        sprintf(web_info->web_host, "%.*s", host_len, url_point);
+    sprintf(web_info->web_host, "%.*s", host_len, url_point);
 
-        if ((slash_point = strchrb(url_point, url_len, '/'))) {
-            /* url likes 'xxx.com/', I think it no file name at this url */
-            if ((file_name_offset = slash_point - url_point) != host_len)
-                sprintf(
-                web_info->web_file, "%.*s", 
-                url_len - file_name_offset - 1,
-                &url_point[file_name_offset + 1]); 
-        }
-
-        sprintf(
-        web_info->web_path, "%.*s", 
-        file_name_offset - host_len + 1, &url_point[host_len]);
-
-        web_info->web_nlayer = sp_url_path_count_nlayer(web_info->web_path);
-
-        return  FRET_P;
+    if ((slash_point = strchrb(url_point, url_len, '/'))) {
+        /* url likes 'xxx.com/', I think it no file name at this url */
+        if ((file_name_offset = slash_point - url_point) != host_len)
+            sprintf(
+            web_info->web_file, "%.*s", 
+            url_len - file_name_offset - 1, &url_point[file_name_offset + 1]);
     }
+    
+    (slash_point && file_name_offset > 0) ?
+    sprintf(
+    web_info->web_path, "%.*s", 
+    file_name_offset - host_len + 1, &url_point[host_len]) :
+    sprintf(web_info->web_path, "/");
 
-    return  FRET_Z;
+    web_info->web_nlayer = sp_url_path_count_nlayer(web_info->web_path);
+
+    return  FRET_P;
 }
 
 
