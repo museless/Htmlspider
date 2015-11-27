@@ -142,7 +142,7 @@ static int ubug_html_download(WEBIN *wInfo)
             return  FRET_N;
 
         printf(
-        "%s - %s - %s\n", 
+        "Redirect: %s - %s - %s\n", 
         wInfo->w_ubuf.web_host, wInfo->w_ubuf.web_path, wInfo->w_ubuf.web_file);
 
         close(wInfo->w_sock);
@@ -171,12 +171,6 @@ static int ubug_handle_httpreq(WEBIN *wInfo)
     if ((ret = ubug_handle_http_retcode(rwData, datLen, http_ret_code, wInfo, urlStr)) != FRET_P)
         return  ret;
     
-    char   *string_point;
-
-    if (!(string_point = strstr(rwData, "\r\n\r\n"))) {
-        elog_write("ubug_send_httpreq - httpret", urlStr, "httpret not complete");
-        return	FUN_RUN_FAIL;
-    }
 
 	return	datLen;
 }
@@ -211,6 +205,7 @@ static int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)
         return  FRET_N;
 
     new_url += MLOCA_LEN;
+    url_len -= MLOCA_LEN;
 
     if (sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
         return  FRET_N;

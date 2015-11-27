@@ -216,7 +216,13 @@ int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)
     int     url_len = buff_size;
     char   *new_url = sp_http_header_locate(MATCH_LOCA, http_buff, &url_len);
 
-    if (!new_url || sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
+    if (!new_url)
+        return  FRET_N;
+
+    new_url += MLOCA_LEN;
+    url_len -= MLOCA_LEN;
+
+    if (sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
         return  FRET_N;
 
     return  FRET_UNIQUE;
