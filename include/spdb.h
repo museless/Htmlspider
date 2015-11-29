@@ -66,7 +66,7 @@ values(\"%.*s\",%d,%d,%d)"
 #define	TRAN_URL	    ",(\"%.*s\",%d,%d,%d)"
 
 #define	REVIEW_URL	    "select * from %s where Url=\"%.*s\""
-#define	UPDATE_LATEST	"update UALL set Latest=\"%s\" where Url=\"%s\""
+#define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url=\"%s%s%s\""
 
 /*-----------------------------
 	     for textbug

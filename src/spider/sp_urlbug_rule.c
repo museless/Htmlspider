@@ -4,7 +4,7 @@
  *---------------------------------------------*/
 
 /*---------------------------------------------
- *     creation time: 
+ *     creation time: 2015-11-23 23:34:41
  *     author: Muse 
  *---------------------------------------------*/
 
@@ -93,7 +93,6 @@ int ubug_locate_default_rule(
 /*-----ubug_catch_csto_rule-----*/
 int ubug_catch_csto_rule(char *content, char **ret_content_point)
 {    
-
     return  FUN_RUN_OK;
 }
 

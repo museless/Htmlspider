@@ -104,7 +104,7 @@ int main(int argc, char **argv)
 {
 	ubug_command_analyst(argc, argv);
 
-	if(mainly_init() && ubug_init_source_pool()) {
+	if (mainly_init() && ubug_init_source_pool()) {
 		ubug_init_signal();
 		ubug_init_database();
 		ubug_init_weblist();
@@ -318,7 +318,8 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
 	    strcpy((list_point)->w_latest, data_row[1]);
 	}
 
-    (list_point)->w_latestcnt = 0;
+    list_point->w_latestcnt = list_point->w_conbufsize = 
+    list_point->w_urlbufsize = list_point->w_contoffset = 0;
 
     if (!ubug_init_dbuf(&((list_point)->w_buff))) {
         elog_write(
@@ -334,7 +335,7 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
 /*-----ubug_init_urllist-----*/
 static int ubug_init_urllist(char *urlStr, WEB *webStu)
 {
-    if (sp_url_seperate(urlStr, strlen(urlStr), webStu) != FRET_P) {
+    if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_P) {
         printf(
         "Host: %s - Path: %s - File: %s - Layer num: %d\n", 
         webStu->web_host, webStu->web_path, 
@@ -397,18 +398,22 @@ static void ubug_set_ubset(const char *way_option)
 /*-----ubug_create_pthread-----*/
 static void ubug_create_pthread(WEBIN *webNode)
 {
-	if(!(webNode->w_conbuf = wmpool_malloc(contStorePool))) {
+	if (!(webNode->w_conbuf = wmpool_malloc(contStorePool))) {
 		ubug_perror("ubug_create_pthread - wmpool_malloc - contbuf", errno);
 		ubug_sig_error();
 	}
 
-	if(!(webNode->w_url = wmpool_malloc(urlStorePool))) {
+    webNode->w_conbufsize = WMP_PAGESIZE;
+
+	if (!(webNode->w_url = wmpool_malloc(urlStorePool))) {
 		ubug_perror("ubug_create_pthread - wmpool_malloc - url", errno);
 		ubug_sig_error();
 	}
 
-	if((webNode->w_size = urlRunSet.ubs_dway(webNode)) > FUN_RUN_END) {
-		if(mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)webNode))
+    webNode->w_urlbufsize = NAMBUF_LEN;
+
+	if ((webNode->w_size = urlRunSet.ubs_dway(webNode)) > FUN_RUN_END) {
+		if (mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)webNode))
 			return;
 
 		elog_write("ubug_create_pthread - mpc_thread_wake", FUNCTION_STR, ERROR_STR);
@@ -449,7 +454,9 @@ static void ubug_main_entrance(void)
         ubug_ping();
 
 		for (urlCatchNum = 0, webPoint = urlSaveList;
-             webPoint != NULL; webPoint = webPoint->w_next) {
+             webPoint != NULL;
+             webPoint = webPoint->w_next) {
+            mpc_thread_wait(ubugThreadPool);
 	        ubug_create_pthread(webPoint);
 		}
 
@@ -519,5 +526,4 @@ static void ubug_job(WEBIN *wPoint)
         urlCatchNum++;
 	}
 }
-
 

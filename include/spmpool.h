@@ -20,9 +20,9 @@ typedef	struct	w_mempool {
 }WPOOL;
 
 /* global function */
-WPOOL	*wmpool_create(int nClip, int cSize);
-void	*wmpool_malloc(WPOOL *pHandler);
-void	*wmpool_calloc(WPOOL *pHandler);
+WPOOL  *wmpool_create(int nClip, int cSize);
+void   *wmpool_malloc(WPOOL *pHandler);
+void   *wmpool_calloc(WPOOL *pHandler);
 void	wmpool_free(WPOOL *pHandler, void *aPoint);
 void	wmpool_destroy(void *pHandler);
 

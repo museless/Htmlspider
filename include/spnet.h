@@ -33,7 +33,10 @@
 #define	HTTP_GFILE_STR          "GET %s%s HTTP/1.1\r\nHost: %s\r\n%s"
 
 /* http server respone */
-#define MAX_DIRECT_TIMES        0x10
+#define MAX_REDIRECT_TIMES      0x10
+
+#define REDIRECT_DONE           0x1
+#define REDIRECT_UNFINISH       0x2
 
 #define MIN_HTTP_RESPONE_LEN    0x80 
 
@@ -94,12 +97,17 @@ struct	web_if {
 	char   *w_url;			        /* store url (a temp value) */
 	char   *w_conbuf;		        /* store website content */
 
+    int     w_conbufsize;           /* size of the content buffer */
+    int     w_urlbufsize;           /* size of w_url buffer */
+    int     w_contoffset;           /* actual website content offset */
+
     int     w_sock;
 	SOCKIF	w_sockif;
 	WEB	    w_ubuf;
 
 	char	w_latest[LATEST_LEN];	/* use for saving latest time */
-	int	    w_latestcnt;		    /* when equal to LATEST_UPGRADE_LIMIT, update data to mysql */
+    int	    w_latestcnt;            /* when equal to LATEST_UPGRADE_LIMIT
+                                       update data to mysql */
 
 	int	    w_pattern;		        /* pattern for current url */
 	int	    w_size;			        /* size of webpage */
@@ -132,16 +140,16 @@ struct	web_txt {
 };
 
 
-/*---------------------
-     extern data
------------------------*/
+/*-----------------------------
+ *        extern data
+ *-----------------------------*/
 
 extern	char	*rPac;
 
 
-/*---------------------
-     global function
------------------------*/
+/*-----------------------------
+ *       global function
+ *-----------------------------*/
 
 /* sp_network.c */
 int     sp_net_sock_init(WEBIN *web_stu);
@@ -149,16 +157,23 @@ int     sp_net_set_sockif(const char *hostName, SOCKIF *sInfo);
 int     sp_net_sock_connect(SOCKIF *sockInfo);
 
 int     sp_net_sock_read(
-        int nSock, char *savBuf, int bufLimit,
+        int nSock, char *savBuf, int bufLimit, 
         int readTimes, int nSec, long microSec);
 
-int     sp_http_interact(WEB *wbStru, int nSock, char *strBuf, int *bufSize);
+int     sp_net_html_download(WEBIN *web_stu);
+ 
+int     sp_http_handle_request(WEBIN *web_stu);
+int     sp_http_interact(WEBIN *web_stu);
+int     sp_http_handle_retcode(
+        char *http_buff, int buff_size, int http_ret_code, WEBIN *web_info);
 
+int     sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info);
 char   *sp_http_header_locate(
         char *http_header, char *data_buff, int *data_size);
 
 char   *sp_http_compare_latest(
         const char *last_time, char *http_buff, int *buff_len);
+
 
 int     sp_url_seperate(char *url, int url_len, WEB *web_info);
 int     sp_url_path_count_nlayer(char *url);

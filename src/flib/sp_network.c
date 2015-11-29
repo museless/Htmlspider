@@ -10,6 +10,7 @@
     Part Five:  Http protocal
     Part Six:   Url string operation
     Part Seven: Ping
+    Part Eight: Web info operation
 
 --------------------------------------------*/
 
@@ -26,8 +27,8 @@
 
 
 /*------------------------------------------
-            Part One: Define
---------------------------------------------*/
+ *           Part One: Define
+ *------------------------------------------*/
 
 #define ENDHTML_CHK_OFFSET 0x100
 
@@ -39,6 +40,9 @@
 /* Part Four */
 static  int     sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags);
 
+/* Part Five */
+static  int     sp_http_redict_check(WEB *dst, WEB *src);
+
 
 /*------------------------------------------
         Part Four: Socket control
@@ -48,6 +52,7 @@ static  int     sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
         3. sp_net_sock_read
         4. sp_net_sock_settimer
         5. sp_net_sock_init
+        6. sp_net_html_download
 
 --------------------------------------------*/
 
@@ -99,8 +104,10 @@ int sp_net_sock_read(
     int     cont_offset, str_size, zero_times = 8;
 
     for (cont_offset = 0; readTimes > 0 && zero_times; readTimes--) {
-        if ((str_size = select_read(nSock, savBuf + cont_offset, 
-           RECE_DATA, nSec, microSec)) == FUN_RUN_FAIL)
+        str_size = 
+        select_read(nSock, savBuf + cont_offset, RECE_DATA, nSec, microSec);
+
+        if (str_size == FUN_RUN_FAIL)
             break;
 
         if (str_size == 0) {
@@ -145,11 +152,44 @@ int sp_net_sock_init(WEBIN *web_stu)
 {
     if (!sp_net_set_sockif(web_stu->w_ubuf.web_host, &web_stu->w_sockif))
         return  FRET_N;
-
-	if (!(web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)))
+	
+    if (!(web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)))
         return  FRET_N;
-
+    
     return  FRET_P;
+}
+
+
+/*-----sp_net_html_download-----*/
+int sp_net_html_download(WEBIN *web_stu)
+{
+    WEB     webinfo_save = web_stu->w_ubuf;
+    int     redire_flags, count, ret_value;
+
+    redire_flags = REDIRECT_UNFINISH;
+    ret_value = FRET_N;
+
+    for (count = 0; count < MAX_REDIRECT_TIMES; count++) {
+        if (sp_net_sock_init(web_stu) != FRET_P)
+            return  FRET_N;
+
+        if ((ret_value = sp_http_handle_request(web_stu)) == FRET_UNIQUE) {
+            if (redire_flags == REDIRECT_DONE) {
+                ret_value = FRET_P;
+                break;
+            }
+
+            redire_flags = 
+            sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
+           
+            close(web_stu->w_sock);
+            continue;
+        }
+
+        break;
+    }
+
+    return  ret_value;
 }
 
 
@@ -159,36 +199,41 @@ int sp_net_sock_init(WEBIN *web_stu)
         1. sp_http_interact
         2. sp_http_header_locate
         3. sp_http_compare_latest
+        4. sp_http_handle_request
+        5. sp_http_handle_retcode
+        6. sp_http_handle_30x
+        7. sp_http_redict_check
 
 --------------------------------------------*/
 
 /*-----sp_http_interact-----*/
-int sp_http_interact(
-    WEB *wbStru, int nSock, char *strBuf, int *bufSize)
+int sp_http_interact(WEBIN *web_stu)
 {
-    short   strSize, read_size;
-
-    if (*bufSize < MIN_HTTP_RESPONE_LEN) {
+    if (web_stu->w_conbufsize < MIN_HTTP_RESPONE_LEN) {
         errno = EINVAL;
         return  FUN_RUN_END;
     }
 
-    strSize = sprintf(
-              strBuf, HTTP_GFILE_STR, wbStru->web_path, 
-              wbStru->web_file, wbStru->web_host, rPac);
-    
-    if (write(nSock, strBuf, strSize) != strSize) 
+    WEB    *web_info = &web_stu->w_ubuf;
+    short   strSize = sprintf(
+                      web_stu->w_conbuf, HTTP_GFILE_STR, web_info->web_path,
+                      web_info->web_file, web_info->web_host, rPac);
+   
+    if (write(web_stu->w_sock, web_stu->w_conbuf, strSize) != strSize) 
         return  FUN_RUN_END;
 
-    read_size = select_read(nSock, strBuf, *bufSize, TAKE_A_SEC, 0);
+    web_stu->w_size = select_read(
+                      web_stu->w_sock, web_stu->w_conbuf,
+                      web_stu->w_conbufsize, TAKE_A_SEC, 0);
 
-    if (read_size < FRET_VAL)
+    if (web_stu->w_size < FRET_VAL)
         return  FUN_RUN_END;
 
-    *bufSize = read_size;
-    strBuf[read_size] = 0;
+    web_stu->w_conbuf[web_stu->w_size] = 0;
 
-    return  atoi(strBuf + 9);
+    printf("Content: %s\n", web_stu->w_conbuf);
+
+    return  atoi(web_stu->w_conbuf + 9);
 }
 
 
@@ -198,9 +243,8 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
     char   *location, *locate_end;
 
     if ((location = strnstr(data_buff, http_header, *data_size))) {
-        locate_end = strnstr(
-                     location, "\r\n", 
-                     *data_size - (location - data_buff));
+        locate_end = 
+        strnstr(location, "\r\n", *data_size - (location - data_buff));
 
         if (!locate_end)
             return  NULL;
@@ -236,6 +280,58 @@ char *sp_http_compare_latest(
     *buff_len = string_size;
 
     return  header;
+}
+
+
+/*-----sp_http_handle_request-----*/
+int sp_http_handle_request(WEBIN *web_stu)
+{
+    return  sp_http_handle_retcode(
+            web_stu->w_conbuf, web_stu->w_size, 
+            sp_http_interact(web_stu), web_stu);
+}
+
+
+/*-----sp_http_handle_retcode-----*/
+int sp_http_handle_retcode(
+    char *http_buff, int buff_size, int http_ret_code, WEBIN *web_info)
+{
+    if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE)
+        return  sp_http_handle_30x(http_buff, buff_size, web_info);
+
+    return  (http_ret_code != RESP_CONNECT_OK) ? FRET_N : FRET_P;
+}
+
+
+/*-----sp_http_handle_30x-----*/
+int sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info)
+{
+    int     url_len = buff_size;
+    char   *new_url = sp_http_header_locate(MATCH_LOCA, http_buff, &url_len);
+
+    if (!new_url)
+        return  FRET_N;
+
+    new_url += MLOCA_LEN;
+    url_len -= MLOCA_LEN;
+
+    if (sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
+        return  FRET_N;
+
+    return  FRET_UNIQUE;
+}
+
+
+/*-----sp_http_redict_check-----*/
+static int sp_http_redict_check(WEB *dst, WEB *src)
+{
+    if (!strcmp(src->web_path, dst->web_path) && 
+        !strcmp(src->web_file, dst->web_file)) {
+        sprintf(dst->web_host, src->web_host);
+        return  REDIRECT_DONE;
+    }
+
+    return  REDIRECT_UNFINISH;
 }
 
 
@@ -343,3 +439,11 @@ long sp_net_speed_ping(const char *ping_host, int num_pack)
 
     return  (num_pack) ? (total_time / num_pack) : FUN_RUN_FAIL;
 }
+
+
+/*------------------------------------------
+        Part Eight: Web info operation
+
+--------------------------------------------*/
+
+

@@ -52,13 +52,15 @@ void    ubug_set_tabname_default(void);
 void    ubug_init_pinginfo(void);
 void    ubug_ping(void);
 
-int     ubug_html_download(WEBIN *wInfo);
+int     ubug_html_download(WEBIN *web_stu);
 
 /* sp_urlbug_db.c */
 void    ubug_init_database(void);
 void    ubug_create_dbtable(void);
 
-void    ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen);   /* pInfo (WEBIN), uData (UDATA) */
+        /* pInfo (WEBIN), uData (UDATA) */
+void    ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen);
+
 void    ubug_tran_db_whole(void);
 void    ubug_tran_db_force(BUFF *pBuff);
 int     ubug_tran_db_real(BUFF *pBuff);

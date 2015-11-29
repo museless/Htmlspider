@@ -2,28 +2,29 @@
 #include "spmpool.h"
 
 
-/*------------------------------------------
-	Part Zero: Mempool API
-
-	1. wmpool_create
-	2. wmpool_malloc
-	3. wmpool_free
-	4. wmpool_destroy
-
-	macro function (spmpool.h)
-	5. wmpool_bit_is_block
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Zero: Mempool API
+ *
+ *	        1. wmpool_create
+ *	        2. wmpool_malloc
+ *  	    3. wmpool_free
+ *	        4. wmpool_destroy
+ *
+ *	        macro function (spmpool.h)
+ *
+ *	        5. wmpool_bit_is_block
+ *
+-*----------------------------------------------*/
 
 /*-----wmpool_create-----*/
 WPOOL *wmpool_create(int nClip, int cSize)
 {
-	WPOOL	*pStru;
-	int	nMap;
+	WPOOL  *pStru;
+	int	    nMap;
 
-	if(nClip < 1 || cSize <= 0) {
-		printf("wmpool_create nClip: %d - cSize: %d - failed\n", nClip, cSize);
-                errno = EINVAL;
+	if (nClip < 1 || cSize <= 0) {
+        printf("wmpool_create nClip: %d - cSize: %d failed\n", nClip, cSize);
+        errno = EINVAL;
 		return	NULL;
 	}
 
@@ -33,13 +34,13 @@ WPOOL *wmpool_create(int nClip, int cSize)
 	pStru->wmp_psize = cSize;
 	pStru->wmp_clip = nClip;
 
-	if(!(pStru->wmp_point = malloc(pStru->wmp_psize * pStru->wmp_clip)))
+	if (!(pStru->wmp_point = malloc(pStru->wmp_psize * pStru->wmp_clip)))
 		return	NULL;
 
 	nMap = nClip / WMP_MAPBIT;
 	nMap += ((nClip % WMP_MAPBIT) ? 1 : 0);
 
-	if(!(pStru->wmp_map = calloc(nMap, sizeof(int)))) {
+	if (!(pStru->wmp_map = calloc(nMap, sizeof(int)))) {
 		free(pStru->wmp_point);
 		return	NULL;
 	}
@@ -51,22 +52,31 @@ WPOOL *wmpool_create(int nClip, int cSize)
 /*-----wmpool_malloc-----*/
 void *wmpool_malloc(WPOOL *pHandler)
 {
-	int	*pMap = pHandler->wmp_map;
-	int	nCir, bNum;
+	int	   *pMap = pHandler->wmp_map;
+	int	    count, bNum;
 
-	for(bNum = nCir = 0; bNum < pHandler->wmp_clip; nCir++, bNum++) {
-		if(nCir == WMP_MAPBIT) {
-			nCir = 0;
+	for (bNum = count = 0; bNum < pHandler->wmp_clip; count++, bNum++) {
+		if (count == WMP_MAPBIT) {
+			count = 0;
 			pMap++;
 		}
 
-		if(!wmpool_bit_is_block(*pMap, nCir)) {
-			*pMap |= (WMP_BIT_BLOCK << nCir);
+		if (!wmpool_bit_is_block(*pMap, count)) {
+			*pMap |= (WMP_BIT_BLOCK << count);
 			break;
 		}
 	}
 
-	return	(bNum != pHandler->wmp_clip) ? (bNum * pHandler->wmp_psize + pHandler->wmp_point) : NULL;
+    char    *locate = NULL;
+
+    if (bNum != pHandler->wmp_clip) {
+        locate = bNum * pHandler->wmp_psize + pHandler->wmp_point;
+
+    } else {
+        errno = ESPIPE;
+    }
+
+	return  locate;	
 }
 
 

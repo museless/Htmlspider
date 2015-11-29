@@ -62,8 +62,8 @@ DBUSRNAME	include/spdb.h	17;"	d
 DCONT	include/spdict.h	/^typedef	struct	dindex	DCONT;$/;"	t	typeref:struct:dindex
 DEFALUT_MAX_BODY	include/inclib/mmdpool/mmdpool.h	51;"	d
 DEFAULT_BSIZE	include/inclib/mmdpool/mmdpool.h	50;"	d
-DEFAULT_PING_HOST	include/spnet.h	52;"	d
-DEFAULT_PING_PNUM	include/spnet.h	53;"	d
+DEFAULT_PING_HOST	include/spnet.h	55;"	d
+DEFAULT_PING_PNUM	include/spnet.h	56;"	d
 DELETE_KEYWORD	include/spdb.h	134;"	d
 DG_ICMP_MAXLEN	include/inclib/icmp/icmp.h	22;"	d
 DG_ICMP_MINLEN	include/inclib/icmp/icmp.h	21;"	d
@@ -98,7 +98,7 @@ DR_WITH_STATE	include/spdict.h	57;"	d
 DR_WITH_TIMES	include/spdict.h	58;"	d
 DR_WRONG	include/spdict.h	30;"	d
 EMPTY_OBJ_STR	include/spinc.h	94;"	d
-ENDHTML_CHK_OFFSET	src/flib/sp_network.c	32;"	d	file:
+ENDHTML_CHK_OFFSET	src/flib/sp_network.c	33;"	d	file:
 ERROR_STR	include/spinc.h	97;"	d
 EXARR	tool/Makefile	/^EXARR	= bin\/arrage$/;"	m
 EXFORM	tool/Makefile	/^EXFORM	= bin\/format$/;"	m
@@ -141,7 +141,7 @@ HBET	include/inclib/musealgo/malgo.h	/^typedef	struct	hashbucket	HBET;$/;"	t	typ
 HEAD_LEN	include/spinc.h	57;"	d
 HERROR_STR	include/spinc.h	98;"	d
 HTTP_GFILE_STR	include/spnet.h	33;"	d
-HTTP_PORT	include/spnet.h	49;"	d
+HTTP_PORT	include/spnet.h	52;"	d
 HTTP_RECALL	include/spinc.h	68;"	d
 HUGE_BUF	include/spinc.h	75;"	d
 ICMP	include/inclib/icmp/icmp.h	/^typedef struct  internet_ctl_msg_protocal   ICMP;$/;"	t	typeref:struct:internet_ctl_msg_protocal
@@ -200,8 +200,8 @@ MATCH_a	include/sphtml.h	46;"	d
 MATOS	include/inclib/mato.h	/^typedef	struct	matos		MATOS;$/;"	t	typeref:struct:matos
 MATO_FALSE	include/inclib/mato.h	9;"	d
 MATO_TRUE	include/inclib/mato.h	10;"	d
-MAX_DIRECT_TIMES	include/spnet.h	36;"	d
 MAX_PADDATA_LEN	include/inclib/ping/ping.h	20;"	d
+MAX_REDIRECT_TIMES	include/spnet.h	36;"	d
 MAX_UNI_LEN	include/spdict.h	16;"	d
 MAX_URL_LEN	include/spnet.h	19;"	d
 MAX_UTF8_LEN	include/spdict.h	15;"	d
@@ -237,7 +237,7 @@ MICSEC_PER_SEC	include/spinc.h	124;"	d
 MIDDLE_BUF	include/spinc.h	73;"	d
 MILLISEC_500	include/spinc.h	119;"	d
 MILSEC_PER_SEC	include/spinc.h	125;"	d
-MIN_HTTP_RESPONE_LEN	include/spnet.h	38;"	d
+MIN_HTTP_RESPONE_LEN	include/spnet.h	41;"	d
 MIN_URL_LEN	include/spnet.h	18;"	d
 MIPC_END	include/inclib/museipc/mipc.h	20;"	d
 MIPC_FAIL	include/inclib/museipc/mipc.h	21;"	d
@@ -318,12 +318,14 @@ PTH_RUN_PERMANENT	include/inclib/mpctl.h	30;"	d
 PTH_WAS_KILLED	src/flib/musetpool/musepthctl.c	/^    PTH_WAS_KILLED,$/;"	e	enum:PTHREAD_STATE	file:
 PWSTRS	include/spdict.h	/^typedef	struct	wstr*	PWSTRS;$/;"	t	typeref:struct:wstr
 RECE_DATA	include/spinc.h	67;"	d
+REDIRECT_DONE	include/spnet.h	38;"	d
+REDIRECT_UNFINISH	include/spnet.h	39;"	d
 RELIST_LIMIT	include/spdict.h	66;"	d
-RESP_CONNECT_ACCEPT	include/spnet.h	41;"	d
-RESP_CONNECT_OK	include/spnet.h	40;"	d
-RESP_PERM_MOVE	include/spnet.h	43;"	d
-RESP_SERV_UNAVAIABLE	include/spnet.h	46;"	d
-RESP_TEMP_MOVE	include/spnet.h	44;"	d
+RESP_CONNECT_ACCEPT	include/spnet.h	44;"	d
+RESP_CONNECT_OK	include/spnet.h	43;"	d
+RESP_PERM_MOVE	include/spnet.h	46;"	d
+RESP_SERV_UNAVAIABLE	include/spnet.h	49;"	d
+RESP_TEMP_MOVE	include/spnet.h	47;"	d
 REVIEW_URL	include/spdb.h	68;"	d
 REVIEW_WORD	include/spdb.h	123;"	d
 RTURL_STATE	include/spdb.h	98;"	d
@@ -834,8 +836,12 @@ sp_html_is_tag	src/flib/sp_html.c	/^static int sp_html_is_tag(const char *tag_st
 sp_html_is_tag_end	src/flib/sp_html.c	/^static int sp_html_is_tag_end(const char *tag_string)$/;"	f	file:
 sp_html_tag_range_locate	src/flib/sp_html.c	/^char *sp_html_tag_range_locate(const char *html_string, int len)$/;"	f
 sp_http_compare_latest	src/flib/sp_network.c	/^char *sp_http_compare_latest($/;"	f
+sp_http_handle_30x	src/flib/sp_network.c	/^int sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info)$/;"	f
+sp_http_handle_request	src/flib/sp_network.c	/^int sp_http_handle_request(WEBIN *web_stu)$/;"	f
+sp_http_handle_retcode	src/flib/sp_network.c	/^int sp_http_handle_retcode($/;"	f
 sp_http_header_locate	src/flib/sp_network.c	/^char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)$/;"	f
-sp_http_interact	src/flib/sp_network.c	/^int sp_http_interact($/;"	f
+sp_http_interact	src/flib/sp_network.c	/^int sp_http_interact(WEBIN *web_stu)$/;"	f
+sp_http_redict_check	src/flib/sp_network.c	/^static int sp_http_redict_check(WEB *dst, WEB *src)$/;"	f	file:
 sp_msg_command	src/flib/sp_message.c	/^inline int sp_msg_command(PMSG *pMsg)$/;"	f
 sp_msg_exam_command	src/flib/sp_message.c	/^int sp_msg_exam_command(PMSG *mStru, int nComm)$/;"	f
 sp_msg_exam_recver	src/flib/sp_message.c	/^int sp_msg_exam_recver(PMSG *msgStru, int nPart, char *ownName)$/;"	f
@@ -853,6 +859,7 @@ sp_msg_select_read	src/flib/sp_message.c	/^int sp_msg_select_read(int nSock, PMS
 sp_msg_take_comm	src/flib/sp_message.c	/^void sp_msg_take_comm(PMSG *pGet, PMSG *pTake)$/;"	f
 sp_msg_unfill_comm	src/flib/sp_message.c	/^void sp_msg_unfill_comm(PMSG *pMsg)$/;"	f
 sp_msg_write	src/flib/sp_message.c	/^int sp_msg_write(int msgFd, PMSG *pMessage)$/;"	f
+sp_net_html_download	src/flib/sp_network.c	/^int sp_net_html_download(WEBIN *web_stu)$/;"	f
 sp_net_set_sockif	src/flib/sp_network.c	/^int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)$/;"	f
 sp_net_sock_connect	src/flib/sp_network.c	/^int sp_net_sock_connect(SOCKIF *sockInfo)$/;"	f
 sp_net_sock_init	src/flib/sp_network.c	/^int sp_net_sock_init(WEBIN *web_stu)$/;"	f
@@ -865,10 +872,6 @@ sp_ping_info	include/spnet.h	/^struct sp_ping_info {$/;"	s
 sp_shell_sort	src/flib/malgo/sort_algo.c	/^void sp_shell_sort(SSORTS *ssStru, void *sortBuf, int nLimit)$/;"	f
 sp_shell_sort_destroy	src/flib/malgo/sort_algo.c	/^void sp_shell_sort_destroy(void *ssStru)$/;"	f
 sp_shell_sort_init	src/flib/malgo/sort_algo.c	/^SSORTS	*sp_shell_sort_init(ssmov smFun, ssass smAssign, ssprog smProgress, sscmre smCmprep,$/;"	f
-sp_soc_destroy	src/flib/sp_socket.c	/^void sp_soc_destroy(void *socStru)$/;"	f
-sp_soc_init	src/flib/sp_socket.c	/^SOC *sp_soc_init(lib_sock libFun, usr_sock usrFun)$/;"	f
-sp_soc_run	src/flib/sp_socket.c	/^inline int sp_soc_run(SOC *pSoc, void *bufStore, int readLen)$/;"	f
-sp_soc_set	src/flib/sp_socket.c	/^void sp_soc_set(SOC *socStru, int nSock, uLong nSec, uLong uSec, int setFlags, int libFlags)$/;"	f
 sp_stop	src/flib/sp_misc.c	/^void sp_stop(void)$/;"	f
 sp_stop_str	src/flib/sp_misc.c	/^void sp_stop_str(void)$/;"	f
 sp_url_path_count_nlayer	src/flib/sp_network.c	/^int sp_url_path_count_nlayer(char *url)$/;"	f
@@ -961,12 +964,8 @@ ubug_db_clean	src/spider/sp_urlbug_clean.c	/^void ubug_db_clean(void *pNULL)$/;"
 ubug_dberr	src/spider/sp_urlbug_db.c	/^int ubug_dberr(MYSQL *sHandler, char *withStr)$/;"	f
 ubug_free_weblist	src/spider/sp_urlbug_clean.c	/^void ubug_free_weblist(void *pNull)$/;"	f
 ubug_get_pattern	src/spider/sp_urlbug_rule.c	/^int ubug_get_pattern(const char *host_string)$/;"	f
-ubug_handle_http_30x	src/spider/sp_urlbug_network.c	/^int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)$/;"	f
-ubug_handle_http_30x	tool/src/sp_funtest.c	/^static int ubug_handle_http_30x(char *http_buff, int buff_size, WEBIN *web_info)$/;"	f	file:
-ubug_handle_http_retcode	src/spider/sp_urlbug_network.c	/^static int ubug_handle_http_retcode($/;"	f	file:
-ubug_handle_http_retcode	tool/src/sp_funtest.c	/^static int ubug_handle_http_retcode($/;"	f	file:
-ubug_handle_httpreq	src/spider/sp_urlbug_network.c	/^int ubug_handle_httpreq(WEBIN *wInfo)$/;"	f
-ubug_html_download	src/spider/sp_urlbug_network.c	/^int ubug_html_download(WEBIN *wInfo)$/;"	f
+ubug_handle_httpreq	src/spider/sp_urlbug_network.c	/^static int ubug_handle_httpreq(WEBIN *web_stu)$/;"	f	file:
+ubug_html_download	src/spider/sp_urlbug_network.c	/^int ubug_html_download(WEBIN *web_stu)$/;"	f
 ubug_init_database	src/spider/sp_urlbug_db.c	/^void ubug_init_database(void)$/;"	f
 ubug_init_dbuf	src/spider/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBuff)$/;"	f	file:
 ubug_init_pinginfo	src/spider/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f
@@ -1003,7 +1002,7 @@ ubug_tran_db	src/spider/sp_urlbug_db.c	/^void ubug_tran_db(void *pInfo, void *uD
 ubug_tran_db_force	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_force(BUFF *pBuff)$/;"	f
 ubug_tran_db_real	src/spider/sp_urlbug_db.c	/^int ubug_tran_db_real(BUFF *pBuff)$/;"	f
 ubug_tran_db_whole	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_whole(void)$/;"	f
-ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *wInfo, char *url_string)$/;"	f	file:
+ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *web_stu, char *url_string)$/;"	f	file:
 ubug_url_count_nlayer	src/spider/sp_urlbug_rule.c	/^int ubug_url_count_nlayer(char *str_url)$/;"	f
 ud_foff	include/spinc.h	/^    int     ud_foff;        \/* file offset *\/$/;"	m	struct:url_dat
 ud_poff	include/spinc.h	/^    int     ud_poff;        \/* path offset *\/$/;"	m	struct:url_dat
@@ -1023,8 +1022,10 @@ usec_t	include/spinc.h	/^typedef useconds_t      usec_t;$/;"	t
 userName	src/flib/mconfctl/museconfctl.c	/^static	char	userName[MIDDLE_BUF + 1];$/;"	v	file:
 w_buff	include/spnet.h	/^	BUFF   *w_buff;		            \/* store url *\/$/;"	m	struct:web_if
 w_conbuf	include/spnet.h	/^	char   *w_conbuf;		        \/* store website content *\/$/;"	m	struct:web_if
+w_conbufsize	include/spnet.h	/^    int     w_conbufsize;           \/* size of the content buffer *\/$/;"	m	struct:web_if
+w_contoffset	include/spnet.h	/^    int     w_contoffset;           \/* actual website content offset *\/$/;"	m	struct:web_if
 w_latest	include/spnet.h	/^	char	w_latest[LATEST_LEN];	\/* use for saving latest time *\/$/;"	m	struct:web_if
-w_latestcnt	include/spnet.h	/^	int	    w_latestcnt;		    \/* when equal to LATEST_UPGRADE_LIMIT, update data to mysql *\/$/;"	m	struct:web_if
+w_latestcnt	include/spnet.h	/^    int	    w_latestcnt;            \/* when equal to LATEST_UPGRADE_LIMIT$/;"	m	struct:web_if
 w_mempool	include/spmpool.h	/^typedef	struct	w_mempool {$/;"	s
 w_n10	include/spdict.h	/^	void	*w_n10;$/;"	m	struct:wlist
 w_n11	include/spdict.h	/^	void	*w_n11;$/;"	m	struct:wlist
@@ -1051,6 +1052,7 @@ w_sockif	include/spnet.h	/^	SOCKIF	w_sockif;$/;"	m	struct:web_if
 w_str	include/spdict.h	/^	uChar	*w_str;$/;"	m	struct:wstr
 w_ubuf	include/spnet.h	/^	WEB	    w_ubuf;$/;"	m	struct:web_if
 w_url	include/spnet.h	/^	char   *w_url;			        \/* store url (a temp value) *\/$/;"	m	struct:web_if
+w_urlbufsize	include/spnet.h	/^    int     w_urlbufsize;           \/* size of w_url buffer *\/$/;"	m	struct:web_if
 w_utf8	include/spdict.h	/^	uChar	w_utf8[UTF8_WORD_LEN];$/;"	m	struct:dword
 web	include/spnet.h	/^struct	web {$/;"	s
 web_file	include/spnet.h	/^	char	web_file[UFILE_LEN];$/;"	m	struct:web
