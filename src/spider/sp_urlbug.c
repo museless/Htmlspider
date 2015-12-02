@@ -4,8 +4,8 @@
  *---------------------------------------------*/
 
 /*---------------------------------------------
- *     creation time: 
- *     author: 
+ *     creation time: 2015-06-01 
+ *     author: Muse 
  *---------------------------------------------*/
 
 /*---------------------------------------------
@@ -183,7 +183,6 @@ static int mainly_init(void)
 
 	mato_init(&writeStoreLock, 1);
 
-    /* max url len read, size of table U20xxxxxx Url field */
 	if (mc_conf_read(
         "urlbug_max_ulen", CONF_NUM,
         &urlMaxLen, sizeof(int)) == FUN_RUN_FAIL) {

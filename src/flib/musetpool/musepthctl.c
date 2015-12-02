@@ -34,7 +34,7 @@
            Part Two: Local data
 --------------------------------------------*/
 
-enum    PTHREAD_STATE {
+enum PTHREAD_STATE {
     PTH_IS_WATCHER,
     PTH_IS_UNINITED,
     PTH_ALREADY_KILLED,
@@ -67,15 +67,15 @@ static  void    mpc_thread_perror(char *errStr, int nErr);
 static  void    mpc_thread_therror(PTHENT *thread_entity, char *errStr, int nErr);
 
 
-/*------------------------------------------
-    Part Four: Muse thpool API
-
-    1. mpc_create
-    2. mpc_thread_wake
-    3. mpc_thread_wait
-    4. mpc_destroy
-
---------------------------------------------*/
+/*---------------------------------------------
+ *      Part Four: Muse thpool API
+ *
+ *          1. mpc_create
+ *          2. mpc_thread_wake
+ *          3. mpc_thread_wait
+ *          4. mpc_destroy
+ *
+-*---------------------------------------------*/
 
 /*-----mpc_create------*/
 PTHPOOL *mpc_create(int pthread_num)
@@ -124,17 +124,17 @@ PTHPOOL *mpc_create(int pthread_num)
 /*-----mpc_thread_wake-----*/
 int mpc_thread_wake(PTHPOOL *threadPool, pthrun runFun, void *pPara)
 {
-    PTHENT *pSele;
+    PTHENT *pthread_entity;
 
-    if(!(pSele = mpc_search_empty(threadPool)))
+    if (!(pthread_entity = mpc_search_empty(threadPool)))
         return  PTH_RUN_END;
 
-    pSele->pe_run = runFun;
-    pSele->pe_data = pPara;
-    pSele->pe_flags = PTH_IS_BUSY;
+    pthread_entity->pe_run = runFun;
+    pthread_entity->pe_data = pPara;
+    pthread_entity->pe_flags = PTH_IS_BUSY;
 
-    pthread_cond_signal(&pSele->pe_cond);
-    pthread_mutex_unlock(&pSele->pe_mutex);
+    pthread_cond_signal(&pthread_entity->pe_cond);
+    pthread_mutex_unlock(&pthread_entity->pe_mutex);
 
     return  PTH_RUN_OK;
 }
@@ -145,14 +145,14 @@ void mpc_thread_wait(PTHPOOL *thread_pool)
 {
     PTHENT *thList;
 
-    if(thread_pool && thread_pool->pl_list) {
+    if (thread_pool && thread_pool->pl_list) {
         /* pass the watcher thread */
         for (thList = thread_pool->pl_list + 1;
              thList < thread_pool->pl_list + thread_pool->pl_cnt; 
              thList++) {
             pthread_mutex_lock(&thList->pe_mutex);
 
-            while(thList->pe_flags == PTH_IS_BUSY)
+            while (thList->pe_flags == PTH_IS_BUSY)
                 pthread_cond_wait(&thList->pe_cond, &thList->pe_mutex);
 
             pthread_mutex_unlock(&thList->pe_mutex);
@@ -170,20 +170,20 @@ void mpc_destroy(PTHPOOL *thread_pool)
     if (!thread_pool)
         return;
 
-    if(thread_pool->pl_list) {
+    if (thread_pool->pl_list) {
         th_entity = thread_pool->pl_list;
 
-        for(; th_entity < thread_pool->pl_list + thread_pool->pl_cnt; th_entity++) {
-            if(th_entity->pe_flags != PTH_WAS_KILLED) {
-                if(!pthread_tryjoin_np(th_entity->pe_tid, NULL))
+        for (; th_entity < thread_pool->pl_list + thread_pool->pl_cnt; th_entity++) {
+            if (th_entity->pe_flags != PTH_WAS_KILLED) {
+                if (!pthread_tryjoin_np(th_entity->pe_tid, NULL))
                     continue;
 
-                if(th_entity->pe_flags == PTH_IS_BUSY) {
+                if (th_entity->pe_flags == PTH_IS_BUSY) {
                     mpc_wait_clock(MILLISEC_500);
 
                     thread_status = pthread_mutex_trylock(&th_entity->pe_mutex);
 
-                    if(thread_status == EBUSY && th_entity->pe_flags == PTH_IS_BUSY) {
+                    if (thread_status == EBUSY && th_entity->pe_flags == PTH_IS_BUSY) {
                         mpc_thread_join(th_entity);
                         continue;
                     }
@@ -217,11 +217,11 @@ static void *mpc_thread_pool_run(void *thread_para)
 
     mpc_thpool_run_prepration(th_entity);
 
-    while(PTH_RUN_PERMANENT) {
+    while (PTH_RUN_PERMANENT) {
         pthread_mutex_lock(&th_entity->pe_mutex);
 
-        while(th_entity->pe_flags != PTH_IS_BUSY) {
-            if(th_entity->pe_flags == PTH_ALREADY_KILLED) 
+        while (th_entity->pe_flags != PTH_IS_BUSY) {
+            if (th_entity->pe_flags == PTH_ALREADY_KILLED) 
                 mpc_thread_self_exit(th_entity);
 
             pthread_cond_wait(&th_entity->pe_cond, &th_entity->pe_mutex);
@@ -245,23 +245,23 @@ static void mpc_thpool_run_prepration(PTHENT *thread_entity)
 {
     int thread_status;
 
-    if((thread_status = pthread_mutex_lock(&thread_entity->pe_mutex)))
+    if ((thread_status = pthread_mutex_lock(&thread_entity->pe_mutex)))
         mpc_thread_therror(thread_entity,
         "mpc_thpool_run_prepration - pthread_mutex_lock", thread_status);
 
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
-    if((thread_status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
+    if ((thread_status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
         mpc_thread_therror(thread_entity,
         "mpc_thpool_run_prepration - pthread_setcanceltype", thread_status);
 
     thread_entity->pe_flags = PTH_IS_READY;
 
-    if(pthread_cond_signal(&thread_entity->pe_cond))
+    if (pthread_cond_signal(&thread_entity->pe_cond))
         mpc_thread_therror(thread_entity,
         "mpc_thpool_run_prepration - pthread_cond_signal", thread_status);
 
-    if(pthread_mutex_unlock(&thread_entity->pe_mutex))
+    if (pthread_mutex_unlock(&thread_entity->pe_mutex))
         mpc_thread_therror(thread_entity,
         "mpc_thpool_run_prepration - pthread_mutex_unlock", thread_status);
 }
@@ -306,11 +306,13 @@ static void mpc_wait_clock(int microsec)
 /*-----mpc_search_empty-----*/
 static PTHENT *mpc_search_empty(PTHPOOL *thread_pool)
 {
-    PTHENT *thread_entity = thread_pool->pl_list;
+    PTHENT *thread_list_end, *thread_entity;
     int     thread_status;
 
-    for (; thread_entity < thread_pool->pl_list + thread_pool->pl_cnt;
-           thread_entity++) {
+    thread_list_end = thread_pool->pl_list + thread_pool->pl_cnt;
+    thread_entity = thread_pool->pl_list;
+
+    for (; thread_entity < thread_list_end; thread_entity++) {
         if (thread_entity->pe_flags == PTH_IS_READY) {
             if ((thread_status = 
                  pthread_mutex_trylock(&thread_entity->pe_mutex))) {
@@ -352,8 +354,9 @@ static int mpc_thread_create(PTHENT *thread_entity)
         return  PTH_RUN_END;
     }
 
-    if ((thread_status = pthread_create(&thread_entity->pe_tid, NULL, 
-       mpc_thread_pool_run, (void *)thread_entity))) {
+    if ((thread_status = pthread_create(
+         &thread_entity->pe_tid, NULL, 
+         mpc_thread_pool_run, (void *)thread_entity))) {
         mpc_thread_perror("mpc_thread_create - pthread_create", thread_status);
         return  PTH_RUN_END;
     }
@@ -376,7 +379,7 @@ static int mpc_thread_create(PTHENT *thread_entity)
         }
     }
 
-    if((thread_status = pthread_mutex_unlock(&thread_entity->pe_mutex))) {
+    if ((thread_status = pthread_mutex_unlock(&thread_entity->pe_mutex))) {
         mpc_thread_perror(
         "mpc_thread_create - pthread_mutex_unlock", thread_status);
         return  PTH_RUN_END;
@@ -424,7 +427,7 @@ static void mpc_thread_join(PTHENT *th_entity)
  *      1. mpc_thread_perror
  *      2. mpc_thread_therror
  *
-**---------------------------------------------*/
+_*---------------------------------------------*/
 
 /*-----mpc_thread_perror-----*/
 static void mpc_thread_perror(char *errStr, int nErr)

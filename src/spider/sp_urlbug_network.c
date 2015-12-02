@@ -1,26 +1,33 @@
-/*------------------------------------------
-	Source file content Six part
+/*---------------------------------------------
+ *     modification time: 2015-12-02 09:03:47
+ *     mender: Muse
+ *---------------------------------------------*/
 
-	Part Zero:	Include
-	Part One:	Local data
-	Part Two:	Local function
-	Part Three:	Define
+/*---------------------------------------------
+ *     file: sp_urlbug_network.c 
+ *     creation time: 2015-06-01
+ *     author: Muse
+ *---------------------------------------------*/
 
-	Part Four:  Ping network
-    Part Five:  Network event 
-
---------------------------------------------*/
+/*---------------------------------------------
+ *        Source file content Six part
+ *
+ *	        Part Zero:	Include
+ *	        Part One:	Local data
+ *	        Part Two:	Local function
+ *	        Part Three:	Define
+ *
+ *	        Part Four:  Ping network
+ *          Part Five:  Network event 
+ *
+-*---------------------------------------------*/
 
 /*------------------------------------------
             Part Zero: Include
 --------------------------------------------*/
 
-#include "spinc.h"
-#include "sphtml.h"
-#include "spdb.h"
-#include "spnet.h"
-#include "spmpool.h"
-#include "spmsg.h"
+#include "sp.h"
+
 #include "spuglobal.h"
 #include "spurlb.h"
 
@@ -136,9 +143,6 @@ int ubug_html_download(WEBIN *web_stu)
                 WMP_PAGESIZE - cont_offset, UBUG_NREAD, 
                 ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
-    perror("sp_net_sock_read");
-    printf("byte_read: %d\n", byte_read);
-
     cont_offset += (byte_read == FUN_RUN_FAIL) ? 0 : byte_read;
     close(web_stu->w_sock);
 
@@ -182,7 +186,7 @@ static void ubug_update_latest_time(WEBIN *web_stu)
         web_stu->w_latestcnt = 0;
 
         while (!mato_dec_and_test(&writeStoreLock))
-                mato_inc(&writeStoreLock);
+            mato_inc(&writeStoreLock);
 
         if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
                 if (ubug_dberr(&urlDataBase, "send_httpreq - up latest") != FUN_RUN_OK)
