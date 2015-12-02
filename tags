@@ -305,7 +305,7 @@ PTFLAGS	tool/Makefile	/^PTFLAGS = -rdynamic -pthread -lz -lcrypt -lnsl -lm$/;"	m
 PTHENT	include/inclib/mpctl.h	/^typedef	struct pthread_entity	PTHENT;$/;"	t	typeref:struct:pthread_entity
 PTHPOOL	include/inclib/mpctl.h	/^typedef	struct pthread_pool     PTHPOOL;$/;"	t	typeref:struct:pthread_pool
 PTHREAD_ERROR	include/sperr.h	6;"	d
-PTHREAD_STATE	src/flib/musetpool/musepthctl.c	/^enum    PTHREAD_STATE {$/;"	g	file:
+PTHREAD_STATE	src/flib/musetpool/musepthctl.c	/^enum PTHREAD_STATE {$/;"	g	file:
 PTH_ALREADY_KILLED	src/flib/musetpool/musepthctl.c	/^    PTH_ALREADY_KILLED,$/;"	e	enum:PTHREAD_STATE	file:
 PTH_IS_BUSY	src/flib/musetpool/musepthctl.c	/^    PTH_IS_BUSY$/;"	e	enum:PTHREAD_STATE	file:
 PTH_IS_READY	src/flib/musetpool/musepthctl.c	/^    PTH_IS_READY,$/;"	e	enum:PTHREAD_STATE	file:
@@ -1002,7 +1002,7 @@ ubug_tran_db	src/spider/sp_urlbug_db.c	/^void ubug_tran_db(void *pInfo, void *uD
 ubug_tran_db_force	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_force(BUFF *pBuff)$/;"	f
 ubug_tran_db_real	src/spider/sp_urlbug_db.c	/^int ubug_tran_db_real(BUFF *pBuff)$/;"	f
 ubug_tran_db_whole	src/spider/sp_urlbug_db.c	/^void ubug_tran_db_whole(void)$/;"	f
-ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *web_stu, char *url_string)$/;"	f	file:
+ubug_update_latest_time	src/spider/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *web_stu)$/;"	f	file:
 ubug_url_count_nlayer	src/spider/sp_urlbug_rule.c	/^int ubug_url_count_nlayer(char *str_url)$/;"	f
 ud_foff	include/spinc.h	/^    int     ud_foff;        \/* file offset *\/$/;"	m	struct:url_dat
 ud_poff	include/spinc.h	/^    int     ud_poff;        \/* path offset *\/$/;"	m	struct:url_dat

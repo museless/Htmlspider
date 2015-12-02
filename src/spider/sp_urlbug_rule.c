@@ -8,43 +8,37 @@
  *     author: Muse 
  *---------------------------------------------*/
 
-/*------------------------------------------
-	Source file content Eleven part
+/*---------------------------------------------
+ *      Source file content Seven part
+ *
+ *	    Part Zero:  Include
+ *	    Part One:   Local data
+ *	    Part Two:   Local function
+ *	    Part Three: Define
+ *
+ *	    Part Four:  URL catch rule
+ *      Part Five:  URL check rules
+ *      Part Six:   URL table name 
+ *
+-*---------------------------------------------*/
 
-	Part Zero:	Include
-	Part One:	Local data
-	Part Two:	Local function
-	Part Three:	Define
+/*---------------------------------------------
+ *	          Part Zero: Include
+-*---------------------------------------------*/
 
-	Part Four:  URL catch rule
-    Part Five:  URL check rules
-    Part Six:   URL table name 
-
---------------------------------------------*/
-
-/*------------------------------------------
-	        Part Zero: Include
---------------------------------------------*/
-
-#include "spinc.h"
-#include "spnet.h"
-#include "spdb.h"
-#include "sphtml.h"
-
-#include "spmpool.h"
-#include "spmsg.h"
+#include "sp.h"
 
 #include "spuglobal.h"
 #include "spurlb.h"
 
 
-/*------------------------------------------
-	    Part Four: URL catch rule
-
-        1. ubug_catch_default_rule
-        2. ubug_locate_default_rule
-
---------------------------------------------*/
+/*---------------------------------------------
+ *        Part Four: URL catch rule
+ *
+ *        1. ubug_catch_default_rule
+ *        2. ubug_locate_default_rule
+ *
+-*---------------------------------------------*/
 
 /*-----ubug_catch_default_rule------*/
 int ubug_catch_default_rule(char *content, char **ret_content_point)
@@ -158,12 +152,13 @@ void ubug_check_separator(char *urlStr, int *uLen)
 	char   *pBeg, *pEnter;
     int     nDec;
 
-	if((pBeg = strnchr(urlStr, '\r', *uLen)) || (pBeg = strnchr(urlStr, '\n', *uLen))) {
+    if ((pBeg = strnchr(urlStr, '\r', *uLen)) ||
+        (pBeg = strnchr(urlStr, '\n', *uLen))) {
         nDec = ((*pBeg == '\r') ? MLINK_LEN : 1);
         *uLen -= nDec;
 
 		/* only one "\r\n" existed */
-		if((pEnter = strnchr(pBeg + nDec, *pBeg, *uLen - (pBeg - urlStr))) == NULL) {
+        if (!(pEnter = strnchr(pBeg + nDec, *pBeg, *uLen - (pBeg - urlStr)))) {
 			strncpy(pBeg, pBeg + nDec, *uLen - (pBeg - urlStr));
 
 		} else {
@@ -293,5 +288,5 @@ int ubug_url_count_nlayer(char *str_url)
 /*-----ubug_set_tabname_default-----*/
 void ubug_set_tabname_default(void)
 {
-    sprintf(urlTabName, "%s", "t_crowdsrc_url");
+    sprintf(urlTabName, "%s", "t_url");
 }

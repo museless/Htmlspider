@@ -246,23 +246,27 @@ static void mpc_thpool_run_prepration(PTHENT *thread_entity)
     int thread_status;
 
     if ((thread_status = pthread_mutex_lock(&thread_entity->pe_mutex)))
-        mpc_thread_therror(thread_entity,
+        mpc_thread_therror(
+        thread_entity,
         "mpc_thpool_run_prepration - pthread_mutex_lock", thread_status);
 
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
     if ((thread_status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
-        mpc_thread_therror(thread_entity,
+        mpc_thread_therror(
+        thread_entity,
         "mpc_thpool_run_prepration - pthread_setcanceltype", thread_status);
 
     thread_entity->pe_flags = PTH_IS_READY;
 
-    if (pthread_cond_signal(&thread_entity->pe_cond))
-        mpc_thread_therror(thread_entity,
+    if ((thread_status = pthread_cond_signal(&thread_entity->pe_cond)))
+        mpc_thread_therror(
+        thread_entity,
         "mpc_thpool_run_prepration - pthread_cond_signal", thread_status);
 
-    if (pthread_mutex_unlock(&thread_entity->pe_mutex))
-        mpc_thread_therror(thread_entity,
+    if ((thread_status = pthread_mutex_unlock(&thread_entity->pe_mutex)))
+        mpc_thread_therror(
+        thread_entity,
         "mpc_thpool_run_prepration - pthread_mutex_unlock", thread_status);
 }
 

@@ -231,8 +231,6 @@ int sp_http_interact(WEBIN *web_stu)
 
     web_stu->w_conbuf[web_stu->w_size] = 0;
 
-    printf("Content: %s\n", web_stu->w_conbuf);
-
     return  atoi(web_stu->w_conbuf + 9);
 }
 

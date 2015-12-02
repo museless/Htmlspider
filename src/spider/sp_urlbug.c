@@ -60,8 +60,9 @@ static  void    ubug_load_config(const char *config_path);
 static  void    ubug_set_ubset(const char *way_option);
 
 /* Part Six */
-static	void	ubug_create_pthread(WEBIN *webNode);
-static	void	ubug_pthread_entrance(void *nParameter);
+static	void	ubug_create_pthread(WEBIN *web_info);
+static	void	ubug_pthread_entrance(void *parameters);
+static  int     ubug_pthread_apply_for_resource(WEBIN *web_info);
 
 /* Part Seven */
 static	void	ubug_main_entrance(void);
@@ -271,18 +272,19 @@ static void ubug_init_weblist(void)
     }
 
     WEBIN **pList = &urlSaveList;
-	MSLROW	allRow;
-    MSLRES *data_result= 
+    MSLRES *data_result = 
             mysql_return_result(&urlDataBase, GET_DIRECTORY, url_store_table_name);
 
     if (!data_result) {
 		if (ubug_dberr(
-            &urlDataBase, "ubug_init_weblist - mysql_return_result") != FUN_RUN_OK)
+            &urlDataBase, "ubug_init_weblist - mysql_return_result") != FRET_P)
 			ubug_sig_error();
 	}
 
-	while ((allRow = mysql_fetch_row(data_result))) {
-        if (!(*pList = ubug_list_entity_set(allRow)))
+    MSLROW	data_row;
+
+	while ((data_row = mysql_fetch_row(data_result))) {
+        if (!(*pList = ubug_list_entity_set(data_row)))
             continue;
 
 		pList = &((*pList)->w_next);
@@ -293,7 +295,7 @@ static void ubug_init_weblist(void)
 
 	(*pList) = NULL;
 
-	if (mgc_add(urlGarCol, NULL_POINT, ubug_free_weblist) == MGC_FAILED)
+    if (mgc_add(urlGarCol, NULL_POINT, ubug_free_weblist) == MGC_FAILED)
 		ubug_perror("ubug_init_weblist - mgc_add", errno);
 }
 
@@ -391,48 +393,60 @@ static void ubug_set_ubset(const char *way_option)
 
         1. ubug_create_pthread
         2. ubug_pthread_entrance
+        3. ubug_pthread_apply_for_resource
 
 --------------------------------------------*/
-
+    
 /*-----ubug_create_pthread-----*/
-static void ubug_create_pthread(WEBIN *webNode)
+static void ubug_create_pthread(WEBIN *web_info)
 {
-	if (!(webNode->w_conbuf = wmpool_malloc(contStorePool))) {
-		ubug_perror("ubug_create_pthread - wmpool_malloc - contbuf", errno);
-		ubug_sig_error();
-	}
+    if (mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)web_info))
+        return;
 
-    webNode->w_conbufsize = WMP_PAGESIZE;
-
-	if (!(webNode->w_url = wmpool_malloc(urlStorePool))) {
-		ubug_perror("ubug_create_pthread - wmpool_malloc - url", errno);
-		ubug_sig_error();
-	}
-
-    webNode->w_urlbufsize = NAMBUF_LEN;
-
-	if ((webNode->w_size = urlRunSet.ubs_dway(webNode)) > FUN_RUN_END) {
-		if (mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)webNode))
-			return;
-
-		elog_write("ubug_create_pthread - mpc_thread_wake", FUNCTION_STR, ERROR_STR);
-		ubug_sig_error();
-	}
-
-	wmpool_free(urlStorePool, webNode->w_url);
-	wmpool_free(contStorePool, webNode->w_conbuf);
+    elog_write("ubug_create_pthread - mpc_thread_wake", FUNCTION_STR, ERROR_STR);
+    ubug_sig_error();
 }
 
 
 /*-----ubug_pthread_entrance-----*/
-void ubug_pthread_entrance(void *nParameter)
+static void ubug_pthread_entrance(void *parameters)
 {
-	WEBIN	*webNode = (WEBIN *)nParameter;
+    WEBIN  *web_info = (WEBIN *)parameters;
+    int     fun_ret;
 
-	urlRunSet.ubs_fent(webNode);
+    if ((fun_ret = ubug_pthread_apply_for_resource(web_info)) == FRET_N)
+        return;
 
-	wmpool_free(contStorePool, webNode->w_conbuf);
-	wmpool_free(urlStorePool, webNode->w_url);
+    if (fun_ret == FRET_P)
+	    urlRunSet.ubs_fent(web_info);
+
+    wmpool_free(contStorePool, web_info->w_conbuf);
+	wmpool_free(urlStorePool, web_info->w_url);
+}
+
+
+/*-----ubug_pthread_apply_for_resource-----*/
+static int ubug_pthread_apply_for_resource(WEBIN *web_info)
+{
+    if (!(web_info->w_conbuf = wmpool_malloc(contStorePool))) {
+        ubug_perror("ubug_pthread_apply_for_resource - contbuf", errno);
+	    return  FRET_N; 
+    }
+
+	if (!(web_info->w_url = wmpool_malloc(urlStorePool))) {
+        wmpool_free(contStorePool, web_info->w_conbuf);
+
+        ubug_perror("ubug_pthread_apply_for_resource - url", errno);
+        return  FRET_N;
+	}
+
+    web_info->w_conbufsize = WMP_PAGESIZE;
+    web_info->w_urlbufsize = NAMBUF_LEN;
+    web_info->w_size = urlRunSet.ubs_dway(web_info);
+
+    printf("web_info->w_size: %d\n", web_info->w_size);
+
+    return  (web_info->w_size > 0) ? FRET_P : FRET_Z;
 }
 
 
@@ -480,48 +494,51 @@ static void ubug_text_abstract_cont(WEBIN *abPoint)
 }
 
 
-/*------------------------------------------
-	    Part Eight: Urlbug mainly work
-
-        1. ubug_job
-
---------------------------------------------*/
+/*---------------------------------------------
+ *      Part Eight: Urlbug mainly work
+ *
+ *         1. ubug_job
+ *
+-*---------------------------------------------*/
 
 /*-----ubug_job-----*/
 static void ubug_job(WEBIN *wPoint)
 {
     char   *content_begin, *content_end;
-    char   *pHttp, *pSign;
-    int     getLen, hostLen = strlen(wPoint->w_ubuf.web_host);
+    char   *url_head, *url_end;
+    int     url_catch_len, host_len = strlen(wPoint->w_ubuf.web_host);
+    UDATA   url_data;
 
     urlRunSet.ubs_locate(wPoint, &content_begin, &content_end);
 
-	pHttp = content_begin;
+    for (; content_begin && content_begin < content_end; content_begin = url_end) {
+        url_catch_len = urlRunSet.ubs_catch(content_begin, &url_end);
 
-	for (; content_begin && content_begin < content_end; content_begin = pSign) {
-        if ((getLen = urlRunSet.ubs_catch(content_begin, &pSign)) == FUN_RUN_FAIL)
+        printf("url_catch_len: %d\n", url_catch_len);
+
+        if (url_catch_len == FRET_N)
             return;
 
-        if (getLen == FUN_RUN_END)
+        if (url_catch_len == FRET_Z)
             continue;
 
-        pHttp = pSign - getLen;
+        url_head = url_end - url_catch_len;
 
-	    ubug_check_separator(pHttp, &getLen);
+	    ubug_check_separator(url_head, &url_catch_len);
 
-        if (strncmp(pHttp, MATCH_HTTP, MHTTP_LEN)) {
-            if ((pHttp = ubug_connect_head(wPoint, hostLen, pHttp, &getLen)) == NULL)
+        if (strncmp(url_head, MATCH_HTTP, MHTTP_LEN)) {
+            url_head = ubug_connect_head(wPoint, host_len, url_head, &url_catch_len);
+
+            if (!url_head)
                 continue;
         }
 
-        if (ubug_check_url_prefix(pHttp, getLen))
+        if (ubug_check_url_prefix(url_head, url_catch_len))
             continue;
     
-        UDATA   url_data;
+        url_layer_extract(&url_data, url_head, url_catch_len);
 
-        url_layer_extract(&url_data, pHttp, getLen);
-
-        urlRunSet.ubs_fst(wPoint, &url_data, pHttp, getLen);
+        urlRunSet.ubs_fst(wPoint, &url_data, url_head, url_catch_len);
         urlCatchNum++;
 	}
 }
