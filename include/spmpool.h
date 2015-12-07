@@ -1,32 +1,56 @@
 #ifndef	_SPMPOOL_H
 #define	_SPMPOOL_H
 
-/* define */
-#define	WMP_MAPBIT	    0x20	/* 32 */
-#define	WMP_MAPBIT_SHI	0x5	    /* 2 ^ 5 */
-#define	WMP_PSIZE_BOR	0x4B000
-#define	WMP_PAGESIZE	0x50000
+/*-----------------------------
+ *          Define
+-*-----------------------------*/
 
-#define	WMP_BIT_BLOCK	0x1
-#define	WMP_BIT_UNBLOCK	0x0
+#define	WMP_BITS_PER_BITMAP	        0x20    /* 32 */
+#define	WMP_BITS_PER_BITMAP_SHIFT	0x5     /* 2 ^ 5 */
+#define	WMP_PSIZE_BOR	            0x4B000
+#define	WMP_PAGESIZE	            0x50000
 
-/* web page mempool */
-typedef	struct	w_mempool {
-	char   *wmp_point;
-	int    *wmp_map;
+#define	WMP_BIT_BLOCK	            0x1
+#define	WMP_BIT_UNBLOCK	            0x0
 
-	int	    wmp_psize;	/* page size */
-	int	    wmp_clip;	/* block num */
-}WPOOL;
 
-/* global function */
-WPOOL  *wmpool_create(int nClip, int cSize);
+/*-----------------------------
+ *          Typedef
+-*-----------------------------*/
+
+typedef struct  w_mempool   WPOOL;
+
+
+/*-----------------------------
+ *          Struct
+-*-----------------------------*/
+
+struct	w_mempool {
+    char   *wmp_start;
+    int    *wmp_bitmap;
+
+    MATOS   wmp_atomic; /* mutipthread protect */
+
+    int	    wmp_psize;	/* page size */
+    int	    wmp_clip;	/* block num */
+};
+
+
+/*-----------------------------
+ *      Global function
+-*-----------------------------*/
+
+WPOOL  *wmpool_create(int clip_num, int per_clip_size);
 void   *wmpool_malloc(WPOOL *pHandler);
-void   *wmpool_calloc(WPOOL *pHandler);
-void	wmpool_free(WPOOL *pHandler, void *aPoint);
-void	wmpool_destroy(void *pHandler);
+void   *wmpool_calloc(WPOOL *handler);
+void	wmpool_free(WPOOL *pHandler, void *free_addr);
+void	wmpool_destroy(void *handler);
 
-/* define function */
+
+/*-----------------------------
+ *       Macro function
+-*-----------------------------*/
+
 #define	wmpool_bit_is_block(nByte, nBit)	((nByte >> nBit) & WMP_BIT_BLOCK)
 
 #endif

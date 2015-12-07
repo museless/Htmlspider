@@ -1,9 +1,37 @@
+/*---------------------------------------------
+ *     modification time: 2015-12-07 14:24:29
+ *     mender: Muse
+ *---------------------------------------------*/
+
+/*---------------------------------------------
+ *     file: mpool_web.c 
+ *     creation time: 2014-02-01
+ *     author: Muse
+ *---------------------------------------------*/
+
+/*---------------------------------------------
+ *       Source file content Four part
+ *
+ *       Part Zero:  Include
+ *       Part One:   Define
+ *       Part Two:   Local data
+ *       Part Three: Local function
+ *
+ *       Part Four:  Mempool API
+ *
+ *---------------------------------------------*/
+
+
+/*---------------------------------------------
+ *                  Include
+-*---------------------------------------------*/
+
 #include "spinc.h"
 #include "spmpool.h"
 
 
 /*---------------------------------------------
- *          Part Zero: Mempool API
+ *          Part Four: Mempool API
  *
  *	        1. wmpool_create
  *	        2. wmpool_malloc
@@ -17,108 +45,111 @@
 -*----------------------------------------------*/
 
 /*-----wmpool_create-----*/
-WPOOL *wmpool_create(int nClip, int cSize)
+WPOOL *wmpool_create(int clip_num, int per_clip_size)
 {
-	WPOOL  *pStru;
-	int	    nMap;
+	WPOOL  *handle;
+	int	    bitmap_num;
 
-	if (nClip < 1 || cSize <= 0) {
-        printf("wmpool_create nClip: %d - cSize: %d failed\n", nClip, cSize);
+	if (clip_num < 1 || per_clip_size <= 0) {
         errno = EINVAL;
 		return	NULL;
 	}
 
-	if(!(pStru = malloc(sizeof(WPOOL))))
+	if (!(handle = malloc(sizeof(WPOOL))))
 		return	NULL;
 
-	pStru->wmp_psize = cSize;
-	pStru->wmp_clip = nClip;
+	handle->wmp_psize = per_clip_size;
+	handle->wmp_clip = clip_num;
 
-	if (!(pStru->wmp_point = malloc(pStru->wmp_psize * pStru->wmp_clip)))
+	if (!(handle->wmp_start = malloc(handle->wmp_psize * handle->wmp_clip)))
 		return	NULL;
 
-	nMap = nClip / WMP_MAPBIT;
-	nMap += ((nClip % WMP_MAPBIT) ? 1 : 0);
+	bitmap_num = clip_num / WMP_BITS_PER_BITMAP;
+	bitmap_num += ((clip_num % WMP_BITS_PER_BITMAP) ? 1 : 0);
 
-	if (!(pStru->wmp_map = calloc(nMap, sizeof(int)))) {
-		free(pStru->wmp_point);
+	if (!(handle->wmp_bitmap = calloc(bitmap_num, sizeof(int)))) {
+		free(handle->wmp_start);
 		return	NULL;
 	}
 
-	return	pStru;
+	return	handle;
 }
 
 
 /*-----wmpool_malloc-----*/
 void *wmpool_malloc(WPOOL *pHandler)
 {
-	int	   *pMap = pHandler->wmp_map;
-	int	    count, bNum;
+	int	   *bitmap_pointer = pHandler->wmp_bitmap;
+	int	    count, bit_offset = 0;
 
-	for (bNum = count = 0; bNum < pHandler->wmp_clip; count++, bNum++) {
-		if (count == WMP_MAPBIT) {
+    for (count = 0; bit_offset < pHandler->wmp_clip; count++, bit_offset++) {
+		if (count == WMP_BITS_PER_BITMAP) {
 			count = 0;
-			pMap++;
+			bitmap_pointer++;
 		}
 
-		if (!wmpool_bit_is_block(*pMap, count)) {
-			*pMap |= (WMP_BIT_BLOCK << count);
+		if (!wmpool_bit_is_block(*bitmap_pointer, count)) {
+			*bitmap_pointer |= (WMP_BIT_BLOCK << count);
 			break;
 		}
 	}
 
-    char    *locate = NULL;
+    char    *return_addr = NULL;
 
-    if (bNum != pHandler->wmp_clip) {
-        locate = bNum * pHandler->wmp_psize + pHandler->wmp_point;
+    if (bit_offset != pHandler->wmp_clip) {
+        return_addr = (bit_offset * pHandler->wmp_psize) + pHandler->wmp_start;
 
     } else {
         errno = ESPIPE;
     }
 
-	return  locate;	
+	return  return_addr;
 }
 
 
 /*-----wmpool_calloc-----*/
-void *wmpool_calloc(WPOOL *pHandler)
+void *wmpool_calloc(WPOOL *handler)
 {
-	void	*pRet;
+    void	*calloc_addr;
 
-	pRet = wmpool_malloc(pHandler);
-	memset(pRet, 0, pHandler->wmp_psize);
+	if (!(calloc_addr = wmpool_malloc(handler)))
+        return  NULL;
 
-	return	pRet;
+	memset(calloc_addr, 0, handler->wmp_psize);
+
+	return  calloc_addr;
 }
 
 
 /*-----wmpool_free-----*/
-void wmpool_free(WPOOL *pHandler, void *aPoint)
+void wmpool_free(WPOOL *handler, void *free_addr)
 {
-	int	nBit, *nMap;
+    char   *addr = (char *)free_addr;
+	int	    num_bits, *bitmap_pointer;
 
-	if((char *)aPoint > (pHandler->wmp_point + (pHandler->wmp_psize * (pHandler->wmp_clip - 1))))
+    if (addr > (handler->wmp_start + (handler->wmp_psize * (handler->wmp_clip - 1))))
 		return;
 
-	nBit = (unsigned int)(((char *)aPoint - pHandler->wmp_point) / pHandler->wmp_psize);
-	nMap = pHandler->wmp_map + (nBit >> WMP_MAPBIT_SHI);
-	*nMap &= (~(WMP_BIT_BLOCK << (nBit % WMP_MAPBIT)));
+    num_bits = (uInt)((addr - handler->wmp_start) / handler->wmp_psize);
+
+    bitmap_pointer = handler->wmp_bitmap + (num_bits >> WMP_BITS_PER_BITMAP_SHIFT);
+	*bitmap_pointer &= (~(WMP_BIT_BLOCK << (num_bits % WMP_BITS_PER_BITMAP)));
 }
 
 
 /*-----wmpool_destroy-----*/
-void wmpool_destroy(void *pHandler)
+void wmpool_destroy(void *handler)
 {
-	WPOOL	*pFree = (WPOOL *)pHandler;
+	WPOOL	*free_handler = (WPOOL *)handler;
 
-	if(pFree) {
-		if(pFree->wmp_point)
-			free(pFree->wmp_point);
+	if (free_handler) {
+		if (free_handler->wmp_start)
+			free(free_handler->wmp_start);
 
-		if(pFree->wmp_map)
-			free(pFree->wmp_map);
+		if (free_handler->wmp_bitmap)
+			free(free_handler->wmp_bitmap);
 
-		free(pFree);
+		free(free_handler);
 	}
 }
 
