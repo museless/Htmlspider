@@ -1,28 +1,28 @@
-/*------------------------------------------
-    Source file content Seven part
+/*---------------------------------------------
+ *      Source file content Seven part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Define
+ *      Part Two:   Local data
+ *      Part Three: Local function
+ *
+ *      Part Four:  Mysql operate
+ *      Part Five:  Operate assist
+ *
+-*---------------------------------------------*/
 
-    Part Zero:  Include
-    Part One:   Define
-    Part Two:   Local data
-    Part Three: Local function
 
-    Part Four:  Mysql operate
-    Part Five:  Operate assist
-
---------------------------------------------*/
-
-
-/*------------------------------------------
-            Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *            Part Zero: Include
+-*---------------------------------------------*/
 
 #include "spinc.h"
 #include "spdb.h"
 
 
-/*------------------------------------------
-          Part Three: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Three: Local function
+-*---------------------------------------------*/
 
 /* Part Five */
 static  int     mysql_execl_query(

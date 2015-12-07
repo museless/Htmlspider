@@ -5,33 +5,39 @@ PTFLAGS	= -pthread -lcrypt -lnsl -lm -lc
 MYFLAGS = -L /usr/local/lib/mysql -lmysqlclient -I /usr/local/include/mysql -lz
 PGFLAGS = -I include/inclib/ping -I include/inclib/icmp
 
-UBUGINC = -I src/spider
+UBUGINC = -I src/urlcatcher
 
 IPCINC	= -I include/inclib/museipc
 ALGOINC = -I include/inclib/musealgo
 
 # elf #
-EXURLB	= bin/spider
+EXURLB	= bin/urlcatcher
 
 # obj #
-OURLB	= src/spider/sp_urlbug.c src/spider/sp_urlbug_db.c \
-		  src/spider/sp_urlbug_disc.c src/spider/sp_urlbug_signal.c \
-		  src/spider/sp_urlbug_clean.c src/spider/sp_urlbug_msg.c \
-		  src/spider/sp_urlbug_err.c src/spider/sp_urlbug_network.c \
-		  src/spider/sp_urlbug_rule.c \
-		  src/flib/sp_global.c src/flib/sp_bufoper.c src/flib/sp_misc.c \
-		  src/flib/sp_pfun.c src/flib/sp_message.c \
-	      src/flib/sp_elog.c src/flib/sp_network.c src/flib/sp_html.c \
-		  src/flib/sp_frame.c src/flib/chunkmpool/mpool_web.c \
-		  src/flib/dboper/dboper.c src/flib/mconfctl/museconfctl.c \
-		  src/flib/museato/museato.c src/flib/musegc/musegc.c \
-		  src/flib/museipc/muse_sem.c src/flib/musetpool/musepthctl.c \
-		  src/flib/ping/ping.c src/flib/icmp/icmp.c
+OURLB	= src/urlcatcher/sp_urlbug.c src/urlcatcher/sp_urlbug_db.c \
+		  src/urlcatcher/sp_urlbug_disc.c src/urlcatcher/sp_urlbug_signal.c \
+		  src/urlcatcher/sp_urlbug_clean.c src/urlcatcher/sp_urlbug_msg.c \
+		  src/urlcatcher/sp_urlbug_err.c src/urlcatcher/sp_urlbug_network.c \
+		  src/urlcatcher/sp_urlbug_rule.c \
+		  src/functionlib/sp_global.c \
+		  src/functionlib/container/sp_bufoper.c \
+		  src/functionlib/sp_misc.c src/functionlib/sp_pfun.c \
+		  src/functionlib/log/sp_elog.c \
+		  src/functionlib/sp_html.c src/functionlib/sp_frame.c \
+		  src/functionlib/dboper/dboper.c \
+		  src/functionlib/mconfctl/museconfctl.c \
+		  src/functionlib/memorybarrier/museato.c \
+		  src/functionlib/garbagecolloter/musegc.c \
+		  src/functionlib/ipc/muse_sem.c src/functionlib/ipc/sp_message.c \
+		  src/functionlib/threadpool/musepthctl.c \
+		  src/functionlib/network/sp_network.c \
+		  src/functionlib/network/ping/ping.c src/functionlib/network/icmp/icmp.c \
+		  src/functionlib/memorypool/chunkmpool/mpool_web.c 
 
 # phony
-.PHONY : spider
+.PHONY : urlcatcher
 
-spider:	$(EXURLB)
+urlcatcher:	$(EXURLB)
 
 $(EXURLB) : $(OURLB)
 	$(CC) -o $(EXURLB) $(OURLB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(UBUGINC) $(IPCINC) $(PGFLAGS)

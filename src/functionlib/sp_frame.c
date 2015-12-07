@@ -48,21 +48,21 @@ int sp_normal_init(
 {
 	snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", owner_name);
 
-	if((*garCol = mgc_init()) == NULL) {
+	if ((*garCol = mgc_init()) == NULL) {
         sp_normal_error("sp_normal_init - mgc_init");
 		exit(FUN_RUN_END);
 	}
 
-	if(mgc_add(*garCol, NULL_POINT, (gcfun)mc_conf_unload) == MGC_FAILED)
+	if (mgc_add(*garCol, NULL_POINT, (gcfun)mc_conf_unload) == MGC_FAILED)
         sp_normal_error("sp_normal_init - mgc_add - mc_conf_unload");
 
-	if(msgFd) {
-		if(!(*msgSet = minitFun(msgFd))) {
+	if (msgFd) {
+		if (!(*msgSet = minitFun(msgFd))) {
             sp_normal_error("sp_normal_init - msg_init");
 			return	FUN_RUN_END;
 		}
 	
-		if(mgc_add(*garCol, *msgSet, (gcfun)sp_msg_frame_destroy) == MGC_FAILED)
+		if (mgc_add(*garCol, *msgSet, (gcfun)sp_msg_frame_destroy) == MGC_FAILED)
 			sp_normal_error("sp_normal_init - mgc_add - msg_init");
 	}
 
