@@ -1,11 +1,13 @@
+# This script resolved by C or Python
+
 # This is urlbug's configure file
 # Warning: 
 # 1. All file name should less than 128bytes
 # 2. Changing the next path if you want to startup
-#    urlbug not at ../bin/urlbug
+# urlbug not at ../bin/urlbug
 
 # pthread num ( 1 ~ 3 )
-urlbug_pthread_num      = 1
+urlbug_pthread_num      = 2
 
 # max url len ( 128 ~ 256 )
 urlbug_max_ulen         = 128
@@ -19,9 +21,9 @@ urlbug_sem_key_file     = ../bin/urlbug
 default_tmpfile_locate  = ../text/url.tmp
 
 # error log
-urlbug_err_log          = ../log/news_urlerr.log
+urlbug_err_log          = ../log/urlerr.log
 
 # for databases
-urls_database_name      = Url 
-urls_store_table_name   = UALL 
+urls_database_name      = Crowdsource 
+urls_store_table_name   = t_url_csto
 

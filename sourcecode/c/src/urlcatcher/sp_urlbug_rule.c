@@ -282,6 +282,7 @@ int ubug_url_count_nlayer(char *str_url)
 	     Part Six: URL table name
 
          1. ubug_set_tabname_default
+         2. ubug_set_tabname_by_date
 
 --------------------------------------------*/
 
@@ -289,4 +290,17 @@ int ubug_url_count_nlayer(char *str_url)
 void ubug_set_tabname_default(void)
 {
     sprintf(urlTabName, "%s", "t_url");
+}
+
+
+/*-----ubug_set_tabname_by_date-----*/
+void ubug_set_tabname_by_date(void)
+{
+    TMS    *current_date;
+
+    current_date = time_str_extract(NULL);
+
+    sprintf(
+    urlTabName, "U%04d%02d%02d", 
+    current_date->tm_year, current_date->tm_mon, current_date->tm_mday);
 }

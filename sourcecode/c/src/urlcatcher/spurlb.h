@@ -47,6 +47,7 @@ int	    ubug_check_url_prefix(char *preSrc, int nLen);
 int     ubug_url_count_nlayer(char *str_url);
 
 void    ubug_set_tabname_default(void);
+void    ubug_set_tabname_by_date(void);
 
 /* sp_urlbug_network.c */
 void    ubug_init_pinginfo(void);

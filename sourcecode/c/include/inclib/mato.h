@@ -45,5 +45,6 @@ mar_t	mato_add_and_test(MATOS *pMato, int nInc);
 mar_t	mato_dec_and_test(MATOS *pMato);
 mar_t	mato_sub_and_test(MATOS *pMato, int nSub);
 
+void    mato_dec_lock(MATOS *atomic);
 
 #endif

@@ -40,7 +40,7 @@ void ubug_print_help(void)
 	int	    hpFd;
 
 	if ((hpFd = 
-         open("../src/spider/urlbug.hlp", O_RDWR)) == FUN_RUN_FAIL) {
+         open("../src/urlcatcher/urlbug.hlp", O_RDWR)) == FUN_RUN_FAIL) {
 		ubug_perror("ubug_print_help - open", errno);
 		exit(FUN_RUN_FAIL);
 	}

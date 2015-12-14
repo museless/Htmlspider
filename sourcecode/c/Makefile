@@ -11,7 +11,7 @@ IPCINC	= -I include/inclib/museipc
 ALGOINC = -I include/inclib/musealgo
 
 # elf #
-EXURLB	= bin/urlcatcher
+EXURLB	= ../../bin/urlcatcher
 
 # obj #
 OURLB	= src/urlcatcher/sp_urlbug.c src/urlcatcher/sp_urlbug_db.c \

@@ -109,7 +109,7 @@ void ubug_tran_db_whole(void)
 /*-----ubug_tran_db_force-----*/
 void ubug_tran_db_force(BUFF *pBuff)
 {
-	while (!mato_dec_and_test(&writeStoreLock))
+    while (!mato_dec_and_test(&writeStoreLock))
 		mato_inc(&writeStoreLock);
 
 	if (!buff_stru_empty(pBuff)) {

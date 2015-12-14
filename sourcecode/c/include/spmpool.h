@@ -41,7 +41,7 @@ struct	w_mempool {
 -*-----------------------------*/
 
 WPOOL  *wmpool_create(int clip_num, int per_clip_size);
-void   *wmpool_malloc(WPOOL *pHandler);
+void   *wmpool_malloc(WPOOL *handler);
 void   *wmpool_calloc(WPOOL *handler);
 void	wmpool_free(WPOOL *pHandler, void *free_addr);
 void	wmpool_destroy(void *handler);

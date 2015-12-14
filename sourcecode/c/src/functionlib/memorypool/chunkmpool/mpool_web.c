@@ -1,13 +1,13 @@
 /*---------------------------------------------
  *     modification time: 2015-12-07 14:24:29
  *     mender: Muse
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *     file: mpool_web.c 
  *     creation time: 2014-02-01
  *     author: Muse
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *       Source file content Four part
@@ -19,7 +19,7 @@
  *
  *       Part Four:  Mempool API
  *
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 
 /*---------------------------------------------
@@ -58,31 +58,35 @@ WPOOL *wmpool_create(int clip_num, int per_clip_size)
 	if (!(handle = malloc(sizeof(WPOOL))))
 		return	NULL;
 
+    mato_init(&handle->wmp_atomic, 1); 
+
 	handle->wmp_psize = per_clip_size;
 	handle->wmp_clip = clip_num;
 
-	if (!(handle->wmp_start = malloc(handle->wmp_psize * handle->wmp_clip)))
+    if (!(handle->wmp_start = malloc(handle->wmp_psize * handle->wmp_clip)))
 		return	NULL;
 
-	bitmap_num = clip_num / WMP_BITS_PER_BITMAP;
-	bitmap_num += ((clip_num % WMP_BITS_PER_BITMAP) ? 1 : 0);
+    bitmap_num = clip_num / WMP_BITS_PER_BITMAP;
+    bitmap_num += ((clip_num % WMP_BITS_PER_BITMAP) ? 1 : 0);
 
-	if (!(handle->wmp_bitmap = calloc(bitmap_num, sizeof(int)))) {
-		free(handle->wmp_start);
-		return	NULL;
-	}
+    if (!(handle->wmp_bitmap = calloc(bitmap_num, sizeof(int)))) {
+        free(handle->wmp_start);
+        return	NULL;
+    }
 
 	return	handle;
 }
 
 
 /*-----wmpool_malloc-----*/
-void *wmpool_malloc(WPOOL *pHandler)
+void *wmpool_malloc(WPOOL *handler)
 {
-	int	   *bitmap_pointer = pHandler->wmp_bitmap;
+	int	   *bitmap_pointer = handler->wmp_bitmap;
 	int	    count, bit_offset = 0;
 
-    for (count = 0; bit_offset < pHandler->wmp_clip; count++, bit_offset++) {
+    mato_dec_lock(&handler->wmp_atomic);
+
+    for (count = 0; bit_offset < handler->wmp_clip; count++, bit_offset++) {
 		if (count == WMP_BITS_PER_BITMAP) {
 			count = 0;
 			bitmap_pointer++;
@@ -94,10 +98,12 @@ void *wmpool_malloc(WPOOL *pHandler)
 		}
 	}
 
+    mato_inc(&handler->wmp_atomic);
+
     char    *return_addr = NULL;
 
-    if (bit_offset != pHandler->wmp_clip) {
-        return_addr = (bit_offset * pHandler->wmp_psize) + pHandler->wmp_start;
+    if (bit_offset != handler->wmp_clip) {
+        return_addr = (bit_offset * handler->wmp_psize) + handler->wmp_start;
 
     } else {
         errno = ESPIPE;

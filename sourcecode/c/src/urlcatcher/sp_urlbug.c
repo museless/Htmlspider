@@ -373,7 +373,7 @@ static void ubug_set_ubset(const char *way_option)
     if (!strcmp(way_option, "normal")) {
         ubug_init_ubset_way(
         ubug_catch_default_rule, 
-        ubug_locate_default_rule, ubug_set_tabname_default);
+        ubug_locate_default_rule, ubug_set_tabname_by_date);
 
     } else if (!strcmp(way_option, "csto")) {
         ubug_init_ubset_way(
@@ -513,8 +513,6 @@ static void ubug_job(WEBIN *wPoint)
 
     for (; content_begin && content_begin < content_end; content_begin = url_end) {
         url_catch_len = urlRunSet.ubs_catch(content_begin, &url_end);
-
-        printf("url_catch_len: %d\n", url_catch_len);
 
         if (url_catch_len == FRET_N)
             return;
