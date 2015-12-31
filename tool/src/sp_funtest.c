@@ -21,44 +21,27 @@
 ------------------------------------------------*/
 
 /*----------------------------------------------
-               Part Zero: Include
-------------------------------------------------*/
+ *             Part Zero: Include
+-*----------------------------------------------*/
 
 #include "sp.h"
 
 
 /*----------------------------------------------
-                Part One: Define
-------------------------------------------------*/
+ *              Part One: Define
+-*----------------------------------------------*/
 
 
 /*----------------------------------------------
-              Part Two: Local data
-------------------------------------------------*/
-
-char    textContent[0x100] = {
-            "<html>\n<div class=\"fuck\" id=\"shit\">\n \
-             \r<a>shit man</a>\n \
-             \r<div class=\"haha\"> <br> </br> </div>\n \
-             \r<div id=\"ohoh\" class=\"yuy\"> </div>\n \
-             \r</div>\n</html>\n"
-        };
-
-char    httpContent[0x100] = {
-            "HTTP/1.0 200 OK\r\n\
-             \rDate: 2015.11.25 22:18\r\n\
-             \rServer: NCSA/1.3\r\n\
-             \rLocation: www.fucker.com\r\n\r\n"
-        };
+ *             Part Two: Local data
+-*----------------------------------------------*/
 
 
 /*----------------------------------------------
            Part Three: Local function
 ------------------------------------------------*/
 
-/* Part Four */
-static  int     para_analysis(int argc, char **argv);
-static  void    test_part(void);
+static  void   *data_extract(MSLROW data_row);
 
 
 /*----------------------------------------------
@@ -73,43 +56,42 @@ static  void    test_part(void);
 /*-----main-----*/
 int main(int argc, char **argv)
 {
-    WEBIN   web_stu;
-    char    url[0x40] = "http://www.csto.com/project/list?page=1";
+    MYSQL   sql_handler;
 
-    if (sp_url_seperate(url, strlen(url), &web_stu.w_ubuf) != FRET_P) {
-        perror("sp_url_seperate");
-        return  -1;
+    if (!mysql_simple_connect(&sql_handler, "Data", NULL, 0)) {
+        printf("Orm---> mysql_simple_connect failed\n");
+        exit(1);
+    }
+    
+    MSLRES *result;
+
+    if (!(result = mysql_return_result(&sql_handler, "select * from data"))) {
+        printf("Orm---> %s - mysql_return_result failed\n", __func__);
+        printf("error: %s\n", mysql_error(&sql_handler));
+        exit(1);
     }
 
-    web_stu.w_conbuf = malloc(4096);
-    web_stu.w_conbufsize = 4096;
+    MSLROW  data_row;
+    char   *data_chunk;
 
-    printf("Return value: %d\n", sp_net_html_download(&web_stu));
-    
-    printf(
-    "Host: %s\nPath: %s\nFile: %s\nPort: %d\n",
-    web_stu.w_ubuf.web_host, web_stu.w_ubuf.web_path,
-    web_stu.w_ubuf.web_file, web_stu.w_ubuf.web_port);
+    while ((data_row = mysql_fetch_row(result))) {
+        if (!(data_chunk = data_extract(data_row))) {
 
-    printf("Ret code: %d\n", atoi(&web_stu.w_conbuf[9]));
+        }
+    }
 
-    free(web_stu.w_conbuf);
+    mysql_free_result(result);
+    mysql_close(&sql_handler);
 
-    return  1;
+    exit(-1);
 }
 
 
-/*-----para_analysis-----*/
-static int para_analysis(int argc, char **argv)
+
+/*-----data_extract-----*/
+void *data_extract(MSLROW data_row)
 {
-    return  1;
+    printf("%s - %s\n", data_row[0], data_row[1]);
+
+    return  NULL;
 }
-
-
-/*-----test_part-----*/
-static void test_part(void)
-{
-
-}
-
-

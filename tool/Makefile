@@ -1,9 +1,13 @@
 # flags #
 CC	= gcc
 NMFLAGS = -g -Wall -I include/
-OTFLAGS = -I ../include/ -I ../include/inclib -I ../include/inclib/musealgo \
-		  -I../include/inclib/icmp -I../include/inclib/ping \
-		  -I../include/inclib/museipc -I../include/inclib/container
+OTFLAGS = -I ../sourcecode/c/include/ -I ../sourcecode/c/include/inclib \
+		  -I ../sourcecode/c/include/inclib/musealgo \
+		  -I../sourcecode/c/include/inclib/icmp \
+		  -I../sourcecode/c/include/inclib/ping \
+		  -I../sourcecode/c/include/inclib/museipc \
+		  -I../sourcecode/c/include/inclib/container
+
 MSFLAGS	= -I /usr/local/include/mysql -L /usr/local/lib/mysql -lmysqlclient
 PTFLAGS = -rdynamic -pthread -lz -lcrypt -lnsl -lm
 
@@ -16,26 +20,36 @@ EXARR	= bin/arrage
 EXTEST	= bin/test
 
 # Obj
-SRCTOOL	= src/sp_tool.c ../src/flib/mconfctl/museconfctl.c ../src/flib/sp_global.c ../src/flib/sp_pfun.c \
-	  ../src/flib/sp_bufoper.c
+SRCTOOL	= src/sp_tool.c ../src/functionlib/mconfctl/museconfctl.c ../src/functionlib/sp_global.c ../src/functionlib/sp_pfun.c \
+	  ../src/functionlib/sp_bufoper.c
 
 SRCRM	= src/sp_remove.c
 
-SRCGA	= src/sp_gather.c ../src/flib/sp_global.c ../src/flib/malgo/sort_algo.c 
+SRCGA	= src/sp_gather.c ../src/functionlib/sp_global.c ../src/functionlib/malgo/sort_algo.c 
 
-SRCFORM	= src/sp_format.c ../src/flib/sp_global.c ../src/flib/sp_pfun.c
+SRCFORM	= src/sp_format.c ../src/functionlib/sp_global.c ../src/functionlib/sp_pfun.c
 
-SRCARR	= src/sp_word_arrange.c ../src/flib/sp_pfun.c
+SRCARR	= src/sp_word_arrange.c ../src/functionlib/sp_pfun.c
 	
 SRCTEST = src/sp_funtest.c \
-	 	  ../src/flib/sp_global.c ../src/flib/sp_bufoper.c ../src/flib/sp_misc.c \
-		  ../src/flib/sp_pfun.c ../src/flib/sp_message.c \
-	      ../src/flib/sp_elog.c ../src/flib/sp_network.c ../src/flib/sp_html.c \
-		  ../src/flib/sp_frame.c ../src/flib/chunkmpool/mpool_web.c \
-		  ../src/flib/dboper/dboper.c ../src/flib/mconfctl/museconfctl.c \
-		  ../src/flib/museato/museato.c ../src/flib/musegc/musegc.c \
-		  ../src/flib/museipc/muse_sem.c ../src/flib/musetpool/musepthctl.c \
-		  ../src/flib/ping/ping.c ../src/flib/icmp/icmp.c
+	 	  ../sourcecode/c/src/functionlib/sp_global.c \
+	      ../sourcecode/c/src/functionlib/container/sp_bufoper.c \
+		  ../sourcecode/c/src/functionlib/sp_misc.c \
+		  ../sourcecode/c/src/functionlib/sp_pfun.c \
+		  ../sourcecode/c/src/functionlib/ipc/sp_message.c \
+		  ../sourcecode/c/src/functionlib/log/sp_elog.c \
+		  ../sourcecode/c/src/functionlib/network/sp_network.c \
+		  ../sourcecode/c/src/functionlib/sp_html.c \
+		  ../sourcecode/c/src/functionlib/sp_frame.c \
+		  ../sourcecode/c/src/functionlib/memorypool/chunkmpool/mpool_web.c \
+		  ../sourcecode/c/src/functionlib/dboper/dboper.c \
+		  ../sourcecode/c/src/functionlib/mconfctl/museconfctl.c \
+		  ../sourcecode/c/src/functionlib/memorybarrier/museato.c \
+		  ../sourcecode/c/src/functionlib/garbagecolloter/musegc.c \
+		  ../sourcecode/c/src/functionlib/ipc/muse_sem.c \
+		  ../sourcecode/c/src/functionlib/threadpool/musepthctl.c \
+		  ../sourcecode/c/src/functionlib/network/ping/ping.c \
+		  ../sourcecode/c/src/functionlib/network/icmp/icmp.c
 
 # phony
 .PHONY : tool gath form rm arrange test
