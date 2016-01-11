@@ -4,21 +4,47 @@ import bs4
 import codecs
 
 
+#----------------------------------------------
+# News content obtainning way from html:
+#
+# 1. Pushing html content into BeautifulSoup
+#    and getting a bs entity.
+# 2. Getting <body> tag.
+# 3. Checking every body tag's children. If it
+#    has children too, keep digging.
+# 4. If a tag is childless, counting its chinese
+#    words number, recording it at a list like
+#    [tag handler, word number] and return it to
+#    its father.
+# 5. Finally, we make a list tree order by
+#    html structure.
+# 6. At this step, we will predefine a var, when
+#    node in list tree that its word number bigger
+#    than this var. We think its a valid node.
+# 7. We sorting those valid node. And chose a fit one.
+# 8. At last, printting out this tags scripped_string.
+#----------------------------------------------
+
+
 def open_html(path):
     with open(path) as file_desc:
         return  file_desc.read()
 
 if __name__ == "__main__":
-    content = open_html("cfi.html")
+    html_parser = bs4.BeautifulSoup(open_html("cfi.html"), "lxml")
 
-    html_parser = bs4.BeautifulSoup(content, "lxml")
-    tag_p = html_parser.p
+    tag_body = html_parser.body
 
-    print html_parser.prettify()
+    for child in tag_body.contents:
+        if isinstance(child, bs4.element.NavigableString) == False:
+            if child.name != 'script':
+                print("Child name: %s" % child.name)
+                for string in child.stripped_strings:
+                    print(string)
 
 """
     with codecs.open("See", "w", "utf-8") as file_desc:
         file_desc.truncate()
 
-        print tag_p.getText()
+        print dir(html_parser.p)
 """

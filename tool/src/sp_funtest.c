@@ -1,24 +1,24 @@
 /*----------------------------------------------
-    modification time: 2015.11.25 22:10
-    mender: Muse
-------------------------------------------------*/
+ *   modification time: 2016.01.10 16:00
+ *   mender: Muse
+-*----------------------------------------------*/
 /*----------------------------------------------
-    file: sp_funtest.c
-    author: Muse
-    creation time: 2015.11.19 21:45
-------------------------------------------------*/
+ *   file: sp_funtest.c
+ *   author: Muse
+ *   creation time: 2015.11.19 21:45
+-*----------------------------------------------*/
 
 /*----------------------------------------------
-           Source file contain Five part
-
-           Part Zero:  Include
-           Part One:   Define
-           Part Two:   Local data
-           Part Three: Local function
-
-           Part Four:  Test
-            
-------------------------------------------------*/
+ *         Source file contain Five part
+ *
+ *          Part Zero:  Include
+ *          Part One:   Define
+ *          Part Two:   Local data
+ *          Part Three: Local function
+ *
+ *          Part Four:  Test
+ *           
+-*-----------------------------------------------*/
 
 /*----------------------------------------------
  *             Part Zero: Include
@@ -40,41 +40,56 @@ typedef struct key_table {
 } KTBL;
 
 
+typedef struct format_type  FORMAT;
+
 typedef struct string_index {
     KTBL   *pointer;
-    char    string[64];
 
-} STRINDEX;
+    FORMAT *format_element; 
+
+} SIND;
+
+
+struct format_type {
+    FORMAT *next;
+    char    type[4];
+    int     len;
+};
 
 
 /*----------------------------------------------
  *             Part Two: Local data
 -*----------------------------------------------*/
 
-STRINDEX    strIndexTable[256];
+SIND    strIndexTable[256];
 
-KTBL        sqlKeyTable[] = {
-    {0, "select %s from %s limit 0", "number, content", "data"},
+KTBL    sqlKeyTable[] = {
+    {0, "select %s from %s limit 0", "*", "data"},
 };
 
 
 /*----------------------------------------------
-           Part Three: Local function
-------------------------------------------------*/
+ *          Part Three: Local function
+-*-----------------------------------------------*/
 
-static  void   *data_extract(MSLROW data_row);
 static  void    create_index_table(MYSQL *sql_handler);
-static  void    exceling(MYSQL *sql_handle, const char *command, int operate_id, int n_arg, ...);
+static  FORMAT *make_format_list(MSLRES *result);
+
+static  void    exceling(
+                MYSQL *sql_handle, 
+                const char *command, int operate_id, int n_arg, ...);
+
+static  char   *result_to_flow(SIND *format, MSLROW data_row);
 
 
 /*----------------------------------------------
-                Part Four: Test
-
-                1. main
-                2. para_analysis
-                3. test_part
-
-------------------------------------------------*/
+ *               Part Four: Test
+ *
+ *               1. main
+ *               2. para_analysis
+ *               3. test_part
+ *
+-*-----------------------------------------------*/
 
 /*-----main-----*/
 int main(int argc, char **argv)
@@ -96,12 +111,10 @@ int main(int argc, char **argv)
 }
 
 
-
 /*-----create_index_table-----*/
 void create_index_table(MYSQL *sql_handler)
 {
     MSLRES      *result;
-    MYSQL_FIELD *data_field;
     char         select_sql[256];
     KTBL        *kt_point;
     int          len = sizeof(sqlKeyTable) / sizeof(sqlKeyTable[0]);
@@ -119,68 +132,85 @@ void create_index_table(MYSQL *sql_handler)
             exit(1);
         }
 
-        STRINDEX   *it_point = &strIndexTable[count];
-        int         offset = 0;
-
-        it_point->pointer = kt_point;
-
-        while ((data_field = mysql_fetch_field(result))) {
-            printf("Type: %d, %lu\n", data_field->type, data_field->length);
-
-            switch(data_field->type) {
-              case MYSQL_TYPE_LONG:
-                if (data_field->length == 32)
-                    offset += sprintf(it_point->string + offset, "%s,", "%d");
-
-                else if (data_field->length == 64)
-                    offset += sprintf(it_point->string + offset, "%s,", "%l");
-
-                else if (data_field->length == 16)
-                    offset += sprintf(it_point->string + offset, "%s,", "%d");
-
-                else
-                    offset += sprintf(it_point->string + offset, "%s,", "%c");
-
-                break;
-
-              case MYSQL_TYPE_TINY:
-                offset += sprintf(it_point->string + offset, "%s,", "%c");
-                break;
-
-              case MYSQL_TYPE_SHORT:
-                offset += sprintf(it_point->string + offset, "%s,", "%u");       
-                break;
-
-              case MYSQL_TYPE_DECIMAL:
-                offset += sprintf(it_point->string + offset, "%s,", "%d");
-                break;
-
-              default:
-                offset += sprintf(it_point->string + offset, "%s,", "%s");
-                break;
-            }
-        }
-
-        it_point->string[offset - 1] = 0;
-
+        strIndexTable[count].pointer = kt_point;
+        strIndexTable[count].format_element = make_format_list(result);
         mysql_free_result(result);
     }
 }
 
 
+/*-----make_format_list-----*/
+FORMAT *make_format_list(MSLRES *result)
+{
+    MYSQL_FIELD *data_field;
+    FORMAT      *formating, **next;
+
+    next = &formating;
+
+    while ((data_field = mysql_fetch_field(result))) {
+        printf("Type: %d, %lu\n", data_field->type, data_field->length);
+
+        *next = malloc(sizeof(FORMAT));
+
+        switch(data_field->type) {
+          case MYSQL_TYPE_LONG:
+            sprintf((*next)->type, "%s", "%l");
+            (*next)->len = sizeof(long);
+            break;
+
+          case MYSQL_TYPE_TINY:
+            sprintf((*next)->type, "%s", "%c");
+            (*next)->len = sizeof(char);
+            break;
+
+          case MYSQL_TYPE_SHORT:
+            sprintf((*next)->type, "%s", "%u");
+            (*next)->len = sizeof(short);
+            break;
+
+          case MYSQL_TYPE_DECIMAL:
+            sprintf((*next)->type, "%s", "%d");
+            (*next)->len = sizeof(int);
+            break;
+
+          case MYSQL_TYPE_DOUBLE:
+            sprintf((*next)->type, "%s", "%lf");
+            (*next)->len = sizeof(double);
+            break;
+
+          default:
+            sprintf((*next)->type, "%s", "%s");
+            (*next)->len = data_field->length;
+            break;
+        }
+
+        printf("Type: %s - len: %d\n\n", (*next)->type, (*next)->len);
+
+        next = &(*next)->next;
+    }
+
+    (*next) = NULL;
+
+    return  formating;
+}
+
+
 /*-----exceling-----*/
-void exceling(MYSQL *sql_handle, const char *command, int operate_id, int n_arg, ...)
+void exceling(
+     MYSQL *sql_handle, const char *command, int operate_id, int n_arg, ...)
 {
     MSLRES     *result;
     va_list     ap_list;
     char        excel_string[256];
+    char       *data_flow;
 
     va_start(ap_list, n_arg);
     
     if (!strcmp(command, "select")) {
-        STRINDEX   *in_point = &strIndexTable[operate_id];
+        SIND   *in_point = &strIndexTable[operate_id];
 
-        sprintf(excel_string, "select %s from %s", in_point->pointer->data_string, in_point->pointer->table_name);
+        sprintf(excel_string, "select %s from %s", 
+        in_point->pointer->data_string, in_point->pointer->table_name);
 
         if (!(result = mysql_return_result(sql_handle, excel_string))) {
             printf("error: %s\n", mysql_error(sql_handle));
@@ -189,19 +219,42 @@ void exceling(MYSQL *sql_handle, const char *command, int operate_id, int n_arg,
 
         MSLROW  data_row;
 
-        while ((data_row = mysql_fetch_result(result))) {
-
-        }
+        while ((data_row = mysql_fetch_row(result)))
+            data_flow = result_to_flow(in_point, data_row); 
 
         mysql_free_result(result);
     }
 }
 
 
-/*-----data_extract-----*/
-void *data_extract(MSLROW data_row)
+/*-----result_to_flow-----*/
+char *result_to_flow(SIND *sind, MSLROW data_row)
 {
-    printf("%s - %s\n", data_row[0], data_row[1]);
+    FORMAT *format = sind->format_element;
+    int     count = 0;
 
-    return  NULL;
+    for (; format; format = format->next, count++) {
+        if (!strcmp(format->type, "%d"))
+            printf("Int: %d\n", atoi(data_row[count]));
+
+        else if (!strcmp(format->type, "%l"))
+            printf("Long: %ld\n", atol(data_row[count]));
+
+        else if (!strcmp(format->type, "%s"))
+            printf("String: %s\n", data_row[count]);
+
+        else if (!strcmp(format->type, "%c"))
+            printf("Tiny or Bool: %d\n", atoi(data_row[count]));
+
+        else if (!strcmp(format->type, "%lf"))
+            printf("Double: %lf\n", atof(data_row[count]));
+        
+        else
+            printf("Don't know: %s\n", data_row[count]);
+    }
+
+    printf("\n");
+
+    return  NULL;    
 }
+
