@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.13 01:10"
+__modification_time__ = "2016.01.14 11:10"
 __intro__ = "a news content catch class"
 
 
@@ -15,6 +15,7 @@ __intro__ = "a news content catch class"
 #----------------------------------------------
 
 from bs4 import BeautifulSoup
+from bs4 import element
 
 
 #----------------------------------------------
@@ -47,19 +48,18 @@ class DataCatcher:
         chinese_words = 0
         tree_node = [tag_object, 0, []]
 
-        if len(tag_object.contents) == 0:
-            tree_node[1] = self.count_chinese_word(tag_object)
-            return  tree_node
-
         for child in tag_object.contents:
-            if isinstance(child, element.NavigableString) == False \
-               and child.name != 'script':
-                node = text_tree_build(child)
+            if isinstance(child, element.NavigableString):
+                chinese_words = self.count_chinese_word(child)
+                continue
 
-                text_tree[2].add(node)
+            if child.name != 'script':
+                node = self.text_tree_build(child)
+
+                tree_node[2].append(node)
                 chinese_words += node[1] 
 
-        tree_node[1] = chinese_words
+        tree_node[1] = chinese_words 
 
         return  tree_node
 
@@ -67,6 +67,28 @@ class DataCatcher:
     #         counting chinese word
     #------------------------------------------
 
-    def count_chinese_word(self, tag_object):
-        pass
+    def count_tag_word_number(self, tag_object):
+        utf8_word_number = 0
+
+        for string in tag_object.stripped_strings:
+            utf8_word_number += self.count_chinese_word(string)
+
+        return  utf8_word_number
+
+    #------------------------------------------
+    #         counting chinese word
+    #------------------------------------------
+
+    def count_chinese_word(self, string):
+        print "string: ", string
+
+        utf8_word_number = 0
+        utf8_string = string.encode('utf-8')
+
+        for index in range(len(utf8_string)):
+            if utf8_string[index] > chr(127):
+                utf8_word_number += 1
+
+        return  utf8_word_number
+
 

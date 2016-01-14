@@ -1,7 +1,8 @@
 #-*- utf8 -*-
 
-import bs4
 import codecs
+
+from datacatcher import DataCatcher
 
 
 #----------------------------------------------
@@ -31,20 +32,5 @@ def open_html(path):
         return  file_desc.read()
 
 if __name__ == "__main__":
-    html_parser = bs4.BeautifulSoup(open_html("cfi.html"), "lxml")
+    catcher = DataCatcher(open_html("cfi.html"))
 
-    tag_body = html_parser.body
-
-    for child in tag_body.contents:
-        if isinstance(child, bs4.element.NavigableString) == False:
-            if child.name != 'script':
-                print("Child name: %s" % child.name)
-                for string in child.stripped_strings:
-                    print(string)
-
-"""
-    with codecs.open("See", "w", "utf-8") as file_desc:
-        file_desc.truncate()
-
-        print dir(html_parser.p)
-"""
