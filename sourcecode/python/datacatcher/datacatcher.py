@@ -50,7 +50,7 @@ class DataCatcher:
 
         for child in tag_object.contents:
             if isinstance(child, element.NavigableString):
-                chinese_words = self.count_chinese_word(child)
+                chinese_words += self.count_chinese_word(child)
                 continue
 
             if child.name != 'script':
@@ -80,13 +80,10 @@ class DataCatcher:
     #------------------------------------------
 
     def count_chinese_word(self, string):
-        print "string: ", string
-
         utf8_word_number = 0
-        utf8_string = string.encode('utf-8')
 
-        for index in range(len(utf8_string)):
-            if utf8_string[index] > chr(127):
+        for index in range(len(string)):
+            if string[index] > chr(127):
                 utf8_word_number += 1
 
         return  utf8_word_number
