@@ -15,4 +15,4 @@ __intro__ = "catcher configuration"
 #----------------------------------------------
 
 Chinese_minumum = 50
-Compare_rate = 0.60
+Compare_rate = 0.65

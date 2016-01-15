@@ -27,6 +27,20 @@ from catcherconfig import Compare_rate
 
 class DataCatcher:
     #------------------------------------------
+    #              Class data 
+    #------------------------------------------
+
+    # Index
+    HANDLE_INDEX = 0
+    COUNT_INDEX = 1
+    RATE_INDEX = 2
+
+    # forbidden tag
+    Forbid_tag = [
+        'script',
+    ]
+
+    #------------------------------------------
     #              Constructor
     #------------------------------------------
 
@@ -45,6 +59,13 @@ class DataCatcher:
 
         self.text_tree_build(self.html_parser.body)
 
+        for index in range(len(self.select_list)):
+            #print self.select_list[index][1]
+
+            if self.select_list[index][1] == 168:
+                print self.select_list[index][0] 
+
+
     #------------------------------------------
     #             build text tree
     #------------------------------------------
@@ -52,24 +73,27 @@ class DataCatcher:
     def text_tree_build(self, tag_object):
         chinese_words = 0
         child_list = {}
+        add_type = True
 
         for child in tag_object.contents:
             if isinstance(child, element.NavigableString):
                 chinese_words += self.count_chinese_word(child)
                 continue
 
-            if child.name != 'script':
-                word_number = self.text_tree_build(child)
+            if child.name not in self.Forbid_tag:
+                word_number, adding_type = self.text_tree_build(child)
 
-                if word_number > Chinese_minumum:
+                if word_number > Chinese_minumum and adding_type:
                     child_list[child] = word_number
 
                 chinese_words += word_number 
 
-        print "Total", chinese_words
+        if chinese_words in child_list.viewvalues():
+            add_type = False
+        
         self.select_list_insert(child_list, chinese_words)
 
-        return  chinese_words
+        return  chinese_words, add_type
 
     #------------------------------------------
     #     count this tag's words number 
@@ -103,6 +127,8 @@ class DataCatcher:
 
     def select_list_insert(self, child_list, total_words):
         for child, number in child_list.items():
-            print number
-            if number / total_words >= Compare_rate:
-                self.select_list.append(child)
+            rate = float(number) / total_words
+
+            if rate >= Compare_rate:
+                self.select_list.append([child, number, rate])
+
