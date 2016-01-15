@@ -17,6 +17,9 @@ __intro__ = "a news content catch class"
 from bs4 import BeautifulSoup
 from bs4 import element
 
+from catcherconfig import Chinese_minumum
+from catcherconfig import Compare_rate
+
 
 #----------------------------------------------
 #             class DataCatcher
@@ -38,15 +41,17 @@ class DataCatcher:
     def reading(self):
         self.html_parser = BeautifulSoup(self.html, "lxml")
         self.charset = self.html_parser
-        self.text_tree = self.text_tree_build(self.html_parser.body)
+        self.select_list = []
+
+        self.text_tree_build(self.html_parser.body)
 
     #------------------------------------------
-    #            build text tree
+    #             build text tree
     #------------------------------------------
 
     def text_tree_build(self, tag_object):
         chinese_words = 0
-        tree_node = [tag_object, 0, []]
+        child_list = {}
 
         for child in tag_object.contents:
             if isinstance(child, element.NavigableString):
@@ -54,17 +59,20 @@ class DataCatcher:
                 continue
 
             if child.name != 'script':
-                node = self.text_tree_build(child)
+                word_number = self.text_tree_build(child)
 
-                tree_node[2].append(node)
-                chinese_words += node[1] 
+                if word_number > Chinese_minumum:
+                    child_list[child] = word_number
 
-        tree_node[1] = chinese_words 
+                chinese_words += word_number 
 
-        return  tree_node
+        print "Total", chinese_words
+        self.select_list_insert(child_list, chinese_words)
+
+        return  chinese_words
 
     #------------------------------------------
-    #         counting chinese word
+    #     count this tag's words number 
     #------------------------------------------
 
     def count_tag_word_number(self, tag_object):
@@ -76,7 +84,7 @@ class DataCatcher:
         return  utf8_word_number
 
     #------------------------------------------
-    #         counting chinese word
+    #          counting chinese word
     #------------------------------------------
 
     def count_chinese_word(self, string):
@@ -88,4 +96,13 @@ class DataCatcher:
 
         return  utf8_word_number
 
+    #------------------------------------------
+    #  insert child into select_list if child
+    #         meeting the condition
+    #------------------------------------------
 
+    def select_list_insert(self, child_list, total_words):
+        for child, number in child_list.items():
+            print number
+            if number / total_words >= Compare_rate:
+                self.select_list.append(child)
