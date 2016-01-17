@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.15 00:10"
+__modification_time__ = "2016.01.17 20:10"
 __intro__ = "catcher configuration"
 
 
@@ -14,5 +14,6 @@ __intro__ = "catcher configuration"
 #               Catcher config
 #----------------------------------------------
 
-Chinese_minumum = 50
-Compare_rate = 0.65
+Chinese_minumum = 60
+Chinese_has_rate = 0.50
+Compare_rate = 0.35
