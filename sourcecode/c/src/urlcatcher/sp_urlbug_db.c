@@ -88,11 +88,11 @@ void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)
 	
     sprintf(
     buff_place_start(web_info->w_buff), TRAN_URL_BEG, urlTabName, uLen, pUrl,
-	pData->ud_poff, pData->ud_foff, web_info->w_pattern) : 
+	pData->ud_poff, pData->ud_foff) : 
 
 	sprintf(
     buff_place_end(web_info->w_buff), TRAN_URL, uLen, pUrl,
-	pData->ud_poff, pData->ud_foff, web_info->w_pattern)));
+	pData->ud_poff, pData->ud_foff)));
 }
 
 

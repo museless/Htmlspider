@@ -58,12 +58,12 @@
 #define	CREAT_URL_TAB	"create table if not exists %s\
 (ID bigint(32) not null primary key auto_increment, \
 Url char(%d) unique not null, Poff tinyint(4), Foff tinyint(4), \
-Pattern int(2), State bool default 0, Errt tinyint default 0)"
+State bool default 0, Errt tinyint default 0)"
 
-#define	TRAN_URL_BEG	"insert ignore %s(Url, POff, Foff, Pattern) \
-values(\"%.*s\",%d,%d,%d)"
+#define	TRAN_URL_BEG	"insert ignore %s(Url, POff, Foff) \
+values(\"%.*s\",%d,%d)"
 
-#define	TRAN_URL	    ",(\"%.*s\",%d,%d,%d)"
+#define	TRAN_URL	    ",(\"%.*s\",%d,%d)"
 
 #define	REVIEW_URL	    "select * from %s where Url=\"%.*s\""
 #define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url=\"%s%s%s\""

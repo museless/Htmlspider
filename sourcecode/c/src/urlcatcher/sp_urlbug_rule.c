@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2015-11-23 23:34:41
+ *     modification time: 2016-01-19 00:05:41
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -18,7 +18,7 @@
  *
  *	    Part Four:  URL catch rule
  *      Part Five:  URL check rules
- *      Part Six:   URL table name 
+ *      Part Six:   URL table name
  *
 -*---------------------------------------------*/
 
@@ -30,6 +30,21 @@
 
 #include "spuglobal.h"
 #include "spurlb.h"
+
+
+/*---------------------------------------------
+*	         Part One: Local data
+-*---------------------------------------------*/
+
+static  char    timComMode[DATE_CMODE][SMALL_BUF];
+
+
+/*---------------------------------------------
+*	       Part Two: Local function
+-*---------------------------------------------*/
+
+/* Part Six */
+static  void    set_date_mode(TMS *date);
 
 
 /*---------------------------------------------
@@ -59,11 +74,13 @@ int ubug_catch_default_rule(char *content, char **ret_content_point)
     if (!strncmp(content_end - MHTML_LEN, MATCH_HTML, MHTML_LEN) ||
         !strncmp(content_end - MSHTML_LEN, MATCH_SHTML, MSHTML_LEN) ||
         !strncmp(content_end - MHTM_LEN, MATCH_HTM, MHTM_LEN)) {
-        if (!(content_begin =
-              ubug_reach_url_head(content_begin, content_end)))
+        content_begin = ubug_reach_url_head(content_begin, content_end);
+
+        if (!content_begin) 
             return  FUN_RUN_END;
 
-        if ((content_len = content_end - content_begin) >= urlMaxLen)
+        if ((content_len = content_end - content_begin) >= urlMaxLen ||
+           ubug_is_today_news(content_begin, content_len) == FRET_N)
             return  FUN_RUN_END;
 
         return  content_len;
@@ -84,67 +101,16 @@ int ubug_locate_default_rule(
 }
 
 
-/*-----ubug_catch_csto_rule-----*/
-int ubug_catch_csto_rule(char *content, char **ret_content_point)
-{    
-    return  FUN_RUN_OK;
-}
-
-
-/*-----ubug_locate_csto_rule-----*/
-int ubug_locate_csto_rule(
-    WEBIN *web_point, char **content_beg, char **content_end)
-{
-    printf("get in here\n");
-
-    if (!(*content_beg = 
-          sp_html_code_location(
-          web_point->w_conbuf, web_point->w_size,
-          "<div class=\"talent_list \" id=\"list_shwores\">"))) {
-        printf("Urlbug---> csto's location wrong\n");
-        sp_stop_str();
-    }
-
-    if (!(*content_end = 
-          sp_html_tag_range_locate(
-          *content_beg, 
-          web_point->w_size - ((*content_beg) - web_point->w_conbuf)))) {
-        printf("Urlbug---> csto cannot get location end\n");
-        sp_stop_str();
-    }
-
-    return  FUN_RUN_OK;
-}
-
-
 /*------------------------------------------
 	    Part Five: URL check rules
 
-        1. ubug_get_pattern
-        2. ubug_check_separator
-        3. ubug_connect_head
-        4. ubug_check_url_prefix
-        5. ubug_reach_url_head
-        6. ubug_url_count_nlayer
+        1. ubug_check_separator
+        2. ubug_connect_head
+        3. ubug_check_url_prefix
+        4. ubug_reach_url_head
+        5. ubug_is_today_news
 
 --------------------------------------------*/
-
-/*-----ubug_get_pattern-----*/
-int ubug_get_pattern(const char *host_string)
-{
-	int     count;
-
-    for (count = 0; ; count++) {
-		if (strstr(host_string, perWebPatt[count]))
-			return	count;
-
-        if (!strcmp(perWebPatt[count], "ending"))
-            break;
-	}
-
-	return	FUN_RUN_FAIL;
-}
-
 
 /*-----ubug_check_separator-----*/
 void ubug_check_separator(char *urlStr, int *uLen)
@@ -253,28 +219,17 @@ char *ubug_reach_url_head(char *pSrc, char *pLimit)
 }
 
 
-/*-----ubug_url_count_nlayer-----*/
-int ubug_url_count_nlayer(char *str_url)
+/*-----ubug_is_today_news-----*/
+int ubug_is_today_news(char *string, int nLimit)
 {
-    char   *pStr;
-    int     nLayer = 1;
+    int     nCir;
 
-    if (!str_url)
-        return  0;
-
-    if (!strcmp(str_url, "/"))
-        return  nLayer;
-
-    for (pStr = str_url + 1; pStr; pStr++) {
-        if (*pStr == '/') {
-            if (*(pStr + 1) == '\0')
-                break;
-
-            nLayer++;
-        }
+    for(nCir = 0; nCir < DATE_CMODE; nCir++) {
+        if(strnstr(string, timComMode[nCir], nLimit))
+            return  FRET_P;
     }
 
-    return  nLayer;
+    return  FRET_N;
 }
 
 
@@ -283,6 +238,7 @@ int ubug_url_count_nlayer(char *str_url)
 
          1. ubug_set_tabname_default
          2. ubug_set_tabname_by_date
+         3. set_date_mode
 
 --------------------------------------------*/
 
@@ -300,7 +256,29 @@ void ubug_set_tabname_by_date(void)
 
     current_date = time_str_extract(NULL);
 
+    set_date_mode(current_date);
+
     sprintf(
     urlTabName, "U%04d%02d%02d", 
     current_date->tm_year, current_date->tm_mon, current_date->tm_mday);
 }
+
+
+/*-----set_date_mode-----*/
+void set_date_mode(TMS *date)
+{
+    char    year[5];
+
+    sprintf(year, "%d", date->tm_year);
+
+    sprintf(timComMode[0], "%s/%02d%02d", &year[2], date->tm_mon, date->tm_mday);
+    sprintf(timComMode[1], "%s%02d%02d", year, date->tm_mon, date->tm_mday);
+    sprintf(timComMode[2], "%s-%02d-%02d", &year[2], date->tm_mon, date->tm_mday);
+    sprintf(timComMode[3], "%s-%02d/%02d", year, date->tm_mon, date->tm_mday);
+    sprintf(timComMode[4], "%s_%02d_%02d", year, date->tm_mon, date->tm_mday);
+    sprintf(timComMode[5], "%s%02d/%02d", &year[2], date->tm_mon, date->tm_mday);
+    sprintf(timComMode[6], "%s/%02d-%02d", year, date->tm_mon, date->tm_mday);
+}
+
+
+

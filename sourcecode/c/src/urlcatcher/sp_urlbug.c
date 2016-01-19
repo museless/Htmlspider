@@ -375,10 +375,6 @@ static void ubug_set_ubset(const char *way_option)
         ubug_catch_default_rule, 
         ubug_locate_default_rule, ubug_set_tabname_by_date);
 
-    } else if (!strcmp(way_option, "csto")) {
-        ubug_init_ubset_way(
-        ubug_catch_csto_rule, ubug_locate_csto_rule, ubug_set_tabname_default);
-
     } else {
         printf("Urlbug---> -d requires an argument");
         exit(FUN_RUN_FAIL);
@@ -467,8 +463,7 @@ static void ubug_main_entrance(void)
         ubug_ping();
 
 		for (urlCatchNum = 0, webPoint = urlSaveList;
-             webPoint != NULL;
-             webPoint = webPoint->w_next) {
+             webPoint != NULL; webPoint = webPoint->w_next) {
             mpc_thread_wait(ubugThreadPool);
 	        ubug_create_pthread(webPoint);
 		}
@@ -489,7 +484,6 @@ static void ubug_main_entrance(void)
 /*-----ubug_text_abstract_cont-----*/
 static void ubug_text_abstract_cont(WEBIN *abPoint)
 {
-	abPoint->w_pattern = ubug_get_pattern(abPoint->w_ubuf.web_host);
 	ubug_job(abPoint);
 }
 

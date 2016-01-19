@@ -36,15 +36,10 @@ int     ubug_catch_default_rule(char *content, char **ret_content_point);
 int     ubug_locate_default_rule(
         WEBIN *web_point, char **content_beg, char **content_end);
 
-int     ubug_catch_csto_rule(char *content, char **ret_content_point);
-int     ubug_locate_csto_rule(
-        WEBIN *web_point, char **content_beg, char **content_end); 
-
 char   *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen);
-int	    ubug_get_pattern(const char *host_string);
 void	ubug_check_separator(char *urlStr, int *uLen);
 int	    ubug_check_url_prefix(char *preSrc, int nLen);
-int     ubug_url_count_nlayer(char *str_url);
+int     ubug_is_today_news(char *string, int nLimit);
 
 void    ubug_set_tabname_default(void);
 void    ubug_set_tabname_by_date(void);

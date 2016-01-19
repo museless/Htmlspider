@@ -20,9 +20,6 @@ SPPING  ubugPingInfo;
 
 char	confNameBuf[PATH_LEN], urlTabName[SMALL_BUF];
 
-char	perWebPatt[][PATTERN_LEN] = {
-        "coding.net", "csto.com","ending"};
-
 FBSTR	forbitStrList[] = {{"ad", 2}, {"blog", 4}, {"video", 5}, {"bbs", 3},
                            {"fashion", 7}, {"sports", 6}, {"travel", 6},
                            {"bschool", 7}, {"shoucang", 8}, {"pxpt", 4},

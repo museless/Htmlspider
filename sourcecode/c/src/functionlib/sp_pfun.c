@@ -12,7 +12,7 @@
 --------------------------------------------*/
 
 /*------------------------------------------
-	Part Zero: Include
+	        Part Zero: Include
 --------------------------------------------*/
 
 #include "spinc.h"
@@ -20,20 +20,21 @@
 #include "sphtml.h"
 
 
-/*------------------------------------------
-	Part Four: Libary function packing
-
-	1. readn
-	2. writen
-	3. strnstr
-	4. strnchr
-	5. select_read
-	6. strchrb
-	7. atoin
-	8. read_all_file
-	9. examine_empty_string
-
---------------------------------------------*/
+/*---------------------------------------------
+ *      Part Four: Libary function packing
+ *
+ *      1. readn
+ *      2. writen
+ *	    3. strnstr
+ *      4. strnchr
+ *      5. select_read
+ *      6. strchrb
+ *      7. atoin
+ *      8. read_all_file
+ *      9. examine_empty_string
+ *      10. count_url_layer
+ *
+-*---------------------------------------------*/
 
 /*-----readn-----*/
 int readn(int rFd, void *rBuf, size_t bCount)
@@ -227,7 +228,9 @@ TMS *time_str_extract(char *timStr)
 		nMon = atoin(timStr + 4, 2);
 		nDay = atoin(timStr + 6, 2);
 	
-		if(nYear <= extTime->tm_year && (nMon >= 1 && nMon <= 12) && (nDay >= 1 && nDay <= 31)) {
+		if(nYear <= extTime->tm_year &&
+          (nMon >= 1 && nMon <= 12) && 
+          (nDay >= 1 && nDay <= 31)) {
 			extTime->tm_year = nYear;
 			extTime->tm_mon = nMon;
 			extTime->tm_mday = nDay;
@@ -235,6 +238,31 @@ TMS *time_str_extract(char *timStr)
 	}
 
 	return	extTime;
+}
+
+
+/*-----count_url_layer-----*/
+int count_url_layer(char *str_url)
+{
+    char   *pStr;
+    int     nLayer = 1;
+
+    if (!str_url)
+        return  0;
+
+    if (!strcmp(str_url, "/"))
+        return  nLayer;
+
+    for (pStr = str_url + 1; pStr; pStr++) {
+        if (*pStr == '/') {
+            if (*(pStr + 1) == '\0')
+                break;
+
+            nLayer++;
+        }
+    }
+
+    return  nLayer;
 }
 
 
@@ -249,19 +277,19 @@ TMS *time_str_extract(char *timStr)
 /*-----url_layer_extract-----*/
 void url_layer_extract(UDATA *pData, char *urlStr, int uLen)
 {
-        char    *pStr;
+    char    *pStr;
 
-        /* get path off */
-        pStr = strchr(urlStr + MHTTP_LEN, '/');
-        pData->ud_poff = pStr - urlStr;
+    /* get path off */
+    pStr = strchr(urlStr + MHTTP_LEN, '/');
+    pData->ud_poff = pStr - urlStr;
 
-        /* get file off */
-        for (uLen--; uLen; uLen--) {
-                if (urlStr[uLen] == '/')
-                        break;
-        }
+    /* get file off */
+    for (uLen--; uLen; uLen--) {
+        if (urlStr[uLen] == '/')
+            break;
+    }
 
-        pData->ud_foff = uLen + 1;
+    pData->ud_foff = uLen + 1;
 }
 
 

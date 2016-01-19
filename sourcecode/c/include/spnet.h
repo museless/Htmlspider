@@ -109,7 +109,6 @@ struct	web_if {
     int	    w_latestcnt;            /* when equal to LATEST_UPGRADE_LIMIT
                                        update data to mysql */
 
-	int	    w_pattern;		        /* pattern for current url */
 	int	    w_size;			        /* size of webpage */
 };
 

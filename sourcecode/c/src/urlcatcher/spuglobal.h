@@ -43,7 +43,7 @@ struct ubug_setting {
     fn_catch    ubs_catch;
     fn_locate   ubs_locate;
     fn_creat    ubs_creat;
-  
+ 
 	int         ubs_rtime;
 };
 
@@ -64,7 +64,6 @@ extern	int	    procCommuFd, urlMaxLen, urlCatchNum;
 extern	MATOS	writeStoreLock;
 
 extern	FBSTR	forbitStrList[];
-extern	char	perWebPatt[][PATTERN_LEN];
 extern	char	confNameBuf[], urlTabName[];
 
 #endif

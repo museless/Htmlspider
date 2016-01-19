@@ -76,7 +76,6 @@
 
 #define	NAMBUF_LEN      0x100
 #define	FNAME_LEN	    0x40
-#define	PATTERN_LEN	    0x20
 #define	LOGBUF_LEN	    0x20000
 #define	LOGBASE_LEN	    0x20
 #define	DATEBUF_LEN	    0x8
@@ -207,6 +206,7 @@ int	    read_all_file(char **pStore, char *ofName, int readOff);
 int	    examine_empty_string(char *exaStr);
 
 TMS	   *time_str_extract(char *timStr);
+int     count_url_layer(char *str_url);
 
 void    url_layer_extract(UDATA *pData, char *urlStr, int uLen);
 int     count_enter_num(const char *string);
