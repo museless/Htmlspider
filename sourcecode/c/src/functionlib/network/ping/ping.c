@@ -82,6 +82,8 @@ int ping(PINGIF *ping_info, const char *host)
         return  FRET_N;
     }
 
+    close(sock);
+
     return  FRET_P;
 }
 
@@ -140,6 +142,10 @@ static int ping_socket_get(void)
     if ((sock = socket(AF_INET, SOCK_RAW, protocal->p_proto)) == FRET_N)
         return  FRET_N;
 
+    if(sp_net_sock_settimer(
+       sock, PING_WAIT_SEC, PING_WAIT_USEC, SO_RCVTIMEO) == FRET_N)
+        return  FRET_N;
+   
     return  sock;
 }
 

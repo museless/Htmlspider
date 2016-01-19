@@ -37,9 +37,6 @@
         Part Three: Local function
 --------------------------------------------*/
 
-/* Part Four */
-static  int     sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags);
-
 /* Part Five */
 static  int     sp_http_redict_check(WEB *dst, WEB *src);
 
@@ -133,7 +130,7 @@ int sp_net_sock_read(
 
 
 /*-----sp_net_sock_settimer------*/
-static int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
+int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
 {
     TMVAL  time_val;
 

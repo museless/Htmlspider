@@ -473,7 +473,7 @@ static void ubug_main_entrance(void)
 		if(procCommuFd)
 			sp_msg_frame_run(urlMsgSet, NULL);
 
-		sleep(TAKE_A_SLEEP);
+		sleep(TAKE_A_LONGSLP);
 
 	} while(urlRunSet.ubs_rtime);
 

@@ -159,6 +159,8 @@ int     sp_net_sock_read(
         int nSock, char *savBuf, int bufLimit, 
         int readTimes, int nSec, long microSec);
 
+int     sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags);
+
 int     sp_net_html_download(WEBIN *web_stu);
  
 int     sp_http_handle_request(WEBIN *web_stu);
