@@ -46,32 +46,108 @@ class DataCatcher:
         'style',
     ]
 
+    # ending terms
+    Ending_terms = [
+        u"责任编辑",
+        u"版权所有",
+        u"下一页",
+        u"关于我们",
+        u"热点资讯",
+        u"重点推荐",
+        u"【相关",
+        u"相关阅读",
+        u"相关推荐",
+        u"相关图集",
+        u"相关报道",
+    ]
+
     #------------------------------------------
     #              Constructor
     #------------------------------------------
 
-    def __init__(self, html_content):
-        self.html = html_content
-        self.reading()
+    def __init__(self):
+        pass
 
     #------------------------------------------
     #            reading the html
     #------------------------------------------
 
-    def reading(self):
-        self.html_parser = BeautifulSoup(self.html, "lxml")
+    def reading(self, html_content):
+        self.html_parser = BeautifulSoup(html_content, "lxml")
         self.charset = self.html_parser
 
-        self.br_number = 0
-        self.p_number = 0
+        self.br_number, self.p_number = 0, 0
 
         self.fit_node_list = {}
         self.text_tree_build(self.html_parser.body)
 
         self.select_tag()
 
+        self.extract_title_string(self.html_parser.title.stripped_strings)
+
     #------------------------------------------
-    #             build text tree
+    #             getting title
+    #------------------------------------------
+
+    def title(self):
+        return  self.title_string
+
+    #------------------------------------------
+    #          getting data source
+    #------------------------------------------
+
+    def data_source(self):
+        return  self.data_source_string
+
+    #------------------------------------------
+    #          getting news content
+    #------------------------------------------
+
+    def news_content(self):
+        final_content = ""
+
+        if self.content_tag == None:
+            return  None
+
+        break_flags = False
+
+        if self.content_tag.findChild("style"):
+            self.content_tag.style.clear() 
+
+        if self.content_tag.findChild("script"):
+            self.content_tag.script.clear()
+
+        for string in self.content_tag.stripped_strings:
+            for end_string in self.Ending_terms:
+                if end_string in string:
+                    break_flags = True
+                    break
+
+            if break_flags:
+                break
+
+            final_content += string
+
+        return  final_content
+
+    #------------------------------------------
+    #          extract title string
+    #------------------------------------------
+
+    def extract_title_string(self, title_strings):
+        for string in title_strings:
+            for offset in range(len(string)):
+                if string[offset] == "_" or \
+                   string[offset] == "|" or \
+                   string[offset] == "-":
+                    break
+
+        self.title_string = string[0: offset]
+        self.data_source_string = \
+        string[offset:].rsplit(string[offset])[-1].rsplit(" ")[-1]
+
+    #------------------------------------------
+    #            build text tree
     #------------------------------------------
 
     def text_tree_build(self, tag_object):
@@ -166,4 +242,4 @@ class DataCatcher:
                 max_words = values[self.WORD_COUNT_INDEX]
                 fit_key = key
 
-        print fit_key
+        self.content_tag = fit_key

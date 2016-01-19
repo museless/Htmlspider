@@ -32,5 +32,8 @@ def open_html(path):
         return  file_desc.read()
 
 if __name__ == "__main__":
-    catcher = DataCatcher(open_html("eastmoney.html"))
-
+    catcher = DataCatcher()
+    catcher.reading(open_html("163.html"))
+    print catcher.title()
+    print catcher.data_source()
+    print catcher.news_content()
