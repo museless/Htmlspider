@@ -61,6 +61,11 @@ class DataCatcher:
         u"相关报道",
     ]
 
+    # member data
+    title_string = "Invaild title"
+    data_source_string = "Invaild source"
+
+
     #------------------------------------------
     #              Constructor
     #------------------------------------------
@@ -83,7 +88,8 @@ class DataCatcher:
 
         self.select_tag()
 
-        self.extract_title_string(self.html_parser.title.stripped_strings)
+        if self.html_parser.findChild("title"):
+            self.extract_title_string(self.html_parser.title.stripped_strings)
 
     #------------------------------------------
     #             getting title
@@ -110,12 +116,6 @@ class DataCatcher:
             return  None
 
         break_flags = False
-
-        if self.content_tag.findChild("style"):
-            self.content_tag.style.clear() 
-
-        if self.content_tag.findChild("script"):
-            self.content_tag.script.clear()
 
         for string in self.content_tag.stripped_strings:
             for end_string in self.Ending_terms:
@@ -155,11 +155,20 @@ class DataCatcher:
         chinese_words, tag_len = 0, 0
         select, child_data = {}, []
 
+        if tag_object == None:
+            return  None
+
         for child in tag_object.contents:
             if isinstance(child, element.NavigableString):
                 chinese_words += self.count_chinese_word(child)
                 tag_len += len(child)
                 continue
+
+            if child.name == "script":
+                child.clear()
+
+            elif child.name == "style":
+                child.clear()
 
             if child.name not in self.Forbid_tag:
                 self.relate_tag_count(child.name, tag_count_list)
