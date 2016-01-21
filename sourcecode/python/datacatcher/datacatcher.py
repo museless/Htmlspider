@@ -20,9 +20,7 @@ import re
 from bs4 import BeautifulSoup
 from bs4 import element
 
-from catcherconfig import Chinese_minumum
-from catcherconfig import Compare_rate
-from catcherconfig import Chinese_has_rate
+from catcherconfig import *
 
 
 #----------------------------------------------
@@ -47,22 +45,7 @@ class DataCatcher:
     Forbid_tag = [
         'script',
         'style',
-    ]
-
-    # ending terms
-    Ending_terms = [
-        u"责任编辑",
-        u"版权所有",
-        u"下一页",
-        u"关于我们",
-        u"热点资讯",
-        u"重点推荐",
-        u"【相关",
-        u"相关阅读",
-        u"相关推荐",
-        u"相关图集",
-        u"相关报道",
-        u"更多精彩内容",
+        'br',
     ]
 
     # member data
@@ -87,10 +70,10 @@ class DataCatcher:
     #------------------------------------------
 
     def reading(self, html_content):
-        self.catch_charset(html_content)
-        html_content = html_content.decode(self.charset)
+        #self.catch_charset(html_content)
+        #html_content = html_content.decode(self.charset)
 
-        self.html_parser = BeautifulSoup(html_content, "html.parser") 
+        self.html_parser = BeautifulSoup(html_content, "lxml") 
 
         self.br_number, self.p_number = 0, 0
 
@@ -137,7 +120,7 @@ class DataCatcher:
         break_flags = False
 
         for string in self.content_tag.stripped_strings:
-            for end_string in self.Ending_terms:
+            for end_string in Ending_terms:
                 if end_string in string:
                     break_flags = True
                     break
@@ -158,7 +141,8 @@ class DataCatcher:
             for offset in range(len(string)):
                 if string[offset] == "_" or \
                    string[offset] == "|" or \
-                   string[offset] == "-":
+                   (string[offset] == "-" and \
+                   string[offset + 1].isdigit() == False):
                     break
 
         self.title_string = string[0: offset]
@@ -183,10 +167,10 @@ class DataCatcher:
                 tag_len += len(child)
                 continue
 
+            self.relate_tag_count(child.name, tag_count_list)
+
             if self.is_forbid_tag(child):
                 continue
-
-            self.relate_tag_count(child.name, tag_count_list)
 
             child_data = self.text_tree_build(child)
             chinese_words += child_data[self.WORD_COUNT_INDEX]
