@@ -15,5 +15,5 @@ __intro__ = "catcher configuration"
 #----------------------------------------------
 
 Chinese_minumum = 60
-Chinese_has_rate = 0.50
-Compare_rate = 0.35
+Chinese_has_rate = 0.36
+Compare_rate = 0.28

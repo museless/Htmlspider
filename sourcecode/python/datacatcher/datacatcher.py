@@ -6,13 +6,16 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.17 22:00"
+__modification_time__ = "2016.01.21 10:00"
 __intro__ = "a news content catch class"
 
 
 #----------------------------------------------
 #                  Import
 #----------------------------------------------
+
+import chardet
+import re
 
 from bs4 import BeautifulSoup
 from bs4 import element
@@ -59,27 +62,35 @@ class DataCatcher:
         u"相关推荐",
         u"相关图集",
         u"相关报道",
+        u"更多精彩内容",
     ]
 
     # member data
+    charset = "utf-8"
+
     title_string = "Invaild title"
     data_source_string = "Invaild source"
+    final_content = ""
 
+    # charset find
+    charset_find_regular = r"charset.*=.*\"(.*)\"$"
 
     #------------------------------------------
     #              Constructor
     #------------------------------------------
 
     def __init__(self):
-        pass
+        self.charset_searcher = re.compile(self.charset_find_regular)
 
     #------------------------------------------
     #            reading the html
     #------------------------------------------
 
     def reading(self, html_content):
-        self.html_parser = BeautifulSoup(html_content, "lxml")
-        self.charset = self.html_parser
+        self.catch_charset(html_content)
+        html_content = html_content.decode(self.charset)
+
+        self.html_parser = BeautifulSoup(html_content, "html.parser") 
 
         self.br_number, self.p_number = 0, 0
 
@@ -90,6 +101,16 @@ class DataCatcher:
 
         if self.html_parser.findChild("title"):
             self.extract_title_string(self.html_parser.title.stripped_strings)
+     
+    #------------------------------------------
+    #            get html charset
+    #------------------------------------------
+
+    def catch_charset(self, html_content):
+        charset = self.charset_searcher.sub(r"\1", html_content)
+
+        if charset != None:
+            self.charset = charset        
 
     #------------------------------------------
     #             getting title
@@ -110,10 +131,8 @@ class DataCatcher:
     #------------------------------------------
 
     def news_content(self):
-        final_content = ""
-
         if self.content_tag == None:
-            return  None
+            return  "Invaild content" 
 
         break_flags = False
 
@@ -126,9 +145,9 @@ class DataCatcher:
             if break_flags:
                 break
 
-            final_content += string
+            self.final_content += string
 
-        return  final_content
+        return  self.final_content
 
     #------------------------------------------
     #          extract title string
@@ -164,29 +183,36 @@ class DataCatcher:
                 tag_len += len(child)
                 continue
 
-            if child.name == "script":
-                child.clear()
+            if self.is_forbid_tag(child):
+                continue
 
-            elif child.name == "style":
-                child.clear()
+            self.relate_tag_count(child.name, tag_count_list)
 
-            if child.name not in self.Forbid_tag:
-                self.relate_tag_count(child.name, tag_count_list)
+            child_data = self.text_tree_build(child)
+            chinese_words += child_data[self.WORD_COUNT_INDEX]
+            tag_len += child_data[self.TAG_LEN_INDEX]
 
-                child_data = self.text_tree_build(child)
-                chinese_words += child_data[self.WORD_COUNT_INDEX]
-                tag_len += child_data[self.TAG_LEN_INDEX]
-
-                if child_data[self.PASS_FLAGS_INDEX] and \
-                  (child_data[self.WORD_COUNT_INDEX] > Chinese_minumum and \
-                  (child_data[self.TAG_COUNT_INDEX][self.P_NUMBER_INDEX] or \
-                   child_data[self.TAG_COUNT_INDEX][self.BR_NUMBER_INDEX])):
-                    select[child] = child_data 
+            if child_data[self.PASS_FLAGS_INDEX] and \
+               (child_data[self.WORD_COUNT_INDEX] > Chinese_minumum and \
+               (child_data[self.TAG_COUNT_INDEX][self.P_NUMBER_INDEX] or \
+               child_data[self.TAG_COUNT_INDEX][self.BR_NUMBER_INDEX])):
+                select[child] = child_data 
 
         self.rate_compare(chinese_words, select)
 
         return  [chinese_words, tag_len, \
                  tag_count_list, self.tag_can_pass(chinese_words, tag_len)]
+
+    #------------------------------------------
+    #           check forbidden tag
+    #------------------------------------------
+
+    def is_forbid_tag(self, tag):
+        if tag.name in self.Forbid_tag:
+            tag.clear()
+            return  True
+
+        return  False
 
     #------------------------------------------
     #          counting chinese word

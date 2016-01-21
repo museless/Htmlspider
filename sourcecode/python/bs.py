@@ -1,6 +1,7 @@
 #-*- utf8 -*-
 
 import codecs
+import chardet 
 
 from datacatcher import DataCatcher
 
@@ -33,7 +34,7 @@ def open_html(path):
 
 if __name__ == "__main__":
     catcher = DataCatcher()
-    catcher.reading(open_html("163.html"))
-    print catcher.title()
-    print catcher.data_source()
-    print catcher.news_content()
+    catcher.reading(open_html("qq.htm"))
+    #print catcher.title()
+    #print catcher.data_source()
+    #print catcher.news_content()
