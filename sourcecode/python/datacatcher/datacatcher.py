@@ -6,8 +6,8 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.21 10:00"
-__intro__ = "a news content catch class"
+__modification_time__ = "2016.01.23 22:20"
+__intro__ = "a news content catcher"
 
 
 #----------------------------------------------
@@ -51,30 +51,24 @@ class DataCatcher:
     # member data
     charset = "utf-8"
 
-    title_string = "Invaild title"
-    data_source_string = "Invaild source"
-    final_content = ""
-
-    # charset find
-    charset_find_regular = r"charset.*=.*\"(.*)\"$"
+    news_title = "Invaild title"
+    news_source = "Invaild source"
 
     #------------------------------------------
     #              Constructor
     #------------------------------------------
 
     def __init__(self):
-        self.charset_searcher = re.compile(self.charset_find_regular)
+        pass
 
     #------------------------------------------
     #            reading the html
     #------------------------------------------
 
-    def reading(self, html_content):
-        #self.catch_charset(html_content)
-        #html_content = html_content.decode(self.charset)
+    def reading(self, html_content, use_parser = "lxml", decode = None):
+        self.alloc_parser(html_content, use_parser, decode)
 
-        self.html_parser = BeautifulSoup(html_content, "lxml") 
-
+        self.final_content = ""
         self.br_number, self.p_number = 0, 0
 
         self.fit_node_list = {}
@@ -82,62 +76,32 @@ class DataCatcher:
 
         self.select_tag()
 
+    #------------------------------------------
+    #         allocate a html parser
+    #------------------------------------------
+   
+    def alloc_parser(self, html_content, use_parser, decode):
+        if decode:
+            html_content = html_content.decode(decode, "ignore")
+
+        self.html_parser = BeautifulSoup(html_content, use_parser)
+
+    #------------------------------------------
+    #         get title and news source
+    #------------------------------------------
+
+    def title_and_data_source(self):
         if self.html_parser.findChild("title"):
-            self.extract_title_string(self.html_parser.title.stripped_strings)
-     
-    #------------------------------------------
-    #            get html charset
-    #------------------------------------------
+            self.splite_news_title(self.html_parser.title.stripped_strings)
 
-    def catch_charset(self, html_content):
-        charset = self.charset_searcher.sub(r"\1", html_content)
-
-        if charset != None:
-            self.charset = charset        
+        return  self.news_title, self.news_source
 
     #------------------------------------------
-    #             getting title
+    # splite title string to title and source
     #------------------------------------------
 
-    def title(self):
-        return  self.title_string
-
-    #------------------------------------------
-    #          getting data source
-    #------------------------------------------
-
-    def data_source(self):
-        return  self.data_source_string
-
-    #------------------------------------------
-    #          getting news content
-    #------------------------------------------
-
-    def news_content(self):
-        if self.content_tag == None:
-            return  "Invaild content" 
-
-        break_flags = False
-
-        for string in self.content_tag.stripped_strings:
-            for end_string in Ending_terms:
-                if end_string in string:
-                    break_flags = True
-                    break
-
-            if break_flags:
-                break
-
-            self.final_content += string
-
-        return  self.final_content
-
-    #------------------------------------------
-    #          extract title string
-    #------------------------------------------
-
-    def extract_title_string(self, title_strings):
-        for string in title_strings:
+    def splite_news_title(self, news_titles):
+        for string in news_titles:
             for offset in range(len(string)):
                 if string[offset] == "_" or \
                    string[offset] == "|" or \
@@ -145,9 +109,9 @@ class DataCatcher:
                    string[offset + 1].isdigit() == False):
                     break
 
-        self.title_string = string[0: offset]
-        self.data_source_string = \
-        string[offset:].rsplit(string[offset])[-1].rsplit(" ")[-1]
+        self.news_title = string[0: offset]
+        self.news_source = \
+        (string[offset:].rsplit(string[offset])[-1]).rsplit(" ")[-1]
 
     #------------------------------------------
     #            build text tree
@@ -262,3 +226,51 @@ class DataCatcher:
                 fit_key = key
 
         self.content_tag = fit_key
+
+    #==========================================
+    #     the next function used to output 
+    #               new content
+    #==========================================
+
+    #------------------------------------------
+    #          get news content access
+    #------------------------------------------
+
+    def news_content(self):
+        if self.content_tag == None:
+            return  "Invaild content" 
+
+        for string in self.content_tag.stripped_strings:
+            if self.has_start_string(string):
+                self.final_content = ""
+                continue
+            
+            if self.has_ending_string(string):
+                break
+
+            self.final_content += string
+
+        return  self.final_content
+
+    #------------------------------------------
+    #         has start string or not
+    #------------------------------------------
+
+    def has_start_string(self, check_string):
+        for start_string in Start_terms:
+            if start_string in check_string:
+                return  True
+
+        return  False
+
+    #------------------------------------------
+    #        has ending string or not
+    #------------------------------------------
+
+    def has_ending_string(self, check_string):
+        for end_string in Ending_terms:
+            if end_string in check_string:
+                return  True
+
+        return  False
+

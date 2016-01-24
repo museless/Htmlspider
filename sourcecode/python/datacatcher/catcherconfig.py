@@ -50,6 +50,5 @@ Ending_terms = [
 ]
 
 Start_terms = [
-    "在线微信",
-    "新浪财经讯",
+    u"中金在线微信",
 ]
