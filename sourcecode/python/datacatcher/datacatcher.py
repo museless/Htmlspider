@@ -6,16 +6,13 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.23 22:20"
+__modification_time__ = "2016.01.25 23:30"
 __intro__ = "a news content catcher"
 
 
 #----------------------------------------------
 #                  Import
 #----------------------------------------------
-
-import chardet
-import re
 
 from bs4 import BeautifulSoup
 from bs4 import element
@@ -51,9 +48,6 @@ class DataCatcher:
     # member data
     charset = "utf-8"
 
-    news_title = "Invaild title"
-    news_source = "Invaild source"
-
     #------------------------------------------
     #              Constructor
     #------------------------------------------
@@ -66,6 +60,9 @@ class DataCatcher:
     #------------------------------------------
 
     def reading(self, html_content, use_parser = "lxml", decode = None):
+        self.news_title = "Invaild title"
+        self.news_source = "Invaild source"
+
         self.alloc_parser(html_content, use_parser, decode)
 
         self.final_content = ""
@@ -102,6 +99,10 @@ class DataCatcher:
 
     def splite_news_title(self, news_titles):
         for string in news_titles:
+            for strange_title in Strange_news_title:
+                if strange_title in string:
+                    return
+
             for offset in range(len(string)):
                 if string[offset] == "_" or \
                    string[offset] == "|" or \
