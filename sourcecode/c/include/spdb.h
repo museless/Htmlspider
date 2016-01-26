@@ -78,8 +78,6 @@ values(\"%.*s\",%d,%d)"
 from %s where Errt<%d and State=0 and \
 ID not in (select Ind from %s.%s) limit %d"
 
-#define	GET_CONF        "select Domain, ConBeg, ConEnd, ReLoc, SrcStr, CharSet from UCONF"
-
 /* News */
 #define	CHECK_IND_EXI	"select Ind from %s where Ind=\"%s\""
 

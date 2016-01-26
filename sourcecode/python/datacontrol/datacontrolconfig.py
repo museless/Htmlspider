@@ -14,20 +14,29 @@ __intro__ = "it was a mysql client"
 #            Data control config 
 #----------------------------------------------
 
-__db_user_name__ = "root"
-__db_user_password__ = "WdSr0922"
+UserName = "root"
+UserPassword = "WdSr0922"
 
 
 #----------------------------------------------
 #            database sql define 
 #----------------------------------------------
 
-CATCH_URL = 1
-
-DatabaseSql = {
-    CATCH_URL : "select * from %s where State = 0 limit %d",
+CreateSql = {
+    1: ["", "News.Example"],
 }
 
+SelectSql = {
+    0: ["*", ""],
+    1: ["*", "State = 0"],
+}
 
+InsertSql = {
+    1: ["Ind, Time, Source, Title, Url, Content",\
+        "\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\""]
+}
 
+UpdateSql = {
+    1: ["State = %d", "ID = %d"],
+}
 
