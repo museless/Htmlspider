@@ -30,7 +30,7 @@ int main(void)
     sock_addr.sin_addr.s_addr = htonl(INADDR_ANY);
     sock_addr.sin_port = htons(PORT);
 
-    if (bind(sock, (struct sockaddr *)&sock_addr, sizeof(sock_addr) == -1)) {
+    if (bind(sock, (struct sockaddr *)&sock_addr, sizeof(sock_addr)) == -1) {
         perror("main - bind");
         exit(-1);
     }
@@ -48,7 +48,7 @@ int main(void)
     struct ip_mreq  muti_req;
 
     muti_req.imr_multiaddr.s_addr = inet_addr(MCAST_ADDR);
-    muti_req.imr_interface.s_addr = inet_addr(LOCAL_ADDR);
+    muti_req.imr_interface.s_addr = htonl(INADDR_ANY);
 
     error = setsockopt(
             sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, &muti_req, sizeof(muti_req));
