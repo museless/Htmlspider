@@ -1,0 +1,169 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.8	//
+BR_NUMBER_INDEX	datacatcher/datacatcher.py	/^    BR_NUMBER_INDEX = 1$/;"	v	class:DataCatcher
+BeautifulSoup	datacatcher/datacatcher.py	/^from bs4 import BeautifulSoup$/;"	i
+CONDITION_INDEX	datacontrol/datacontrol.py	/^    CONDITION_INDEX = 1$/;"	v	class:DataControl
+CREATE_FIELD_INDEX	datacontrol/datacontrol.py	/^    CREATE_FIELD_INDEX = 0$/;"	v	class:DataControl
+Chinese_has_rate	datacatcher/catcherconfig.py	/^Chinese_has_rate = 0.21$/;"	v
+Chinese_minumum	datacatcher/catcherconfig.py	/^Chinese_minumum = 60$/;"	v
+Compare_rate	datacatcher/catcherconfig.py	/^Compare_rate = 0.28$/;"	v
+CreateSql	datacontrol/datacontrolconfig.py	/^CreateSql = {$/;"	v
+DataCatcher	bs.py	/^from datacatcher import DataCatcher$/;"	i
+DataCatcher	datacatcher/__init__.py	/^from datacatcher import DataCatcher $/;"	i
+DataCatcher	datacatcher/datacatcher.py	/^class DataCatcher:$/;"	c
+DataCatcher	example.py	/^from datacatcher import DataCatcher$/;"	i
+DataCatcher	newscatcher.py	/^from datacatcher import DataCatcher$/;"	i
+DataControl	datacontrol/__init__.py	/^from datacontrol import DataControl $/;"	i
+DataControl	datacontrol/datacontrol.py	/^class DataControl:$/;"	c
+DataControl	newscatcher.py	/^from datacontrol import DataControl$/;"	i
+Ending_terms	datacatcher/catcherconfig.py	/^Ending_terms = [$/;"	v
+ExposureBoss	qq.htm	/^		function ExposureBoss(id, name){$/;"	f
+ExposureBoss	qq.htm	/^function ExposureBoss(id, name){$/;"	f
+ExposureBoss2	qq.htm	/^	function ExposureBoss2(id, name){$/;"	f
+FIELD_INDEX	datacontrol/datacontrol.py	/^    FIELD_INDEX = 0$/;"	v	class:DataControl
+Forbid_tag	datacatcher/datacatcher.py	/^    Forbid_tag = [$/;"	v	class:DataCatcher
+GetSelectedText	qq.htm	/^function GetSelectedText (cursorPos){$/;"	f
+INSERT_FIELD_INDEX	datacontrol/datacontrol.py	/^    INSERT_FIELD_INDEX = 0$/;"	v	class:DataControl
+INSERT_FORMAT_INDEX	datacontrol/datacontrol.py	/^    INSERT_FORMAT_INDEX = 1$/;"	v	class:DataControl
+InsertSql	datacontrol/datacontrolconfig.py	/^InsertSql = {$/;"	v
+LIKE_INDEX	datacontrol/datacontrol.py	/^    LIKE_INDEX = 1$/;"	v	class:DataControl
+MySQLdb	datacontrol/datacontrol.py	/^import MySQLdb$/;"	i
+MySQLdb	example.py	/^import MySQLdb$/;"	i
+PASS_FLAGS_INDEX	datacatcher/datacatcher.py	/^    PASS_FLAGS_INDEX = 3$/;"	v	class:DataCatcher
+P_NUMBER_INDEX	datacatcher/datacatcher.py	/^    P_NUMBER_INDEX = 0$/;"	v	class:DataCatcher
+Request	qq.htm	/^function Request() {$/;"	f
+Request1	qq.htm	/^		function Request1() { loadScript('http:\/\/i.match.qq.com\/dingcai\/ding?tlt='+encodeURI(ARTICLE_INFO.title)+'&url='+ARTICLE_INFO.article_url); }\/\/ 喜欢这篇文章$/;"	f
+Request2	qq.htm	/^		function Request2() {	loadScript('http:\/\/i.match.qq.com\/dingcai\/cai?tlt='+encodeURI(ARTICLE_INFO.title)+'&url='+ARTICLE_INFO.article_url); }\/\/不喜欢这篇文章$/;"	f
+Request5	qq.htm	/^		function Request5() {	loadScript('http:\/\/i.match.qq.com\/keep\/i?url='+ARTICLE_INFO.article_url+'&ty=1'+'&callback="sctag"'); }\/\/文章是否被收藏$/;"	f
+SelectSql	datacontrol/datacontrolconfig.py	/^SelectSql = {$/;"	v
+ShowDaren	163.html	/^    function ShowDaren(ref, wrapper) {$/;"	f
+Start_terms	datacatcher/catcherconfig.py	/^Start_terms = [$/;"	v
+Strange_news_title	datacatcher/catcherconfig.py	/^Strange_news_title = [$/;"	v
+TAG_COUNT_INDEX	datacatcher/datacatcher.py	/^    TAG_COUNT_INDEX = 2$/;"	v	class:DataCatcher
+TAG_LEN_INDEX	datacatcher/datacatcher.py	/^    TAG_LEN_INDEX = 1$/;"	v	class:DataCatcher
+UPDATE_LIMIT_INDEX	datacontrol/datacontrol.py	/^    UPDATE_LIMIT_INDEX = 1$/;"	v	class:DataControl
+UPDATE_SET_INDEX	datacontrol/datacontrol.py	/^    UPDATE_SET_INDEX = 0$/;"	v	class:DataControl
+UpdateSql	datacontrol/datacontrolconfig.py	/^UpdateSql = {$/;"	v
+UserName	datacontrol/datacontrolconfig.py	/^UserName = "root"$/;"	v
+UserPassword	datacontrol/datacontrolconfig.py	/^UserPassword = "WdSr0922"$/;"	v
+WORD_COUNT_INDEX	datacatcher/datacatcher.py	/^    WORD_COUNT_INDEX = 0$/;"	v	class:DataCatcher
+__author__	datacatcher/__init__.py	/^__author__ = "Muse"$/;"	v
+__author__	datacatcher/catcherconfig.py	/^__author__ = "Muse"$/;"	v
+__author__	datacatcher/datacatcher.py	/^__author__ = "Muse"$/;"	v
+__author__	datacontrol/__init__.py	/^__author__ = "Muse"$/;"	v
+__author__	datacontrol/datacontrol.py	/^__author__ = "Muse"$/;"	v
+__author__	datacontrol/datacontrolconfig.py	/^__author__ = "Muse"$/;"	v
+__author__	newscatcher.py	/^__author__ = "Muse"$/;"	v
+__author__	newscatchermain.py	/^__author__ = "Muse"$/;"	v
+__creation_time__	datacatcher/__init__.py	/^__creation_time__ = "2016.01.13 01:10"$/;"	v
+__creation_time__	datacatcher/catcherconfig.py	/^__creation_time__ = "2016.01.13 01:10"$/;"	v
+__creation_time__	datacatcher/datacatcher.py	/^__creation_time__ = "2016.01.13 01:10"$/;"	v
+__creation_time__	datacontrol/__init__.py	/^__creation_time__ = "2016.01.25 23:45"$/;"	v
+__creation_time__	datacontrol/datacontrol.py	/^__creation_time__ = "2016.01.25 23:45"$/;"	v
+__creation_time__	datacontrol/datacontrolconfig.py	/^__creation_time__ = "2016.01.25 23:45"$/;"	v
+__creation_time__	newscatcher.py	/^__creation_time__ = "2016.01.28 16:34"$/;"	v
+__creation_time__	newscatchermain.py	/^__creation_time__ = "2016.01.28 16:34"$/;"	v
+__init__	datacatcher/datacatcher.py	/^    def __init__(self):$/;"	m	class:DataCatcher
+__init__	datacontrol/datacontrol.py	/^    def __init__(self, database_name):$/;"	m	class:DataControl
+__intro__	datacatcher/__init__.py	/^__intro__ = "a news content catch class"$/;"	v
+__intro__	datacatcher/catcherconfig.py	/^__intro__ = "catcher configuration"$/;"	v
+__intro__	datacatcher/datacatcher.py	/^__intro__ = "a news content catcher"$/;"	v
+__intro__	datacontrol/__init__.py	/^__intro__ = "data controler or you can say it was a mysql client"$/;"	v
+__intro__	datacontrol/datacontrol.py	/^__intro__ = "it was a mysql client"$/;"	v
+__intro__	datacontrol/datacontrolconfig.py	/^__intro__ = "it was a mysql client"$/;"	v
+__intro__	newscatcher.py	/^__intro__ = "news catcher interface"$/;"	v
+__intro__	newscatchermain.py	/^__intro__ = "news catcher main"$/;"	v
+__modification_time__	datacatcher/__init__.py	/^__modification_time__ = "2016.01.14 11:10"$/;"	v
+__modification_time__	datacatcher/catcherconfig.py	/^__modification_time__ = "2016.01.21 20:10"$/;"	v
+__modification_time__	datacatcher/datacatcher.py	/^__modification_time__ = "2016.01.25 23:30"$/;"	v
+__modification_time__	datacontrol/__init__.py	/^__modification_time__ = "2016.01.25 23:45"$/;"	v
+__modification_time__	datacontrol/datacontrol.py	/^__modification_time__ = "2016.01.26 21:45"$/;"	v
+__modification_time__	datacontrol/datacontrolconfig.py	/^__modification_time__ = "2016.01.25 23:45"$/;"	v
+__modification_time__	newscatcher.py	/^__modification_time__ = "2016.01.28 16:34"$/;"	v
+__modification_time__	newscatchermain.py	/^__modification_time__ = "2016.01.28 16:34"$/;"	v
+__version__	datacatcher/__init__.py	/^__version__ = "0.0.1"$/;"	v
+__version__	datacontrol/__init__.py	/^__version__ = "1.1.1"$/;"	v
+addEvent	qq.htm	/^function addEvent(node, type, listener){$/;"	f
+alloc_parser	datacatcher/datacatcher.py	/^    def alloc_parser(self, html_content, use_parser, decode):$/;"	m	class:DataCatcher
+anchorforkd	hexun.html	/^<a name="anchorforkd"><\/a>$/;"	a
+bindFeedbackBoxClose	163.html	/^		function bindFeedbackBoxClose(){$/;"	f
+catcher_initialize	newscatcher.py	/^def catcher_initialize():$/;"	f
+chardet	bs.py	/^import chardet $/;"	i
+charset	datacatcher/datacatcher.py	/^    charset = "utf-8"$/;"	v	class:DataCatcher
+clickHandler	163.html	/^function clickHandler() {$/;"	f
+codecs	bs.py	/^import codecs$/;"	i
+codecs	example.py	/^import codecs$/;"	i
+collect	qq.htm	/^function collect(){}$/;"	f
+collectModule	qq.htm	/^function collectModule(_COLLECT_TEXT_len,cursorPos){$/;"	f
+content	example.py	/^    content = (content == "") and data_catcher.news_title or content$/;"	v
+content	example.py	/^    content = data_catcher.news_content()$/;"	v
+count_chinese_word	datacatcher/datacatcher.py	/^    def count_chinese_word(self, string):$/;"	m	class:DataCatcher
+create	datacontrol/datacontrol.py	/^    def create(self, operate_id, table_name):$/;"	m	class:DataControl
+crsczy	qq.htm	/^ function crsczy(){ $/;"	f
+cursor	example.py	/^cursor = sql_handler.cursor()$/;"	v
+data_catcher	example.py	/^data_catcher = DataCatcher()$/;"	v
+delegateClick	163.html	/^function delegateClick() {$/;"	f
+element	datacatcher/datacatcher.py	/^from bs4 import element$/;"	i
+execute	datacontrol/datacontrol.py	/^    def execute(self, sql_string):$/;"	m	class:DataControl
+file_desc	example.py	/^file_desc = codecs.open("See", "w+", "utf-8")$/;"	v
+final_insert	datacontrol/datacontrol.py	/^    def final_insert(self):$/;"	m	class:DataControl
+gdtad	qq.htm	/^function gdtad(gdtAD1, gdt_id1, gdtAD2, gdt_id2){$/;"	f
+getClass	163.html	/^	function getClass(tagname, className) {$/;"	f
+getCookie1	qq.htm	/^			function getCookie1(uin){$/;"	f
+getDescObj	163.html	/^function getDescObj(objP){$/;"	f
+getDisDesc	163.html	/^function getDisDesc(){$/;"	f
+getMousePoint	qq.htm	/^function getMousePoint(ev){$/;"	f
+getOffset	163.html	/^    function getOffset(el) {$/;"	f
+getOffset	163.html	/^function getOffset(el) {$/;"	f
+getWxEwm	qq.htm	/^	function getWxEwm(data){$/;"	f
+has_ending_string	datacatcher/datacatcher.py	/^    def has_ending_string(self, check_string):$/;"	m	class:DataCatcher
+has_start_string	datacatcher/datacatcher.py	/^    def has_start_string(self, check_string):$/;"	m	class:DataCatcher
+html_data	example.py	/^    html_data = url_data.read()$/;"	v
+initHotRead	qq.htm	/^function initHotRead(url){$/;"	f
+insert_buff	datacontrol/datacontrol.py	/^    insert_buff = []$/;"	v	class:DataControl
+insert_field	datacontrol/datacontrol.py	/^    insert_field = ""$/;"	v	class:DataControl
+insert_head	datacontrol/datacontrol.py	/^    insert_head = ""$/;"	v	class:DataControl
+insert_ready	datacontrol/datacontrol.py	/^    def insert_ready(self, operate_id, table_name):$/;"	m	class:DataControl
+isParent	163.html	/^function isParent(el, parent) {$/;"	f
+is_forbid_tag	datacatcher/datacatcher.py	/^    def is_forbid_tag(self, tag):$/;"	m	class:DataCatcher
+jsonpCallback	qq.htm	/^function jsonpCallback(data)$/;"	f
+loadImg	qq.htm	/^function loadImg(a,b,o){var w=a,h=b,v=w\/h;var i=new Image();i.src=o.src;var W=i.width,H=i.height,V=W\/H;var ri=Math.min(w\/W,h\/H),ra=Math.max(w\/W,h\/H);if(W==w||H==h){return}if(v>V){if(W>w){o.width=w;o.height=(w*H)\/W}else{o.width=W;o.height=(W*h)\/H}}else{if(H>h){o.height=h;o.width=(W*h)\/H}else{o.height=H;o.width=(H*w)\/h}}}<\/script>$/;"	f
+loadScript	qq.htm	/^		function loadScript(sUrl) {$/;"	f
+loadScript	qq.htm	/^function loadScript(sUrl) {$/;"	f
+news_content	datacatcher/datacatcher.py	/^    def news_content(self):$/;"	m	class:DataCatcher
+open_html	bs.py	/^def open_html(path):$/;"	f
+pre_insert	datacontrol/datacontrol.py	/^    def pre_insert(self, *parameters):$/;"	m	class:DataControl
+rate_compare	datacatcher/datacatcher.py	/^    def rate_compare(self, total_rate, child_dict):$/;"	m	class:DataCatcher
+reading	datacatcher/datacatcher.py	/^    def reading(self, html_content, use_parser = "lxml", decode = None):$/;"	m	class:DataCatcher
+registerZone2	qq.htm	/^function registerZone2(ev,clickType)$/;"	f
+relate_tag_count	datacatcher/datacatcher.py	/^    def relate_tag_count(self, child_name, tag_count_list):$/;"	m	class:DataCatcher
+removeHTMLTag	163.html	/^function removeHTMLTag(str) {$/;"	f
+result	example.py	/^    result = cursor.fetchone()$/;"	v
+ret_code	example.py	/^    ret_code = url_data.getcode()$/;"	v
+retina_img_replacer	qq.htm	/^function retina_img_replacer(reimg){$/;"	f
+sctag	qq.htm	/^						 function sctag(data_1){$/;"	f
+sctagClick	qq.htm	/^					function sctagClick(){  $/;"	f
+select	datacontrol/datacontrol.py	/^    def select(self, operate_id, table_name, limit = -1):$/;"	m	class:DataControl
+select_tag	datacatcher/datacatcher.py	/^    def select_tag(self):$/;"	m	class:DataCatcher
+shareClick	163.html	/^    function shareClick() {$/;"	f
+showFeedbackBox	163.html	/^		function showFeedbackBox(x,y){$/;"	f
+splite_news_title	datacatcher/datacatcher.py	/^    def splite_news_title(self, news_titles):$/;"	m	class:DataCatcher
+sql_handler	example.py	/^sql_handler = MySQLdb.connect(user = 'root', passwd = 'WdSr0922', db = "Url")$/;"	v
+starwz	qq.htm	/^function starwz(){$/;"	f
+table_name	example.py	/^table_name = "U20160122"$/;"	v
+table_name_get	newscatcher.py	/^def table_name_get():$/;"	f
+tag_can_pass	datacatcher/datacatcher.py	/^    def tag_can_pass(self, word_count, total_len):$/;"	m	class:DataCatcher
+text_tree_build	datacatcher/datacatcher.py	/^    def text_tree_build(self, tag_object):$/;"	m	class:DataCatcher
+tieInit	163.html	/^    function tieInit() {$/;"	f
+time	newscatcher.py	/^import time$/;"	i
+title_and_data_source	datacatcher/datacatcher.py	/^    def title_and_data_source(self):$/;"	m	class:DataCatcher
+trimInput	xinhua.htm	/^function trimInput(){$/;"	f
+update	datacontrol/datacontrol.py	/^    def update(self, operate_id, table_name, *parameters):$/;"	m	class:DataControl
+url	example.py	/^    url = result[1]$/;"	v
+url_data	example.py	/^        url_data = urllib.urlopen(url)$/;"	v
+urllib	example.py	/^import urllib$/;"	i
+urllib	newscatcher.py	/^import urllib$/;"	i

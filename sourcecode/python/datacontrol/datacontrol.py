@@ -58,6 +58,13 @@ class DataControl:
         self.cursor = self.controler.cursor()
 
     #------------------------------------------
+    #               Destructor 
+    #------------------------------------------
+
+    def __del__(self):
+        pass
+
+    #------------------------------------------
     #        joint to the select string 
     #------------------------------------------
 
