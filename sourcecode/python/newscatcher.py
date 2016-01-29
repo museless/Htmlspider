@@ -22,14 +22,23 @@ from datacontrol import DataControl
 
 
 #----------------------------------------------
+#                  Data
+#----------------------------------------------
+
+URL_ID_INDEX = 0
+URL_INDEX = 1
+
+
+#----------------------------------------------
 #            catcher initialize
 #----------------------------------------------
 
 def catcher_initialize():
     url_receiver = DataControl("Url");
-    news_catcher = DataControl("News")
+    news_uploader = DataControl("News")
+    data_catcher = DataCatcher()
 
-    return  url_receiver, news_catcher
+    return  url_receiver, news_uploader, data_catcher
 
 
 #----------------------------------------------
@@ -42,3 +51,45 @@ def table_name_get():
     return  "U" + time_str, "N" + time_str
 
 
+#----------------------------------------------
+#             catch url's data
+#----------------------------------------------
+
+def url_data_get(url_receiver, url, url_id):
+    url_data = None
+
+    try:
+        url_data = urllb.urlopen(url)
+    except:
+        url_receiver.update(1, 2, url_id)
+
+    if url_data != None:
+        ret_code = url_data.getcode()
+
+        if ret_code != 200:
+            url_receiver.update(1, 2, url_id)
+            url_data = None 
+
+    return  url_data
+
+
+#----------------------------------------------
+#          datacatcher mainly job 
+#----------------------------------------------
+
+def catcher_work(
+    url_receiver, news_uploader, url_tabname, news_tabname, url_limit = 32):
+
+    while True:
+        url_receiver.select(1, url_tabname, url_limit)
+        results = url_receiver.fetchall()
+
+        for row in results:
+            url = results[URL_INDEX]
+            url_id = results[URL_ID_INDEX]
+            url_data = url_data_get(url_receiver, url, url_id)
+
+            if url_data == None:
+                continue
+
+            html = url_data.read()
