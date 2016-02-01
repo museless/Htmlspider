@@ -21,7 +21,6 @@ static	DMPB	*mmdp_default_block_search(DMPB *begBlock, mpt_t *pLoct);
 	Part One:	API
 	Part Two:	Slave Function
 	Part Three:	Block search
-	Part Four:	Error handler
 
 --------------------------------------------*/
 
@@ -312,11 +311,4 @@ static DMPB *mmdp_default_block_search(DMPB *begBlock, mpt_t *pLoct)
 	return	NULL;
 }
 
-
-/*------------------------------------------
-	Part Four: Error handler
-
-	1. 
-
---------------------------------------------*/
 

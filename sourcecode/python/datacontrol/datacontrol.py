@@ -158,6 +158,7 @@ class DataControl:
             update_string += \
             "where %s" % UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX]
 
+        print update_string, parameters
         self.execute(update_string % parameters)
 
     #------------------------------------------

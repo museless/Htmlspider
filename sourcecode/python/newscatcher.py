@@ -55,19 +55,19 @@ def table_name_get():
 #             catch url's data
 #----------------------------------------------
 
-def url_data_get(url_receiver, url, url_id):
+def url_data_get(url_receiver, url_tabname, url, url_id):
     url_data = None
 
     try:
-        url_data = urllb.urlopen(url)
+        url_data = urllib.urlopen(url)
     except:
-        url_receiver.update(1, 2, url_id)
+        url_receiver.update(1, url_tabname, 2, url_id)
 
     if url_data != None:
         ret_code = url_data.getcode()
 
         if ret_code != 200:
-            url_receiver.update(1, 2, url_id)
+            url_receiver.update(1, url_tabname, 2, url_id)
             url_data = None 
 
     return  url_data
@@ -77,11 +77,11 @@ def url_data_get(url_receiver, url, url_id):
 #             catch html content
 #----------------------------------------------
 
-def html_data_get(url_receiver, url_data, url_id):
+def html_data_get(url_receiver, url_tabname, url_data, url_id):
     html = url_data.read()
 
     if len(html) < 256:
-        url_receiver.update(1, 3, url_id)
+        url_receiver.update(1, url_tabname, 3, url_id)
         return  None
 
     return  html 
@@ -111,19 +111,19 @@ def catcher_work(
 
     while True:
         url_receiver.select(1, url_tabname, url_limit)
-        results = url_receiver.fetchall()
+        results = url_receiver.cursor.fetchall()
 
         for data_row in results:
-            url_receiver.update(1, 9, url_id)
-
             url = data_row[URL_INDEX]
             url_id = data_row[URL_ID_INDEX]
-            url_data = url_data_get(url_receiver, url, url_id)
+
+            url_receiver.update(1, url_tabname, 9, url_id)
+            url_data = url_data_get(url_receiver, url_tabname, url, url_id)
 
             if url_data == None:
                 continue
 
-            html = html_data_get(url_receiver, url_data, url_id)
+            html = html_data_get(url_receiver, url_tabname, url_data, url_id)
 
             if html == None:
                 continue
