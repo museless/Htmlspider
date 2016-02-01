@@ -32,7 +32,7 @@ SelectSql = {
 }
 
 InsertSql = {
-    1: ["Ind, Time, Source, Title, Url, Content",\
+    0: ["Ind, Time, Source, Title, Url, Content",\
         "\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\""]
 }
 

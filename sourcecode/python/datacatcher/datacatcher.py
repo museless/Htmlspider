@@ -69,7 +69,7 @@ class DataCatcher:
         self.br_number, self.p_number = 0, 0
 
         self.fit_node_list = {}
-        self.text_tree_build(self.html_parser.body)
+        self.__text_tree_build(self.html_parser.body)
 
         self.select_tag()
 
@@ -89,7 +89,7 @@ class DataCatcher:
 
     def title_and_data_source(self):
         if self.html_parser.findChild("title"):
-            self.splite_news_title(self.html_parser.title.stripped_strings)
+            self.__splite_news_title(self.html_parser.title.stripped_strings)
 
         return  self.news_title, self.news_source
 
@@ -97,7 +97,7 @@ class DataCatcher:
     # splite title string to title and source
     #------------------------------------------
 
-    def splite_news_title(self, news_titles):
+    def __splite_news_title(self, news_titles):
         for string in news_titles:
             for strange_title in Strange_news_title:
                 if strange_title in string:
@@ -118,7 +118,7 @@ class DataCatcher:
     #            build text tree
     #------------------------------------------
 
-    def text_tree_build(self, tag_object):
+    def __text_tree_build(self, tag_object):
         tag_count_list = [0, 0]
         chinese_words, tag_len = 0, 0
         select, child_data = {}, []
@@ -134,10 +134,10 @@ class DataCatcher:
 
             self.relate_tag_count(child.name, tag_count_list)
 
-            if self.is_forbid_tag(child):
+            if self.__is_forbid_tag(child):
                 continue
 
-            child_data = self.text_tree_build(child)
+            child_data = self.__text_tree_build(child)
             chinese_words += child_data[self.WORD_COUNT_INDEX]
             tag_len += child_data[self.TAG_LEN_INDEX]
 
@@ -156,7 +156,7 @@ class DataCatcher:
     #           check forbidden tag
     #------------------------------------------
 
-    def is_forbid_tag(self, tag):
+    def __is_forbid_tag(self, tag):
         if tag.name in self.Forbid_tag:
             tag.clear()
             return  True

@@ -25,4 +25,4 @@ if __name__ == "__main__":
     url_receiver, news_uploader, data_catcher = catcher_initialize()
     url_table, news_table = table_name_get()
 
-    catcher_work(url_receiver, news_uploader, url_table, news_table)
+    catcher_work(data_catcher, url_receiver, news_uploader, url_table, news_table)
