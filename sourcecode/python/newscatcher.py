@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.28 16:34"
-__modification_time__ = "2016.01.31 20:34"
+__modification_time__ = "2016.02.02 00:01"
 __intro__ = "news catcher interface"
 
 
@@ -16,6 +16,7 @@ __intro__ = "news catcher interface"
 
 import urllib
 import time
+import chardet
 
 from datacatcher import DataCatcher
 from datacontrol import DataControl
@@ -46,7 +47,7 @@ def catcher_initialize():
 #----------------------------------------------
 
 def table_name_get():
-    time_str = time.strftime("%Y%m%d")
+    time_str = "20160201"#time.strftime("%Y%m%d")
 
     return  "U" + time_str, "N" + time_str
 
@@ -61,12 +62,14 @@ def url_data_get(url_receiver, url_tabname, url, url_id):
     try:
         url_data = urllib.urlopen(url)
     except:
+        print("Url: %s cannot get" % url)
         url_receiver.update(1, url_tabname, 2, url_id)
 
     if url_data != None:
         ret_code = url_data.getcode()
 
         if ret_code != 200:
+            print("Url: %s - ret: %d" % (url, ret_code))
             url_receiver.update(1, url_tabname, 2, url_id)
             url_data = None 
 
@@ -107,7 +110,8 @@ def catcher_work(
     data_catcher, url_receiver, news_uploader, 
     url_tabname, news_tabname, url_limit = 32):
 
-    news_uploader.insert_ready(0, news_tabname)
+    news_uploader.create(1, news_tabname) 
+    news_uploader.insert_ready(1, news_tabname)
 
     while True:
         url_receiver.select(1, url_tabname, url_limit)
@@ -131,12 +135,14 @@ def catcher_work(
             html_extract(data_catcher, url, html)
 
             title, source = data_catcher.title_and_data_source()
+            title = news_uploader.escaping(title.encode("utf8"))
+            news = news_uploader.escaping(data_catcher.news_content().encode("utf8"))
 
             news_uploader.pre_insert(
-            (str(url_id), time.strftime("%H:%M"), 
-            source, title, url, data_catcher.news_content))
+            str(url_id), time.strftime("%H:%M"), 
+            str(source.decode("utf8")), str(title.decode("utf8")), url, str(news.decode("utf8")))
 
-            url_receiver.update(1, 1, url_id)
+            url_receiver.update(1, url_tabname, 1, url_id)
 
         news_uploader.final_insert()
 

@@ -15,6 +15,7 @@ __intro__ = "it was a mysql client"
 #----------------------------------------------
 
 import MySQLdb
+import chardet
 
 from datacontrolconfig import * 
 
@@ -52,8 +53,8 @@ class DataControl:
     def __init__(self, database_name):
         self.controler = \
         MySQLdb.connect(
-        user = UserName,
-        passwd = UserPassword, db = database_name)
+        user = UserName, passwd = UserPassword, 
+        db = database_name, charset = "utf8")
             
         self.cursor = self.controler.cursor()
 
@@ -138,7 +139,7 @@ class DataControl:
             return  None
 
         self.execute(
-        "%s%s" % (self.insert_head, ",".join(self.insert_buff)))
+        u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
 
         self.insert_buff = []
 
@@ -158,7 +159,6 @@ class DataControl:
             update_string += \
             "where %s" % UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX]
 
-        print update_string, parameters
         self.execute(update_string % parameters)
 
     #------------------------------------------
@@ -169,5 +169,12 @@ class DataControl:
         if sql_string == "":
             return  None
 
-        return  self.cursor.execute(sql_string)
+        return  self.cursor.execute(sql_string.encode("utf8"))
+
+    #------------------------------------------
+    #             string escaping
+    #------------------------------------------
+
+    def escaping(self, sql_string):
+        return  self.controler.escape(sql_string)
 

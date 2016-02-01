@@ -25,7 +25,7 @@ Compare_rate = 0.28
 
 # werid title
 Strange_news_title = [
-    "已删除或过期的稿",
+    u"已删除或过期的稿",
 ]
 
 # ending terms
@@ -47,6 +47,8 @@ Ending_terms = [
     u"网站简介",
     u"网站地图",
     u"本站所有文章",
+    u"凤凰财知道",
+    u"每日早间捕捉涨停股",
 ]
 
 Start_terms = [
