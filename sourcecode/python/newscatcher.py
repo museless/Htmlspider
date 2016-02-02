@@ -140,7 +140,7 @@ def catcher_work(
 
             news_uploader.pre_insert(
             str(url_id), time.strftime("%H:%M"), 
-            str(source.decode("utf8")), str(title.decode("utf8")), url, str(news.decode("utf8")))
+            source, title.decode("utf8"), url, news.decode("utf8"))
 
             url_receiver.update(1, url_tabname, 1, url_id)
 
