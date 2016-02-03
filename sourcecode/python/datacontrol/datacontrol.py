@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.02.02 12:45"
+__modification_time__ = "2016.02.03 10:05"
 __intro__ = "it was a mysql client"
 
 
@@ -176,5 +176,8 @@ class DataControl:
     #------------------------------------------
 
     def escaping(self, sql_string):
-        return  self.controler.escape(sql_string)
+        sql_string = sql_string.replace('"', '\\"')
+        sql_string = sql_string.replace("'", "\\'")
+
+        return  sql_string
 

@@ -51,6 +51,7 @@ Ending_terms = [
     u"每日早间捕捉涨停股",
     u"编译//",
     u"本文来源",
+    u"本报记者",
 ]
 
 Start_terms = [
