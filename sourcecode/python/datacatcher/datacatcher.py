@@ -98,6 +98,7 @@ class DataCatcher:
     #------------------------------------------
 
     def __splite_news_title(self, news_titles):
+        # for title
         for string in news_titles:
             for strange_title in Strange_news_title:
                 if strange_title in string:
@@ -108,11 +109,18 @@ class DataCatcher:
                    string[offset] == "|" or \
                    (string[offset] == "-" and \
                    string[offset + 1].isdigit() == False):
+                    self.news_title = string[0: offset]
                     break
 
-        self.news_title = string[0: offset]
-        self.news_source = \
-        (string[offset:].rsplit(string[offset])[-1]).rsplit(" ")[-1]
+        # for source 
+        self.news_source = string[offset: ]
+
+        for offset in range(1, len(string) + 1):
+            if string[-offset] == "_" or \
+               string[-offset] == "|" or \
+               string[-offset] == "-":
+                self.news_source = string[-offset + 1: ]
+                break
 
     #------------------------------------------
     #            build text tree

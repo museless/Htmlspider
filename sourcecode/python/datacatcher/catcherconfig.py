@@ -16,7 +16,7 @@ __intro__ = "catcher configuration"
 
 Chinese_minumum = 60
 Chinese_has_rate = 0.21
-Compare_rate = 0.28
+Compare_rate = 0.22
 
 
 #----------------------------------------------
@@ -52,9 +52,12 @@ Ending_terms = [
     u"编译//",
     u"本文来源",
     u"本报记者",
+    u".F.X.1.6.8",
+    u"新浪声明：",
 ]
 
 Start_terms = [
     u"中金在线微信",
     u"分享到：",
+    u"&nbsp中财网",
 ]
