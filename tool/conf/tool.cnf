@@ -8,7 +8,7 @@ urls_db_name		= Url
 urls_save_path		= /MuseSp/text/history
 conts_save_path		= /MuseSp/text/cont
 
-confs_save_path		= /MuseSp/tool/text
+confs_save_path		= /mnt/hgfs/Muse/CsSpider/tool/text 
 
 uathname_save_path	= /MuseSp/tool/text/uathname
 urladdr_save_path	= /MuseSp/tool/text/urladdr

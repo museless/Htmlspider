@@ -5,7 +5,7 @@
 #----------------------------------------------
 
 __author__ = "Muse"
-__creation_time__ = "2016.01.28 16:34"
+__creation_time__ = "2016.02.12 10:35"
 __modification_time__ = "2016.02.03 10:00"
 __intro__ = "news catcher interface"
 
@@ -47,7 +47,7 @@ def catcher_initialize():
 #----------------------------------------------
 
 def table_name_get():
-    time_str = "20160201"#time.strftime("%Y%m%d")
+    time_str = time.strftime("%Y%m%d")
 
     return  "U" + time_str, "N" + time_str
 
@@ -91,16 +91,32 @@ def html_data_get(url_receiver, url_tabname, url_data, url_id):
 
 
 #----------------------------------------------
+#            catch html's charset 
+#----------------------------------------------
+
+def catch_html_charset(html):
+    offset = html.find("charset=")
+
+    if offset == -1:
+        return  False
+
+    offset += len("charset=")
+
+    if html[offset] == "\"":
+        offset += 1
+
+    end_offset = html[offset:].find("\"")
+
+    return  html[offset: offset + end_offset]
+
+
+#----------------------------------------------
 #                html extract 
 #----------------------------------------------
 
-def html_extract(data_catcher, url, html):
-    if "gmw" in url:
-        data_catcher.reading(html, decode = "utf8")
-        return
-
+def html_extract(data_catcher, url, html, charset):
     if "qq.com" not in url:
-        data_catcher.reading(html)
+        data_catcher.reading(html, decode = charset)
         return
 
     data_catcher.reading(html, use_parser = "html.parser", decode = "gb2312")
@@ -110,13 +126,13 @@ def html_extract(data_catcher, url, html):
 #           upload news content
 #----------------------------------------------
 
-def upload_news(data_catcher, news_uploader, url_id, url):
-    title, source = data_catcher.title_and_data_source()
+def upload_news(data_catcher, news_uploader, url_id, url, charset):
+    title, source = data_catcher.title_and_data_source(charset)
 
     news_uploader.pre_insert(
         str(url_id), time.strftime("%H:%M"), \
         source, news_uploader.escaping(title), url, \
-        news_uploader.escaping(data_catcher.news_content()))
+        news_uploader.escaping(data_catcher.news_content(charset)))
 
 
 #----------------------------------------------
@@ -139,8 +155,14 @@ def handle_url_result(
         if html == None:
             return
 
-        html_extract(data_catcher, url, html)
-        upload_news(data_catcher, news_uploader, url_id, url)
+        charset = catch_html_charset(html) 
+
+        if charset == False:
+            url_receiver.update(1, url_tabname, 4, url_id)
+            return
+
+        html_extract(data_catcher, url, html, charset)
+        upload_news(data_catcher, news_uploader, url_id, url, charset)
         url_receiver.update(1, url_tabname, 1, url_id)
 
 
@@ -160,8 +182,9 @@ def catcher_work(
         results = url_receiver.cursor.fetchall()
 
         for data_row in results:
-            handle_url_result(data_row, data_catcher, url_receiver, 
-                news_uploader, url_tabname, news_tabname)
+            handle_url_result(
+            data_row, data_catcher, url_receiver, 
+            news_uploader, url_tabname, news_tabname)
 
         news_uploader.final_insert()
 

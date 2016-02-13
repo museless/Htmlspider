@@ -20,8 +20,15 @@ EXARR	= bin/arrage
 EXTEST	= bin/test
 
 # Obj
-SRCTOOL	= src/sp_tool.c ../src/functionlib/mconfctl/museconfctl.c ../src/functionlib/sp_global.c ../src/functionlib/sp_pfun.c \
-	  ../src/functionlib/sp_bufoper.c
+SRCTOOL	= src/sp_tool.c \
+	 	  ../sourcecode/c/src/functionlib/sp_global.c \
+		  ../sourcecode/c/src/functionlib/sp_pfun.c \
+		  ../sourcecode/c/src/functionlib/memorypool/chunkmpool/mpool_web.c \
+		  ../sourcecode/c/src/functionlib/dboper/dboper.c \
+		  ../sourcecode/c/src/functionlib/mconfctl/museconfctl.c \
+		  ../sourcecode/c/src/functionlib/memorybarrier/museato.c \
+		  ../sourcecode/c/src/functionlib/garbagecolloter/musegc.c \
+	      ../sourcecode/c/src/functionlib/container/sp_bufoper.c
 
 SRCRM	= src/sp_remove.c
 

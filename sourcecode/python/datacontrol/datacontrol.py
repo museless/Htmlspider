@@ -1,4 +1,4 @@
-#-*- coding:utf8 -*-
+# -*- coding:utf8 -*-
 
 #----------------------------------------------
 #                Code header
@@ -117,7 +117,7 @@ class DataControl:
         (table_name, InsertSql[operate_id][self.INSERT_FIELD_INDEX])
 
         self.insert_field = \
-        "(%s)" % InsertSql[operate_id][self.INSERT_FORMAT_INDEX]
+        u"(%s)" % InsertSql[operate_id][self.INSERT_FORMAT_INDEX]
  
     #------------------------------------------
     #          insert to insert list 

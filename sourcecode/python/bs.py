@@ -11,11 +11,11 @@ def open_html(path):
         return  file_desc.read()
 
 if __name__ == "__main__":
-    url_data = urllib.urlopen("http://money.163.com/16/0201/08/BENPL1PV00253B0H.html")
+    url_data = urllib.urlopen("http://news.cnfol.com/guojicaijing/20160212/22242528.shtml")
     html = url_data.read()
 
     catcher = DataCatcher()
-    catcher.reading(html)
+    catcher.reading(html, decode = "utf8")
 
-    print("%s\n%s" % catcher.title_and_data_source())
-    print(catcher.news_content())
+    print("%s\n%s" % catcher.title_and_data_source("utf8"))
+    print("Content:\n%s" % catcher.news_content())

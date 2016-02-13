@@ -78,7 +78,7 @@ int ping(PINGIF *ping_info, const char *host)
     memset(ping_info, 0, sizeof(PINGIF));
     
     if (ping_access(sock, ping_info, &sock_info) == FRET_N) {
-        printf("ping access\n");
+        close(sock);
         return  FRET_N;
     }
 
@@ -143,8 +143,10 @@ static int ping_socket_get(void)
         return  FRET_N;
 
     if(sp_net_sock_settimer(
-       sock, PING_WAIT_SEC, PING_WAIT_USEC, SO_RCVTIMEO) == FRET_N)
+       sock, PING_WAIT_SEC, PING_WAIT_USEC, SO_RCVTIMEO) == FRET_N) {
+        close(sock);
         return  FRET_N;
+    }
    
     return  sock;
 }

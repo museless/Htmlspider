@@ -35,7 +35,7 @@ CharSet char(8) not null)"
 #define	CREAT_UALLTAB	"create table if not exists UALL(Url char(128) not null primary key, Latest char(64) default null, \
 Blockmask tinyint(1) default 1)"
 
-#define	INSERT_URLSTAB	"insert %s(Url, Pattern) values(\"%.*s\", %d)"
+#define	INSERT_URLSTAB	"insert %s(Url) values(\"%.*s\")"
 #define	INSERT_CONFTAB	"insert UCONF values(\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\")"
 #define	INSERT_UALLTAB	"insert UALL(Url) values(\"%.*s\")"
 

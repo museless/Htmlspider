@@ -37,6 +37,6 @@ InsertSql = {
 }
 
 UpdateSql = {
-    1: ["State = %d", "ID = %d"],
+    1: [u"State = %d", "ID = %d"],
 }
 
