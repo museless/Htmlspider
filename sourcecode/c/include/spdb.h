@@ -69,52 +69,6 @@ values(\"%.*s\",%d,%d)"
 #define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url=\"%s%s%s\""
 
 /*-----------------------------
-	     for textbug
--------------------------------*/
-
-#define	URL_ID_LEN      32
-
-#define	GET_URL_LIMIT   "select ID, Url, Poff, Foff, Pattern \
-from %s where Errt<%d and State=0 and \
-ID not in (select Ind from %s.%s) limit %d"
-
-/* News */
-#define	CHECK_IND_EXI	"select Ind from %s where Ind=\"%s\""
-
-#define	CREAT_NEWS_TAB	"create table if not exists %s\
-(Ind char(48) not null primary key, Date char(10) not null, \
-Time char(5) not null, Source char(24) character set utf8 not null, \
-Title char(128) character set utf8 not null, Url char(128) not null, \
-Pramark tinyint(1) default 0, Extmark tinyint(1) default 0, \
-Content MEDIUMTEXT character set utf8 not null, \
-Gsize int(32), Cstart int(32), Csize int(32))"
-
-#define	TRAN_NEWS_BEG	"insert %s(Ind, Date, Time, Source, Url, Gsize, Cstart, Csize, Title, Content) \
-values(\"%s\", \"%.8s\", \"%.5s\", \"%s\", \"%s\", %d, %d, %d, \""
-#define	TRAN_NEWS	    ", (\"%s\", \"%.8s\", \"%.5s\", \"%s\", \"%s\", %d, %d, %d, \""
-
-#define	RTURL_STATE	    "update %s set State=1 where ID=\"%s\""
-#define	WGURL_STATE	    "update %s set State=2, Errt=Errt+1 where ID=\"%s\""
-#define	FUNWG_STATE	    "update %s set State=3, Errt=Errt+1 where ID=\"%s\""
-#define	NOTIT_STATE	    "update %s set State=5, Errt=Errt+1 where ID=\"%s\""
-#define	NOCONT_STATE	"update %s set State=6, Errt=Errt+1 where ID=\"%s\""
-#define	USING_STATE	    "update %s set State=9 where ID=\"%s\""
-#define	INC_ERRT	    "update %s set Errt=Errt+1 where ID=\"%s\""
-
-#define	UPDATE_URL	    "update %s set Url=\"%s\" where Url=\"%s\""
-
-/* view */
-#define	CR_NEW_VIEW	"create or replace view V%s as \
-select concat(\"Urls num: \", count(ID)) Count from %s \
-union select concat(\"News num: \", count(Ind)) Count from %s \
-union select concat(\"State = 0: \", count(ID)) Count from %s where State=0 \
-union select concat(\"State = 1: \", count(ID)) Count from %s where State=1 \
-union select concat(\"State = 2: \", count(ID)) Count from %s where State=2 \
-union select concat(\"State = 6: \", count(ID)) Count from %s where State=6 \
-union select concat(\"Et = 1: \", count(ID)) Count from %s where Errt=1 \
-union select concat(\"Et = 2: \", count(ID)) Count from %s where Errt=2"
-
-/*-----------------------------
 	       for extbug
 -------------------------------*/
 
@@ -140,24 +94,8 @@ Keynum int(32) not null, Keyflags tinyint(1) default 0)"
 #define	GET_NEWS_CONT	"select Ind, Content from %s where %s = 0 limit %d"
 #define	SET_NEWS_FLAGS	"update %s set %s=1 where Ind=\"%s\""
 
-#define	GET_PAPER_NUM	"select * from %s"
-#define	UPDATE_WORD_IDF	"update %s set Times=Times+1 where Word=\"%.*s\""
-#define	UPDATE_KEEP_WD	" or Word=\"%.*s\""
-
 #define	INSERT_KEYWD	"insert %s(Ind, Klist, Keynum) values(\"%s\", \"%.*s\", %d)"
 #define	INSERT_KW_NEXT	",(\"%s\", \"%.*s\", %d)"
-
-#define	DOWN_WORD_IDF	"select Times from %s where Word=\"%.*s\""
-#define	DOWN_KEEP_WD	" or Word=\"%.*s\""
-
-/*-----------------------------
-	      for outbug
--------------------------------*/
-
-#define	GET_KEYWD_LIM	"select Ind, Klist from %s where Keyflags=0 limit %d"
-
-#define	SET_KEYWD_FLAGS	"update %s set Keyflags=1 where Ind=\"%s\""
-
 
 /*-----------------------------
 	       typedef
@@ -167,8 +105,6 @@ typedef	MYSQL_RES           MSLRES;
 typedef	MYSQL_ROW           MSLROW;
 
 typedef	struct	sstrlist	SSTRL;
-typedef	struct	fconf		SCONF;
-
 
 
 /*-----------------------------
@@ -178,17 +114,6 @@ typedef	struct	fconf		SCONF;
 struct	sstrlist {
 	SSTRL  *s_next;
 	char	s_str[SQL_STRCMP_LEN];
-};
-
-struct	fconf {
-	void   *c_timbeg;                      /* ready to change search pattern, useless now */
-	SSTRL  *c_conbeg;
-	SSTRL  *c_conend;
-
-	char	c_domain[SQL_DOMAIN_LEN];
-	char	c_conrloc[SQL_RELOC_LEN];
-	char	c_srcstr[SQL_SRCSTR_LEN];
-	char	c_charset[SQL_CHARSET_LEN];
 };
 
 

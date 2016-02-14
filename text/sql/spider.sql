@@ -1,17 +1,11 @@
 /*---------------------------------------------
- *          delete all existed sql 
--*---------------------------------------------*/
-
-drop table Url.Example;
-drop table News.Example;
-
-
-/*---------------------------------------------
  *           create all need database
 -*---------------------------------------------*/
 
 create database if not exists Url;
 create database if not exists News;
+create database if not exists Dictionary;
+create database if not exists Keyword;
 
 
 /*---------------------------------------------
@@ -35,4 +29,21 @@ Source char(24) character set utf8 not null,
 Title char(128) character set utf8 not null, 
 Url char(128) not null, Extmark tinyint(1) default 0,
 Content MEDIUMTEXT character set utf8 not null);
+
+
+/*---------------------------------------------
+ *         create dictionary table 
+-*---------------------------------------------*/
+
+create table if not exists Dictionary.t_word_noun(
+Word varchar(48) not null primary key,
+Len tinyint(2), State int(2) default 0);
+
+
+/*---------------------------------------------
+ *        create keyword example table
+-*---------------------------------------------*/
+
+create table if not exists Keyword.Example(
+Ind char(48) not null primary key, Keylist varchar(2048) character set utf8 not null, Keynum int(32) not null, Keyflags tinyint(1) default 0) 
 
