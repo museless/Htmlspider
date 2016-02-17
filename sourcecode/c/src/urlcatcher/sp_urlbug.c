@@ -56,7 +56,6 @@ static  int     ubug_init_dbuf(BUFF **pBuff);
 static	void	ubug_init_weblist(void);
 static	int	    ubug_init_urllist(char *urlStr, WEB *webStu);
 static  WEBIN  *ubug_list_entity_set(MSLROW data_row);
-static  void    ubug_load_config(const char *config_path);
 static  void    ubug_set_ubset(const char *way_option);
 
 /* Part Six */
@@ -129,7 +128,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
     while ((ch = getopt(nPara, pComm, "c:d:h")) != FUN_RUN_FAIL) {
         switch (ch) {
             case 'c':	
-                ubug_load_config(optarg);
+                mc_load_config("urlbug", optarg);
                 config_flags = 1;
                 break;
 
@@ -168,9 +167,8 @@ static void ubug_command_analyst(int nPara, char **pComm)
         4. ubug_init_dbuf
         5. ubug_init_weblist
         6. ubug_init_urllist
-        7. ubug_load_config
-        8. ubug_set_ubset
-        9. ubug_list_entity_set 
+        7. ubug_set_ubset
+        8. ubug_list_entity_set 
 
 --------------------------------------------*/
 
@@ -348,18 +346,6 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
 	printf("Urlbug---> ubug_init_urllist - strange url: %s\n", urlStr);
 
 	return	FUN_RUN_END;
-}
-
-
-/*-----ubug_load_config-----*/
-static void ubug_load_config(const char *config_path)
-{
-    if (mc_conf_load("Urlbug", config_path) == FUN_RUN_FAIL) {
-        printf("Urlbug---> load configure failed\n");
-        ubug_perror("ubug_load_config - mc_conf_load", errno);
-        mc_conf_unload();
-        exit(FUN_RUN_FAIL);
-    }
 }
 
 

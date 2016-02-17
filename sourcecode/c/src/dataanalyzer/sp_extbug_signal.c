@@ -58,7 +58,7 @@ static  void    exbug_signal_handler(int nSignal);
 int exbug_signal_init(void)
 {
     struct  sigaction   sigStru;
-    sigset_t        sigMask;
+    sigset_t            sigMask;
 
     /* for signal int */
     sigemptyset(&sigMask);
@@ -68,7 +68,7 @@ int exbug_signal_init(void)
     sigStru.sa_mask = sigMask;
     sigStru.sa_flags = 0;
 
-    if(sigaction(SIGINT, &sigStru, NULL) == FUN_RUN_FAIL) {
+    if (sigaction(SIGINT, &sigStru, NULL) == FUN_RUN_FAIL) {
         perror("Extbug---> exbug_signal_init - sigaction - SIGINT");
         return  FUN_RUN_END;
     }
@@ -77,7 +77,7 @@ int exbug_signal_init(void)
     sigdelset(&sigMask, SIGINT);
     sigStru.sa_mask = sigMask;
 
-    if(sigaction(SIGSEGV, &sigStru, NULL) == FUN_RUN_FAIL) {
+    if (sigaction(SIGSEGV, &sigStru, NULL) == FUN_RUN_FAIL) {
         perror("otbug_init_signal - sigaction - SIGSEGV");
         return  FUN_RUN_END;
     }
@@ -91,7 +91,7 @@ static void exbug_signal_handler(int nSignal)
 {
     int nTimes = 0;
 
-    if(nSignal == SIGINT) {
+    if (nSignal == SIGINT) {
         pthread_mutex_lock(&sigIntLock);
 
         printf("Extbug---> inside SIGINT...\n");
@@ -108,7 +108,7 @@ static void exbug_signal_handler(int nSignal)
         exit(FUN_RUN_FAIL);
     }
 
-    if(nSignal == SIGSEGV) {
+    if (nSignal == SIGSEGV) {
         pthread_mutex_lock(&sigSegLock);
 
         printf("Extbug---> caught SIGSEGV\n");
