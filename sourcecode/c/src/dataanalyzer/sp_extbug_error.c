@@ -1,4 +1,4 @@
-#include "spinc.h"
+#include "sp.h"
 
 #include "spextb.h"
 #include "speglobal.h"
@@ -15,7 +15,7 @@
 /*-----exbug_sig_error-----*/
 void exbug_sig_error(int nObj)
 {
-    if(nObj == PTHREAD_ERROR)
+    if (nObj == PTHREAD_ERROR)
         mato_dec(&pthreadCtlLock);
 
     kill(getpid(), SIGINT);

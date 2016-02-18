@@ -18,11 +18,9 @@
  *
  *      Part Four:  Extbug main
  *      Part Five:  Initialization
- *      Part Six:   Dictionary control
  *      Part Seven: Exbug entrance
- *      Part Eight: Message part
- *      Part Nine:  Misc part
- *      Part Ten:   Extbug work
+ *      Part Eight: Misc part
+ *      Part Nine:  Extbug work
  *
 -*---------------------------------------------*/
 
@@ -44,48 +42,40 @@
  *          Part One: Local data
 -*---------------------------------------------*/
 
-static  int fileIndexBuf[WORD_LEN_LIMIT];
-
 
 /*---------------------------------------------
  *          Part Two: Local function
 -*---------------------------------------------*/
 
 /* Part Four */
-static  void    exbug_command_analyst(int nPara, char **paraList);
+static  void    exbug_option_analyst(int nPara, char **paraList);
+static  void    exbug_access(void);
 
 /* Part Five */
 static  int     mainly_init(void);
 static  void    exbug_data_init(void);
-static  void    exbug_timbuf_init(char *pTime);
+static  void    exbug_tblname_set(char *time_string);
 static  int     exbug_mempool_init(void);
 static  int     exbug_read_config(void); 
-static  void    exbug_final_init(void);
+static  void    exbug_work_prepare(void);
 
-static  int     exbug_up_init(void);
-
-/* Part Six */
-static  int     exbug_dictionary_load(char *fConf, char *savConf, char *fName, CLISTS *pTerm, CLISTS *charHead);
-static  int     exbug_findex_load(char *finPath);
-static  int     exbug_index_load(WHEAD **cStru, char *iName, int nTerms);
-static  int     exbug_terms_load(WDCB **termStru, char *termFile, int nOff);
+static  int     exbug_work_setting(void);
 
 /* Part Seven */
 static  void    exbug_keyword_job(void);
 static  void    exbug_create_pthread(NCONT *pPara);
 static  void   *exbug_memory_malloc(int nSize);
 
-/* Part Nine */
-
 /* Part Ten */
 static  void    *exbug_pthread_entrance(void *pPara);
 
 
-/*------------------------------------------
-    Part Three: Define
---------------------------------------------*/
+/*---------------------------------------------
+ *            Part Three: Define
+-*---------------------------------------------*/
 
-#define exbug_runset_init(exbent, minit, exinit, mwrt, mfwrt, ctab, runmode, upfun, mname) { \
+#define exbug_runset_init(exbent, minit, exinit, \
+            mwrt, mfwrt, ctab, runmode, upfun, mname) { \
     exbRunSet.emod_entry = exbent; \
     exbRunSet.emod_init = minit; \
     exbRunSet.emod_exinit = exinit; \
@@ -98,28 +88,20 @@ static  void    *exbug_pthread_entrance(void *pPara);
 }
 
 
-/*------------------------------------------
-    Part Four: Extbug main
-
-    1. main
-    2. exbug_command_analyst
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Four: Extbug main
+ *
+ *          1. main
+ *          2. exbug_option_analyst
+ *          3. exbug_access 
+ *
+-*---------------------------------------------*/
 
 /*-----main-----*/
 int main(int argc, char *argv[])
 {
-    exbug_command_analyst(argc, argv);
-
-    if (mainly_init() && exbug_database_init() && exbug_mempool_init()) {
-        if (exbug_paper_num_read() && exbug_dictionary_load("extbug_noun_findex_path",
-        "extbug_noun_path", "noun", &charTermList, &charHeadSave) == FUN_RUN_OK) {
-            if (exbRunSet.emod_init && exbRunSet.emod_init() == FUN_RUN_OK) {
-                exbug_final_init();
-                exbRunSet.emod_entry();
-            }
-        }
-    }
+    exbug_option_analyst(argc, argv);
+    exbug_access();
 
     mgc_all_clean(exbGarCol);
 
@@ -127,13 +109,13 @@ int main(int argc, char *argv[])
 }
 
 
-/*-----exbug_command_analyst-----*/
-void exbug_command_analyst(int nPara, char **paraList)
+/*-----exbug_option_analyst-----*/
+void exbug_option_analyst(int nPara, char **paraList)
 {
     int     conf_flags = 0, time_flags = 0;
     char    ch;
 
-    while ((ch = getopt(nPara, paraList, "htc:"))) {
+    while ((ch = getopt(nPara, paraList, "ht:c:"))) {
         switch (ch) {
             case 'h':
                 exbug_print_help();
@@ -145,7 +127,7 @@ void exbug_command_analyst(int nPara, char **paraList)
                 conf_flags = 1;
 
             case 't':
-                exbug_timbuf_init(paraList[++nCir]);
+                exbug_tblname_set(optarg);
                 time_flags = 1;
                 break;
 
@@ -162,7 +144,28 @@ void exbug_command_analyst(int nPara, char **paraList)
     }
     
     if (!time_flags)
-        exbug_timbuf_init(NULL);
+        exbug_tblname_set(NULL);
+}
+
+
+/*-----exbug_access-----*/
+void exbug_access(void)
+{
+    if (mainly_init() == FRET_Z) 
+        return;
+
+    if (exbug_database_init() == FRET_Z || exbug_mempool_init() == FRET_Z)
+        return;
+
+    if (exbug_dictionary_load(
+       "extbug_noun_findex_path", "extbug_noun_path", "noun", 
+       &charTermList, &charHeadSave) == FUN_RUN_OK) {
+
+        if (exbRunSet.emod_init && exbRunSet.emod_init() == FUN_RUN_OK) {
+            exbug_work_prepare();
+            exbRunSet.emod_entry();
+        }
+    }
 }
 
 
@@ -171,14 +174,11 @@ void exbug_command_analyst(int nPara, char **paraList)
  *
  *          1. mainly_init
  *          2. exbug_data_init
- *          3. exbug_timbuf_init
+ *          3. exbug_tblname_set
  *          4. exbug_mempool_init
  *          5. exbug_read_config
- *
- *          6. exbug_final_init
- *
- *          7. exbug_up_init
- *          8. exbug_tran_init
+ *          6. exbug_work_prepare
+ *          7. exbug_work_setting
  *
 -*---------------------------------------------*/
 
@@ -186,7 +186,7 @@ void exbug_command_analyst(int nPara, char **paraList)
 static int mainly_init(void)
 {
     exbug_runset_init(
-    exbug_keyword_job, exbug_up_init, 
+    exbug_keyword_job, exbug_work_setting, 
     NULL, NULL, NULL, exbug_create_keyword_table, 
     exbug_extract_keyword, exbug_update_terms, MASK_EXT);
 
@@ -197,7 +197,7 @@ static int mainly_init(void)
 
     /* mgc one init */
     if (mgc_one_init(&extResCol, (gcfun)mysql_free_result, TRY_MORE) == MGC_FAILED) {
-        extbug_perror("mainly_init - mgc_one_init", errno);
+        exbug_perror("mainly_init - mgc_one_init", errno);
         return  FUN_RUN_END;
     }
 
@@ -218,17 +218,17 @@ static int mainly_init(void)
 
 
 /*-----exbug_data_init-----*/
-static void exbug_data_init(void)
+void exbug_data_init(void)
 {
     memset(&charTermList, 0, sizeof(CLISTS));
     memset(&charHeadSave, 0, sizeof(CLISTS));
 }
 
 
-/*-----exbug_timbuf_init-----*/
-static void exbug_timbuf_init(char *pTime)
+/*-----exbug_tblname_set-----*/
+void exbug_tblname_set(char *time_string)
 {
-    TMS    *extTime = time_str_extract(pTime);
+    TMS    *extTime = time_str_extract(time_string);
 
     sprintf(
     tblNewsName, "N%d%02d%02d", 
@@ -244,20 +244,20 @@ static void exbug_timbuf_init(char *pTime)
 static int exbug_mempool_init(void)
 {
     if ((threadMemPool = mmdp_create(upMaxTerms * PER_WORD_MAX)) == NULL) {
-        extbug_perror("exbug_mempool_init - mmdp_create thread", errno);
+        exbug_perror("exbug_mempool_init - mmdp_create thread", errno);
         return  FUN_RUN_END;    
     }
 
     if (mgc_add(exbGarCol, threadMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
-        extbug_perror("exbug_mempool_init - mgc_add - threadMemPool", errno);
+        exbug_perror("exbug_mempool_init - mgc_add - threadMemPool", errno);
 
     if ((procMemPool = mmdp_create(PROC_MP_SIZE)) == NULL) {
-        extbug_perror("exbug_mempool_init - mmdp_create proc", errno);
+        exbug_perror("exbug_mempool_init - mmdp_create proc", errno);
         return  FUN_RUN_END;    
     }
 
     if (mgc_add(exbGarCol, procMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
-        extbug_perror("exbug_mempool_init - mgc_add - procMemPool", errno);
+        exbug_perror("exbug_mempool_init - mgc_add - procMemPool", errno);
 
     return  FUN_RUN_OK;
 }
@@ -289,204 +289,61 @@ int exbug_read_config(void)
     }
 
     if (!(ebSemControl = msem_create(path_string, nExbugPthead, PROJ_PTH_CTL))) {
-        extbug_perror("exbug_read_config - msem_create", errno);
+        exbug_perror("exbug_read_config - msem_create", errno);
         return  FRET_Z;
     }
 
     if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
-        extbug_perror("exbug_read_config - mgc_add - sem", errno);
+        exbug_perror("exbug_read_config - mgc_add - sem", errno);
 
     return  FRET_P;
 }
 
 
-/*-----exbug_final_init-----*/
-static void exbug_final_init(void)
+/*-----exbug_work_prepare-----*/
+void exbug_work_prepare(void)
 {
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_database_close) == MGC_FAILED)
-        extbug_perror("exbug_final_init - mgc_add - dbclose", errno);
+        exbug_perror("exbug_work_prepare - mgc_add - dbclose", errno);
 }
 
 
-/*-----exbug_up_init-----*/
-static int exbug_up_init(void)
+/*-----exbug_work_setting-----*/
+int exbug_work_setting(void)
 {
     if (exbug_module_database_init() == FUN_RUN_FAIL)
         return  FUN_RUN_FAIL;
 
     if ((extSaveBuf = buff_stru_init(SQL_HHCOM_LEN)) == NULL) {
-        elog_write("exbug_up_init - buff_stru_init", FUNCTION_STR, ERROR_STR);
+        elog_write(
+        "exbug_work_setting - buff_stru_init", FUNCTION_STR, ERROR_STR);
+
         return  FUN_RUN_FAIL;
     }
 
     if (mgc_add(exbGarCol, extSaveBuf, buff_stru_free_all) == MGC_FAILED)
-        elog_write("exbug_up_init - mgc_add - extSaveBuf", FUNCTION_STR, ERROR_STR);
+        elog_write("exbug_work_setting - mgc_add - extSaveBuf", 
+            FUNCTION_STR, ERROR_STR);
 
     return  FUN_RUN_OK;
 }
 
 
-/*------------------------------------------
-    Part Six: Dictionary control
-
-    1. exbug_dictionary_load
-    2. exbug_findex_load
-    3. exbug_index_load
-    4. exbug_terms_load
-
---------------------------------------------*/
-
-/*-----exbug_dictionary_load-----*/
-int exbug_dictionary_load(
-    char *fConf, char *savConf, char *fName, CLISTS *pTerm, CLISTS *charHead)
-{
-    WDCB  **pContent;
-    WHEAD **pHead;
-    char    nameBuf[PATH_LEN];
-    char    dicPath[PATH_LEN];
-    int     nCnt;
-
-    if (mc_conf_read(fConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err(fConf);
-        return  FUN_RUN_FAIL;
-    }
-
-    if (exbug_findex_load(dicPath) == FUN_RUN_FAIL) {
-        printf("Extbug---> exbug_findex_load failed\n");
-        return  FUN_RUN_FAIL;
-    }
-
-    if (mc_conf_read(savConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err(savConf);
-        return  FUN_RUN_FAIL;
-    }
-
-    for(nCnt = 0; nCnt < WORD_LEN_LIMIT; nCnt++) {
-        sprintf(nameBuf, "%s/%s%d", dicPath, fName, nCnt + 2);
-
-        pContent = ((WDCB **)pTerm + nCnt);
-
-        if (fileIndexBuf[nCnt]) {
-            if (!exbug_terms_load(pContent, nameBuf, nCnt))
-                return  FUN_RUN_FAIL;
-        }
-
-        sprintf(nameBuf, "%s/Index%d", dicPath, nCnt + 2);
-        pHead = (WHEAD **)charHead + nCnt;
-
-        if (fileIndexBuf[nCnt]) {
-            if (!exbug_index_load(pHead, nameBuf, fileIndexBuf[nCnt]))
-                return  FUN_RUN_FAIL;
-        }
-    }
-
-    return  FUN_RUN_OK;
-}
-
-
-/*-----exbug_findex_load-----*/
-static int exbug_findex_load(char *finPath)
-{
-    char   *fiPoint, *pMov;
-    int    *inBuf = fileIndexBuf;
-
-    if (read_all_file(&fiPoint, finPath, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
-
-    for(pMov = fiPoint; *pMov; pMov++, inBuf++) {
-        *inBuf = atoi(pMov);
-        
-        if ((pMov = strchr(pMov, '\n')) == NULL)
-            break;
-    }
-
-    free(fiPoint);
-
-    return  FUN_RUN_OK;
-}
-
-
-/*-----exbug_index_load-----*/
-static int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
-{
-    WHEAD   *cNext;
-    char    *iStore, *iMov;
-
-    if ((cNext = *cStru = mmdp_malloc(procMemPool, ((nTerms + 1) * sizeof(WHEAD)))) == NULL) {
-        extbug_perror("exbug_index_load - mmdp_malloc", errno);
-        return  FUN_RUN_END;
-    }
-
-    if (read_all_file(&iStore, iName, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_END;
-
-    for(iMov = iStore; *iMov; iMov++, cNext++) {
-        strncpy(cNext->dc_utf8, iMov, UTF8_WORD_LEN);
-        iMov += (UTF8_WORD_LEN + 1);
-
-        cNext->dc_off = atoi(iMov);
-
-        if ((iMov = strchr(iMov, '\t')) == NULL) {
-            extbug_perror("exbug_index_load - strchr - one", errno);
-            return  FUN_RUN_END;
-        }
-
-        cNext->dc_cnt = atoi(++iMov);
-
-        if ((iMov = strchr(iMov, '\n')) == NULL) {
-            extbug_perror("exbug_index_load - strchr - two", errno);
-            return  FUN_RUN_END;
-        }
-    }
-
-    free(iStore);
-
-    cNext->dc_cnt = cNext->dc_off = -1;
-
-    return  FUN_RUN_OK;
-}
-
-
-/*-----exbug_terms_load-----*/
-static int exbug_terms_load(WDCB **termStru, char *termFile, int nOff)
-{
-    if ((*termStru = mmdp_malloc(procMemPool, sizeof(WDCB))) == NULL) {
-        extbug_perror("exbug_terms_load - mmdp_malloc", errno);
-        return  FUN_RUN_END;
-    }
-
-    memset(*termStru, 0, sizeof(WDCB));
-
-    if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_END;
-
-    if (mgc_add(exbGarCol, ((*termStru)->wb_lterms), free) != FUN_RUN_OK)
-        printf("Extbug---> exbug_terms_load - mgc_add failed\n");
-
-    if (exbRunSet.emod_exinit) {
-        if (!exbRunSet.emod_exinit(*termStru, nOff))
-            return  FUN_RUN_END;
-    }
-
-    return  FUN_RUN_OK;
-}
-
-
-/*------------------------------------------
-    Part Seven: Exbug entrance
-
-    1. exbug_keyword_job
-    2. exbug_create_pthread
-    3. exbug_memory_malloc
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Seven: Exbug entrance
+ *
+ *          1. exbug_keyword_job
+ *          2. exbug_create_pthread
+ *          3. exbug_memory_malloc
+ *
+-*---------------------------------------------*/
 
 /*----exbug_keyword_job-----*/
-static void exbug_keyword_job(void)
+void exbug_keyword_job(void)
 {
-    MSLRES  *newsRes;
+    MSLRES *newsRes;
+    NCONT  *pContent;
     MSLROW  newsRow;
-    NCONT   *pContent;
 
     while (FUN_RUN_OK) {
         if (!(newsRes = exbug_content_download())) {
@@ -548,33 +405,6 @@ static void *exbug_memory_malloc(int nSize)
 }
 
 
-/*------------------------------------------
-    Part Eight: Message part
-
-    1. exbug_time_change
-    2. exbug_keep_working
-
---------------------------------------------*/
-
-/*-----exbug_time_change-----*/
-void exbug_time_change(void)
-{
-    while (!mato_sub_and_test(&pthreadCtlLock, 0))
-        ;   /* nothing */
-
-    if (exbRunSet.emod_fwrt)
-        exbRunSet.emod_fwrt();
-
-    exbug_wait_arouse(sp_msg_frame_fd(extbugMsgSet), TAKE_A_REST);
-    exbug_timbuf_init(NULL);
-
-    if (exbRunSet.emod_tchange)
-        exbRunSet.emod_tchange();
-
-    return;
-}
-
-
 /*-----exbug_keep_working-----*/
 void exbug_keep_working(void *pResult)
 {
@@ -583,41 +413,15 @@ void exbug_keep_working(void *pResult)
 }
 
 
-/*------------------------------------------
-    Part Nine: Misc part
-
-    1. exbug_data_sync
-
---------------------------------------------*/
-
-/*-----exbug_data_sync-----*/
-void exbug_data_sync(void)
-{
-    while (!mato_dec_and_test(&dicDbLock))
-        mato_inc(&dicDbLock);
-
-    if (buff_check_exist(extSaveBuf)) {
-        if (!buff_stru_empty(extSaveBuf)) {
-            if (mysql_real_query(&dbKeysHandler, buff_place_start(extSaveBuf), buff_now_size(extSaveBuf)))
-                elog_write("exbug_data_sync", FUNCTION_STR, (char *)mysql_error(&dbKeysHandler));
-
-            buff_stru_make_empty(extSaveBuf);
-        }
-    }
-
-    mato_inc(&dicDbLock);
-}
-
-
-/*------------------------------------------
-    Part Ten: Extbug work
-
-    1. exbug_pthread_entrance
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Ten: Extbug work
+ *
+ *          1. exbug_pthread_entrance
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_pthread_entrance-----*/
-static void *exbug_pthread_entrance(void *pPara)
+void *exbug_pthread_entrance(void *pPara)
 {
     WDCT    wCnt;
 

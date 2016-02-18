@@ -16,8 +16,6 @@ static  char    userName[MIDDLE_BUF + 1];
  *      3. mc_conf_unload
  *      4. mc_conf_print_err
  *
- *      5. 
- *
 -*---------------------------------------------*/
 
 /*-----mc_conf_load-----*/
@@ -118,7 +116,7 @@ void mc_load_config(const char *config_path, const char *user)
 {
     if (mc_conf_load(user, config_path) == FUN_RUN_FAIL) {
         printf("%s---> load configure failed\n", user);
-        ubug_perror("mc_load_config - mc_conf_load", errno);
+        perror("mc_load_config - mc_conf_load");
         mc_conf_unload();
         exit(FUN_RUN_FAIL);
     }

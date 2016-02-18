@@ -18,7 +18,7 @@ Byte	include/inclib/container/container.h	/^typedef unsigned char   Byte;$/;"	t
 CC	Makefile	/^CC		= gcc$/;"	m
 CHANGE_TIME	include/spmsg.h	22;"	d
 CHARSET_LEN	include/spinc.h	55;"	d
-CLISTS	src/dataanalyzer/spextb.h	/^typedef	struct	clist	CLISTS;$/;"	t	typeref:struct:clist
+CLISTS	src/dataanalyzer/spextb.h	/^typedef struct  clist   CLISTS;$/;"	t	typeref:struct:clist
 CODE_ECHO	include/inclib/icmp/icmp.h	49;"	d
 CODE_ECHO_REPLY	include/inclib/icmp/icmp.h	27;"	d
 CODE_EXCEED_HOST_AUTHORITY	include/inclib/icmp/icmp.h	45;"	d
@@ -85,7 +85,7 @@ EMPTY_OBJ_STR	include/spinc.h	93;"	d
 ENDHTML_CHK_OFFSET	src/functionlib/network/sp_network.c	33;"	d	file:
 ERROR_STR	include/spinc.h	96;"	d
 ETB_SEG_MAXTMS	src/dataanalyzer/spextb.h	14;"	d
-EXBSET	src/dataanalyzer/spextb.h	/^typedef	struct	exbset	EXBSET;$/;"	t	typeref:struct:exbset
+EXBSET	src/dataanalyzer/spextb.h	/^typedef struct  exbset  EXBSET;$/;"	t	typeref:struct:exbset
 EXURLB	Makefile	/^EXURLB	= ..\/..\/bin\/urlcatcher$/;"	m
 FBSTR	src/urlcatcher/spuglobal.h	/^typedef struct  forbid_word     FBSTR;$/;"	t	typeref:struct:forbid_word
 FILE_AUTHOR	include/spinc.h	86;"	d
@@ -235,7 +235,7 @@ MYERR_STR	include/spinc.h	98;"	d
 MYFLAGS	Makefile	/^MYFLAGS = -L \/usr\/local\/lib\/mysql -lmysqlclient -I \/usr\/local\/include\/mysql -lz$/;"	m
 Ma_LEN	include/sphtml.h	45;"	d
 NAMBUF_LEN	include/spinc.h	77;"	d
-NCONT	src/dataanalyzer/spextb.h	/^typedef	struct	newcont	NCONT;$/;"	t	typeref:struct:newcont
+NCONT	src/dataanalyzer/spextb.h	/^typedef struct  newcont NCONT;$/;"	t	typeref:struct:newcont
 NMFLAGS	Makefile	/^NMFLAGS	= -rdynamic -g -Wall -I include\/inclib -I include\/inclib\/mmdpool -I include\/ -fstack-protector-all$/;"	m
 NO_MSG	include/spmsg.h	20;"	d
 NPAPER_LEN	include/spinc.h	83;"	d
@@ -303,7 +303,7 @@ SAVE_BUF_LEN	src/dataanalyzer/spextb.h	21;"	d
 SDDS	include/inclib/museipc/mshm.h	/^typedef	struct shmid_ds	SDDS;$/;"	t	typeref:struct:shmid_ds
 SEMBUF	include/inclib/museipc/msem.h	/^typedef	struct sembuf	SEMBUF;$/;"	t	typeref:struct:sembuf
 SEMUN	include/inclib/museipc/msem.h	/^typedef	union semun	SEMUN;$/;"	t	typeref:union:semun
-SEPWORD	src/dataanalyzer/spextb.h	/^typedef	struct	sepword	SEPWORD;$/;"	t	typeref:struct:sepword
+SEPWORD	src/dataanalyzer/spextb.h	/^typedef struct  sepword SEPWORD;$/;"	t	typeref:struct:sepword
 SET_NEWS_FLAGS	include/spdb.h	95;"	d
 SLEEP_A_SEC	include/inclib/mgc.h	14;"	d
 SMALL_BUF	include/spinc.h	72;"	d
@@ -396,8 +396,8 @@ UTF8_WHEAD	src/dataanalyzer/spextb.h	19;"	d
 UTF8_WORD_CNT	include/spdict.h	11;"	d
 UTF8_WORD_LEN	include/spdict.h	10;"	d
 UTF8_WORD_LEN	src/dataanalyzer/spextb.h	11;"	d
-WDCB	src/dataanalyzer/spextb.h	/^typedef	struct	wdcomb	WDCB;$/;"	t	typeref:struct:wdcomb
-WDCT	src/dataanalyzer/spextb.h	/^typedef	struct	wordcnt	WDCT;$/;"	t	typeref:struct:wordcnt
+WDCB	src/dataanalyzer/spextb.h	/^typedef struct  wdcomb  WDCB;$/;"	t	typeref:struct:wdcomb
+WDCT	src/dataanalyzer/spextb.h	/^typedef struct  wordcnt WDCT;$/;"	t	typeref:struct:wordcnt
 WEB	include/spnet.h	/^typedef	struct	web		        WEB;$/;"	t	typeref:struct:web
 WEBIN	include/spnet.h	/^typedef	struct	web_if		    WEBIN;$/;"	t	typeref:struct:web_if
 WEB_CONTEXT_LEN	include/spnet.h	25;"	d
@@ -407,7 +407,7 @@ WEB_EXTRA_LEN	include/spnet.h	29;"	d
 WEB_INDEX_LEN	include/spnet.h	26;"	d
 WEB_TIME_LEN	include/spnet.h	27;"	d
 WEB_TITLE_LEN	include/spnet.h	24;"	d
-WHEAD	src/dataanalyzer/spextb.h	/^typedef	struct	whead	WHEAD;$/;"	t	typeref:struct:whead
+WHEAD	src/dataanalyzer/spextb.h	/^typedef struct  whead   WHEAD;$/;"	t	typeref:struct:whead
 WLISTS	include/spdict.h	/^typedef	struct	wlist	WLISTS;$/;"	t	typeref:struct:wlist
 WMP_BITS_PER_BITMAP	include/spmpool.h	8;"	d
 WMP_BITS_PER_BITMAP_SHIFT	include/spmpool.h	9;"	d
@@ -422,7 +422,7 @@ WORD_CMP_MAX	src/dataanalyzer/spextb.h	15;"	d
 WORD_LEN_LIMIT	src/dataanalyzer/spextb.h	10;"	d
 WORD_NUM_LIMIT	include/spdict.h	12;"	d
 WPOOL	include/spmpool.h	/^typedef struct  w_mempool   WPOOL;$/;"	t	typeref:struct:w_mempool
-WST	src/dataanalyzer/spextb.h	/^typedef	struct	wordst	WST;$/;"	t	typeref:struct:wordst
+WST	src/dataanalyzer/spextb.h	/^typedef struct  wordst  WST;$/;"	t	typeref:struct:wordst
 WSTRS	include/spdict.h	/^typedef	struct	wstr	WSTRS;$/;"	t	typeref:struct:wstr
 _CONTAINER_H	include/inclib/container/container.h	2;"	d
 _ICMP_H	include/inclib/icmp/icmp.h	2;"	d
@@ -485,31 +485,31 @@ buff_stru_init	src/functionlib/container/sp_bufoper.c	/^BUFF *buff_stru_init(int
 buff_stru_is_existed	src/functionlib/container/sp_bufoper.c	11;"	d	file:
 buff_stru_make_empty	src/functionlib/container/sp_bufoper.c	/^inline void buff_stru_make_empty(BUFF *pBuff)$/;"	f
 buff_stru_strstr	src/functionlib/container/sp_bufoper.c	/^char *buff_stru_strstr(BUFF *strBuf, char *needStr)$/;"	f
-c_n10	src/dataanalyzer/spextb.h	/^	void	*c_n10;$/;"	m	struct:clist
-c_n11	src/dataanalyzer/spextb.h	/^	void	*c_n11;$/;"	m	struct:clist
-c_n12	src/dataanalyzer/spextb.h	/^	void	*c_n12;$/;"	m	struct:clist
-c_n13	src/dataanalyzer/spextb.h	/^	void	*c_n13;$/;"	m	struct:clist
-c_n14	src/dataanalyzer/spextb.h	/^	void	*c_n14;$/;"	m	struct:clist
-c_n15	src/dataanalyzer/spextb.h	/^	void	*c_n15;$/;"	m	struct:clist
-c_n16	src/dataanalyzer/spextb.h	/^	void	*c_n16;$/;"	m	struct:clist
-c_n2	src/dataanalyzer/spextb.h	/^	void	*c_n2;$/;"	m	struct:clist
-c_n3	src/dataanalyzer/spextb.h	/^	void	*c_n3;$/;"	m	struct:clist
-c_n4	src/dataanalyzer/spextb.h	/^	void	*c_n4;$/;"	m	struct:clist
-c_n5	src/dataanalyzer/spextb.h	/^	void	*c_n5;$/;"	m	struct:clist
-c_n6	src/dataanalyzer/spextb.h	/^	void	*c_n6;$/;"	m	struct:clist
-c_n7	src/dataanalyzer/spextb.h	/^	void	*c_n7;$/;"	m	struct:clist
-c_n8	src/dataanalyzer/spextb.h	/^	void	*c_n8;$/;"	m	struct:clist
-c_n9	src/dataanalyzer/spextb.h	/^	void	*c_n9;$/;"	m	struct:clist
+c_n10	src/dataanalyzer/spextb.h	/^    void    *c_n10;$/;"	m	struct:clist
+c_n11	src/dataanalyzer/spextb.h	/^    void    *c_n11;$/;"	m	struct:clist
+c_n12	src/dataanalyzer/spextb.h	/^    void    *c_n12;$/;"	m	struct:clist
+c_n13	src/dataanalyzer/spextb.h	/^    void    *c_n13;$/;"	m	struct:clist
+c_n14	src/dataanalyzer/spextb.h	/^    void    *c_n14;$/;"	m	struct:clist
+c_n15	src/dataanalyzer/spextb.h	/^    void    *c_n15;$/;"	m	struct:clist
+c_n16	src/dataanalyzer/spextb.h	/^    void    *c_n16;$/;"	m	struct:clist
+c_n2	src/dataanalyzer/spextb.h	/^    void    *c_n2;$/;"	m	struct:clist
+c_n3	src/dataanalyzer/spextb.h	/^    void    *c_n3;$/;"	m	struct:clist
+c_n4	src/dataanalyzer/spextb.h	/^    void    *c_n4;$/;"	m	struct:clist
+c_n5	src/dataanalyzer/spextb.h	/^    void    *c_n5;$/;"	m	struct:clist
+c_n6	src/dataanalyzer/spextb.h	/^    void    *c_n6;$/;"	m	struct:clist
+c_n7	src/dataanalyzer/spextb.h	/^    void    *c_n7;$/;"	m	struct:clist
+c_n8	src/dataanalyzer/spextb.h	/^    void    *c_n8;$/;"	m	struct:clist
+c_n9	src/dataanalyzer/spextb.h	/^    void    *c_n9;$/;"	m	struct:clist
 charHeadSave	src/dataanalyzer/sp_extbug_global.c	/^CLISTS	charTermList, charHeadSave;$/;"	v
 charTermList	src/dataanalyzer/sp_extbug_global.c	/^CLISTS	charTermList, charHeadSave;$/;"	v
-clist	src/dataanalyzer/spextb.h	/^struct	clist {$/;"	s
+clist	src/dataanalyzer/spextb.h	/^struct  clist {$/;"	s
 confNameBuf	src/urlcatcher/sp_urlbug_clean.c	/^char	confNameBuf[PATH_LEN], urlTabName[SMALL_BUF];$/;"	v
-confStoreFd	src/functionlib/mconfctl/museconfctl.c	/^static	int	confStoreFd;$/;"	v	file:
-confctlBuff	src/functionlib/mconfctl/museconfctl.c	/^static	BUFF	confctlBuff;$/;"	v	file:
+confStoreFd	src/functionlib/mconfctl/museconfctl.c	/^static  int     confStoreFd;$/;"	v	file:
+confctlBuff	src/functionlib/mconfctl/museconfctl.c	/^static  BUFF    confctlBuff;$/;"	v	file:
 contStorePool	src/urlcatcher/sp_urlbug_clean.c	/^WPOOL	*contStorePool, *urlStorePool;$/;"	v
 count_enter_num	src/functionlib/sp_pfun.c	/^int count_enter_num(const char *string)$/;"	f
 count_url_layer	src/functionlib/sp_pfun.c	/^int count_url_layer(char *str_url)$/;"	f
-ctab	src/dataanalyzer/spextb.h	/^typedef	void	(*ctab)(void);$/;"	t
+ctab	src/dataanalyzer/spextb.h	/^typedef void    (*ctab)(void);$/;"	t
 dbDicHandler	src/dataanalyzer/sp_extbug_global.c	/^MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;$/;"	v
 dbDicName	src/dataanalyzer/sp_extbug_global.c	/^char	tblWordName[SQL_TABNAME_LEN], dbDicName[SQL_DBNAME_LEN];$/;"	v
 dbKeysHandler	src/dataanalyzer/sp_extbug_global.c	/^MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;$/;"	v
@@ -517,11 +517,11 @@ dbKeysName	src/dataanalyzer/sp_extbug_global.c	/^char	tblKeysName[SQL_TABNAME_LE
 dbNewsHandler	src/dataanalyzer/sp_extbug_global.c	/^MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;$/;"	v
 dbNewsName	src/dataanalyzer/sp_extbug_global.c	/^char	tblNewsName[SQL_TABNAME_LEN], dbNewsName[SQL_DBNAME_LEN];$/;"	v
 dc_cnt	include/spdict.h	/^	int	dc_cnt;$/;"	m	struct:dindex
-dc_cnt	src/dataanalyzer/spextb.h	/^	int	dc_cnt;$/;"	m	struct:whead
+dc_cnt	src/dataanalyzer/spextb.h	/^    int     dc_cnt;$/;"	m	struct:whead
 dc_off	include/spdict.h	/^	int	dc_off;$/;"	m	struct:dindex
-dc_off	src/dataanalyzer/spextb.h	/^	int	dc_off;$/;"	m	struct:whead
+dc_off	src/dataanalyzer/spextb.h	/^    int     dc_off;$/;"	m	struct:whead
 dc_utf8	include/spdict.h	/^	char	dc_utf8[UTF8_WORD_LEN];$/;"	m	struct:dindex
-dc_utf8	src/dataanalyzer/spextb.h	/^	char	dc_utf8[UTF8_WORD_LEN];$/;"	m	struct:whead
+dc_utf8	src/dataanalyzer/spextb.h	/^    char    dc_utf8[UTF8_WORD_LEN];$/;"	m	struct:whead
 dicDbLock	src/dataanalyzer/sp_extbug_global.c	/^MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;$/;"	v
 dindex	include/spdict.h	/^struct	dindex {$/;"	s
 dmp_bigbody	include/inclib/mmdpool/mmdpool.h	/^struct	dmp_bigbody {$/;"	s
@@ -535,24 +535,24 @@ elog_destroy	src/functionlib/log/sp_elog.c	/^void elog_destroy(void)$/;"	f
 elog_init	src/functionlib/log/sp_elog.c	/^int elog_init(char *confStr)$/;"	f
 elog_write	src/functionlib/log/sp_elog.c	/^int elog_write(char *errStr, char *objStr1, char *objStr2)$/;"	f
 elog_write_force	src/functionlib/log/sp_elog.c	/^void elog_write_force(void)$/;"	f
-emod_entry	src/dataanalyzer/spextb.h	/^	exbent	emod_entry;$/;"	m	struct:exbset
-emod_exinit	src/dataanalyzer/spextb.h	/^	exinit	emod_exinit;$/;"	m	struct:exbset
-emod_fwrt	src/dataanalyzer/spextb.h	/^	mfwrt	emod_fwrt;$/;"	m	struct:exbset
-emod_init	src/dataanalyzer/spextb.h	/^	minit	emod_init;$/;"	m	struct:exbset
-emod_maname	src/dataanalyzer/spextb.h	/^	char	*emod_maname;$/;"	m	struct:exbset
-emod_rmode	src/dataanalyzer/spextb.h	/^	rmode	emod_rmode;$/;"	m	struct:exbset
-emod_tchange	src/dataanalyzer/spextb.h	/^	ctab	emod_tchange;$/;"	m	struct:exbset
-emod_up	src/dataanalyzer/spextb.h	/^	upmode	emod_up;$/;"	m	struct:exbset
-emod_wrt	src/dataanalyzer/spextb.h	/^	mwrt	emod_wrt;$/;"	m	struct:exbset
+emod_entry	src/dataanalyzer/spextb.h	/^    exbent  emod_entry;$/;"	m	struct:exbset
+emod_exinit	src/dataanalyzer/spextb.h	/^    exinit  emod_exinit;$/;"	m	struct:exbset
+emod_fwrt	src/dataanalyzer/spextb.h	/^    mfwrt   emod_fwrt;$/;"	m	struct:exbset
+emod_init	src/dataanalyzer/spextb.h	/^    minit   emod_init;$/;"	m	struct:exbset
+emod_maname	src/dataanalyzer/spextb.h	/^    char   *emod_maname;$/;"	m	struct:exbset
+emod_rmode	src/dataanalyzer/spextb.h	/^    rmode   emod_rmode;$/;"	m	struct:exbset
+emod_tchange	src/dataanalyzer/spextb.h	/^    ctab    emod_tchange;$/;"	m	struct:exbset
+emod_up	src/dataanalyzer/spextb.h	/^    upmode  emod_up;$/;"	m	struct:exbset
+emod_wrt	src/dataanalyzer/spextb.h	/^    mwrt    emod_wrt;$/;"	m	struct:exbset
 errLogFd	src/functionlib/log/sp_elog.c	/^static	int	    errLogFd;$/;"	v	file:
 examine_empty_string	src/functionlib/sp_pfun.c	/^inline int examine_empty_string(char *exaStr)$/;"	f
 exbGarCol	src/dataanalyzer/sp_extbug_global.c	/^MGCH	*exbGarCol;$/;"	v
 exbRunSet	src/dataanalyzer/sp_extbug_global.c	/^EXBSET	exbRunSet;$/;"	v
-exbent	src/dataanalyzer/spextb.h	/^typedef	void	(*exbent)(void);$/;"	t
+exbent	src/dataanalyzer/spextb.h	/^typedef void    (*exbent)(void);$/;"	t
 exbset	src/dataanalyzer/spextb.h	/^struct exbset {$/;"	s
 exbugIpcFd	src/dataanalyzer/sp_extbug_global.c	/^int	exbugIpcFd, nExbugPthead, upMaxTerms, nKlistSize;$/;"	v
 exbug_check_word_head	src/dataanalyzer/sp_extbug_mmseg.c	/^static int exbug_check_word_head(const char *pHead)$/;"	f	file:
-exbug_command_analyst	src/dataanalyzer/sp_extbug.c	/^static void exbug_command_analyst(int nPara, char **paraList)$/;"	f	file:
+exbug_command_analyst	src/dataanalyzer/sp_extbug.c	/^void exbug_command_analyst(int nPara, char **paraList)$/;"	f
 exbug_content_download	src/dataanalyzer/sp_extbug_db.c	/^void *exbug_content_download(void)$/;"	f
 exbug_create_keyword_table	src/dataanalyzer/sp_extbug_db.c	/^void exbug_create_keyword_table(void)$/;"	f
 exbug_create_pthread	src/dataanalyzer/sp_extbug.c	/^static void exbug_create_pthread(NCONT *pPara)$/;"	f	file:
@@ -562,9 +562,8 @@ exbug_database_close	src/dataanalyzer/sp_extbug_db.c	/^void exbug_database_close
 exbug_database_init	src/dataanalyzer/sp_extbug_db.c	/^int exbug_database_init(void)$/;"	f
 exbug_dberr_deal	src/dataanalyzer/sp_extbug_db.c	/^int exbug_dberr_deal(void *sqlHand, char *dbName, char *pHead)$/;"	f
 exbug_dicdb_unlink	src/dataanalyzer/sp_extbug_db.c	/^static void exbug_dicdb_unlink(void)$/;"	f	file:
-exbug_dictionary_load	src/dataanalyzer/sp_extbug.c	/^static int exbug_dictionary_load(char *fConf, char *savConf, char *fName, CLISTS *pTerm, CLISTS *charHead)$/;"	f	file:
+exbug_dictionary_load	src/dataanalyzer/sp_extbug.c	/^int exbug_dictionary_load($/;"	f
 exbug_extract_keyword	src/dataanalyzer/sp_extbug_extract.c	/^void exbug_extract_keyword(WDCT *extDic)$/;"	f
-exbug_extract_practise	src/dataanalyzer/sp_extbug_extract.c	/^void exbug_extract_practise(WDCT *praDic)$/;"	f
 exbug_final_init	src/dataanalyzer/sp_extbug.c	/^static void exbug_final_init(void)$/;"	f	file:
 exbug_findex_load	src/dataanalyzer/sp_extbug.c	/^static int exbug_findex_load(char *finPath)$/;"	f	file:
 exbug_index_load	src/dataanalyzer/sp_extbug.c	/^static int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)$/;"	f	file:
@@ -582,10 +581,12 @@ exbug_newsdb_unlink	src/dataanalyzer/sp_extbug_db.c	/^static void exbug_newsdb_u
 exbug_paper_num_inc	src/dataanalyzer/sp_extbug_misc.c	/^void exbug_paper_num_inc(void)$/;"	f
 exbug_paper_num_read	src/dataanalyzer/sp_extbug_misc.c	/^int exbug_paper_num_read(void)$/;"	f
 exbug_paper_sync	src/dataanalyzer/sp_extbug_misc.c	/^void exbug_paper_sync(void)$/;"	f
+exbug_perror	src/dataanalyzer/sp_extbug_error.c	/^void exbug_perror(const char *string_head, int error_num)$/;"	f
 exbug_print_help	src/dataanalyzer/sp_extbug_misc.c	/^void exbug_print_help(void)$/;"	f
 exbug_pthread_entrance	src/dataanalyzer/sp_extbug.c	/^static void *exbug_pthread_entrance(void *pPara)$/;"	f	file:
+exbug_read_config	src/dataanalyzer/sp_extbug.c	/^int exbug_read_config(void)$/;"	f
 exbug_rewind_exmark	src/dataanalyzer/sp_extbug_db.c	/^void exbug_rewind_exmark(const char *pInd, char *maskName)$/;"	f
-exbug_runset_init	src/dataanalyzer/sp_extbug.c	83;"	d	file:
+exbug_runset_init	src/dataanalyzer/sp_extbug.c	87;"	d	file:
 exbug_segment_entrance	src/dataanalyzer/sp_extbug_mmseg.c	/^void exbug_segment_entrance(WDCT *wcStru, const char *pNews)$/;"	f
 exbug_sig_error	src/dataanalyzer/sp_extbug_error.c	/^void exbug_sig_error(int nObj)$/;"	f
 exbug_signal_handler	src/dataanalyzer/sp_extbug_signal.c	/^static void exbug_signal_handler(int nSignal)$/;"	f	file:
@@ -593,8 +594,6 @@ exbug_signal_init	src/dataanalyzer/sp_extbug_signal.c	/^int exbug_signal_init(vo
 exbug_simple_segment	src/dataanalyzer/sp_extbug_mmseg.c	/^static void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)$/;"	f	file:
 exbug_terms_load	src/dataanalyzer/sp_extbug.c	/^static int exbug_terms_load(WDCB **termStru, char *termFile, int nOff)$/;"	f	file:
 exbug_timbuf_init	src/dataanalyzer/sp_extbug.c	/^static void exbug_timbuf_init(char *pTime)$/;"	f	file:
-exbug_time_change	src/dataanalyzer/sp_extbug.c	/^void exbug_time_change(void)$/;"	f
-exbug_train_init	src/dataanalyzer/sp_extbug.c	/^static int exbug_train_init(void)$/;"	f	file:
 exbug_up_init	src/dataanalyzer/sp_extbug.c	/^static int exbug_up_init(void)$/;"	f	file:
 exbug_update_terms	src/dataanalyzer/sp_extbug_extract.c	/^void exbug_update_terms(WDCT *upList, const char *pInd)$/;"	f
 exbug_wait_arouse	src/dataanalyzer/sp_extbug_message.c	/^void exbug_wait_arouse(int waitFd, int wTime)$/;"	f
@@ -602,7 +601,7 @@ exbug_word_add	src/dataanalyzer/sp_extbug_mmseg.c	/^void exbug_word_add(WDCT *ad
 exbug_word_print	src/dataanalyzer/sp_extbug_mmseg.c	/^void exbug_word_print(WDCT *printCnt)$/;"	f
 exbug_wordstru_setting	src/dataanalyzer/sp_extbug_mmseg.c	/^void exbug_wordstru_setting(WDCT *setCnt)$/;"	f
 exfun	include/spdict.h	/^typedef	void	(*exfun)(int);$/;"	t
-exinit	src/dataanalyzer/spextb.h	/^typedef	int	(*exinit)(WDCB *, int);$/;"	t
+exinit	src/dataanalyzer/spextb.h	/^typedef int     (*exinit)(WDCB *, int);$/;"	t
 extResCol	src/dataanalyzer/sp_extbug_global.c	/^MGCO	extResCol;$/;"	v
 extSaveBuf	src/dataanalyzer/sp_extbug_global.c	/^BUFF	*extSaveBuf;$/;"	v
 extbugMsgSet	src/dataanalyzer/sp_extbug_global.c	/^void	*extbugMsgSet;			\/* MSGSET *\/$/;"	v
@@ -610,7 +609,7 @@ extbug_search_head	src/dataanalyzer/sp_extbug_mmseg.c	/^static WHEAD *extbug_sea
 fb_len	src/urlcatcher/spuglobal.h	/^    int     fb_len;$/;"	m	struct:forbid_word
 fb_str	src/urlcatcher/spuglobal.h	/^    char   *fb_str;$/;"	m	struct:forbid_word
 fcset	include/spnet.h	/^typedef	int     (*fcset)(unsigned char *);$/;"	t
-fileIndexBuf	src/dataanalyzer/sp_extbug.c	/^static  int fileIndexBuf[WORD_LEN_LIMIT];$/;"	v	file:
+fileIndexBuf	src/dataanalyzer/sp_extbug.c	/^static int  fileIndexBuf[WORD_LEN_LIMIT];$/;"	v	file:
 fn_catch	src/urlcatcher/spuglobal.h	/^typedef int     (*fn_catch)(char *, char **); $/;"	t
 fn_creat	src/urlcatcher/spuglobal.h	/^typedef void    (*fn_creat)(void);$/;"	t
 fn_dway	src/urlcatcher/spuglobal.h	/^typedef int     (*fn_dway)(WEBIN *);$/;"	t
@@ -694,8 +693,9 @@ mc_conf_load	src/functionlib/mconfctl/museconfctl.c	/^int mc_conf_load(const cha
 mc_conf_print_err	src/functionlib/mconfctl/museconfctl.c	/^void mc_conf_print_err(char *pFind)$/;"	f
 mc_conf_read	src/functionlib/mconfctl/museconfctl.c	/^int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)$/;"	f
 mc_conf_unload	src/functionlib/mconfctl/museconfctl.c	/^void mc_conf_unload(void)$/;"	f
+mc_load_config	src/functionlib/mconfctl/museconfctl.c	/^void mc_load_config(const char *config_path, const char *user)$/;"	f
 merr_t	include/inclib/mmdpool/mmdpool.h	/^typedef	unsigned short	merr_t;$/;"	t
-mfwrt	src/dataanalyzer/spextb.h	/^typedef	void	(*mfwrt)(void);$/;"	t
+mfwrt	src/dataanalyzer/spextb.h	/^typedef void    (*mfwrt)(void);$/;"	t
 mgc_add	src/functionlib/garbagecolloter/musegc.c	/^int mgc_add(MGCH *pMgch, void *pObj, gcfun pHandler)$/;"	f
 mgc_all_clean	src/functionlib/garbagecolloter/musegc.c	/^void mgc_all_clean(MGCH *pMgch)$/;"	f
 mgc_cleaner	include/inclib/mgc.h	/^	gcfun	mgc_cleaner;$/;"	m	struct:musegc
@@ -720,7 +720,7 @@ mh_deflock	include/inclib/mmdpool/mmdpool.h	/^	MATOS	mh_biglock, mh_deflock;$/;"
 mh_err	include/inclib/mmdpool/mmdpool.h	/^	merr_t	mh_err;		\/* pool err num, one handler one err *\/$/;"	m	struct:dmp_handler
 mh_sizebor	include/inclib/mmdpool/mmdpool.h	/^	msize_t	mh_sizebor;	\/* size border *\/$/;"	m	struct:dmp_handler
 mh_stru	include/inclib/mmdpool/mmdpool.h	/^	DMPB	*mh_stru;$/;"	m	struct:dmp_handler
-minit	src/dataanalyzer/spextb.h	/^typedef	int	(*minit)(void);$/;"	t
+minit	src/dataanalyzer/spextb.h	/^typedef int     (*minit)(void);$/;"	t
 mkrun	include/spdict.h	/^struct	mkrun {$/;"	s
 mmdp_big_malloc	src/functionlib/memorypool/mmdpool/musemdpool.c	/^static mpt_t *mmdp_big_malloc(DMPH *hPoint, msize_t maSize)$/;"	f	file:
 mmdp_big_search	src/functionlib/memorypool/mmdpool/musemdpool.c	/^static DMPBB *mmdp_big_search(DMPBB *hStru, mpt_t *pFind)$/;"	f	file:
@@ -783,7 +783,7 @@ mssend	include/spmsg.h	/^typedef	int	(*mssend)(int);$/;"	t
 musegc	include/inclib/mgc.h	/^struct	musegc {$/;"	s
 musegch	include/inclib/mgc.h	/^struct	musegch {$/;"	s
 musegco	include/inclib/mgc.h	/^struct	musegco {$/;"	s
-mwrt	src/dataanalyzer/spextb.h	/^typedef	void	(*mwrt)(void *);$/;"	t
+mwrt	src/dataanalyzer/spextb.h	/^typedef void    (*mwrt)(void *);$/;"	t
 mysql_creat_table	src/functionlib/dboper/dboper.c	/^int mysql_creat_table(void *sql_handle, const char *creat_string, ...)$/;"	f
 mysql_execl_query	src/functionlib/dboper/dboper.c	/^static int mysql_execl_query($/;"	f	file:
 mysql_return_result	src/functionlib/dboper/dboper.c	/^void *mysql_return_result(void *sql_handle, const char *sql_string, ...)$/;"	f
@@ -794,9 +794,9 @@ nKlistSize	src/dataanalyzer/sp_extbug_global.c	/^int	exbugIpcFd, nExbugPthead, u
 nPaperFd	src/dataanalyzer/sp_extbug_misc.c	/^static	int	nPaperFd;$/;"	v	file:
 nPaperLock	src/dataanalyzer/sp_extbug_global.c	/^MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;$/;"	v
 nSepStr	src/dataanalyzer/sp_extbug_mmseg.c	/^static	int	nSepStr = sizeof(sepStrStore) \/ sizeof(sepStrStore[0]);$/;"	v	file:
-nc_cont	src/dataanalyzer/spextb.h	/^	const	char	*nc_cont;$/;"	m	struct:newcont
-nc_ind	src/dataanalyzer/spextb.h	/^	const	char	*nc_ind;$/;"	m	struct:newcont
-newcont	src/dataanalyzer/spextb.h	/^struct	newcont {$/;"	s
+nc_cont	src/dataanalyzer/spextb.h	/^    const   char    *nc_cont;$/;"	m	struct:newcont
+nc_ind	src/dataanalyzer/spextb.h	/^    const   char    *nc_ind;$/;"	m	struct:newcont
+newcont	src/dataanalyzer/spextb.h	/^struct  newcont {$/;"	s
 nrOpt	src/functionlib/sp_global.c	/^int	nrOpt = (sizeof(sqlOpt) \/ sizeof(char *));$/;"	v
 ownNameSave	src/functionlib/sp_frame.c	/^static	char	ownNameSave[OWN_NAME_LEN];$/;"	v	file:
 p_host	include/spnet.h	/^    char    p_host[SMALL_BUF];$/;"	m	struct:sp_ping_info
@@ -836,7 +836,7 @@ pthrun	include/inclib/mpctl.h	/^typedef	void	                (*pthrun)(void *);$
 rPac	src/functionlib/sp_global.c	/^char	*rPac =	"Accept-Language: zh-CN\\r\\n"$/;"	v
 read_all_file	src/functionlib/sp_pfun.c	/^int read_all_file(char **pStore, char *ofName, int readOff)$/;"	f
 readn	src/functionlib/sp_pfun.c	/^int readn(int rFd, void *rBuf, size_t bCount)$/;"	f
-rmode	src/dataanalyzer/spextb.h	/^typedef	void	(*rmode)(WDCT *);$/;"	t
+rmode	src/dataanalyzer/spextb.h	/^typedef void    (*rmode)(WDCT *);$/;"	t
 s_next	include/spdb.h	/^	SSTRL  *s_next;$/;"	m	struct:sstrlist
 s_str	include/spdb.h	/^	char	s_str[SQL_STRCMP_LEN];$/;"	m	struct:sstrlist
 select_read	src/functionlib/sp_pfun.c	/^int select_read(int nSock, char *readBuf, int nRead, int nSec, long microSec)$/;"	f
@@ -849,8 +849,8 @@ sem_wake	include/inclib/museipc/msem.h	/^	SEMBUF	sem_wait, sem_wake;$/;"	m	struc
 semsave	include/inclib/museipc/msem.h	/^struct semsave {$/;"	s
 semun	include/inclib/museipc/msem.h	/^union	semun {$/;"	u
 sepStrStore	src/dataanalyzer/sp_extbug_mmseg.c	/^static	SEPWORD	sepStrStore[] = {{"。"}, {"，"}, {"、"}, {"；"}, {"‘"}, {"’"}, {"“"}, $/;"	v	file:
-sep_utf8	src/dataanalyzer/spextb.h	/^	char	sep_utf8[UTF8_WORD_LEN];$/;"	m	struct:sepword
-sepword	src/dataanalyzer/spextb.h	/^struct	sepword {$/;"	s
+sep_utf8	src/dataanalyzer/spextb.h	/^    char    sep_utf8[UTF8_WORD_LEN];$/;"	m	struct:sepword
+sepword	src/dataanalyzer/spextb.h	/^struct  sepword {$/;"	s
 set_date_mode	src/urlcatcher/sp_urlbug_rule.c	/^void set_date_mode(TMS *date)$/;"	f
 shellsort	include/inclib/musealgo/malgo.h	/^struct	shellsort {$/;"	s
 shm_ds	include/inclib/museipc/mshm.h	/^	SDDS	shm_ds;$/;"	m	struct:mshm
@@ -908,7 +908,6 @@ sp_stop	src/functionlib/sp_misc.c	/^void sp_stop(void)$/;"	f
 sp_stop_str	src/functionlib/sp_misc.c	/^void sp_stop_str(void)$/;"	f
 sp_url_path_count_nlayer	src/functionlib/network/sp_network.c	/^int sp_url_path_count_nlayer(char *url)$/;"	f
 sp_url_seperate	src/functionlib/network/sp_network.c	/^int sp_url_seperate(char *url, int url_len, WEB *web_info)$/;"	f
-sp_wordlist_mov_next	src/dataanalyzer/sp_extbug_extract.c	/^inline WST *sp_wordlist_mov_next(WST *wStru, int nMov)$/;"	f
 spfun	include/spdict.h	/^typedef	int	    (*spfun)(char *, int, char *, int);$/;"	t
 sqlOpt	src/functionlib/sp_global.c	/^char	*sqlOpt[] = {"db", "--default-file = my.cnf"};$/;"	v
 sqlSeleCom	src/dataanalyzer/sp_extbug_global.c	/^char	sqlSeleCom[SQL_LICOM_LEN];$/;"	v
@@ -976,14 +975,13 @@ ubug_init_dbuf	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBu
 ubug_init_pinginfo	src/urlcatcher/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f
 ubug_init_signal	src/urlcatcher/sp_urlbug_signal.c	/^void ubug_init_signal(void)$/;"	f
 ubug_init_source_pool	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_source_pool(void)$/;"	f	file:
-ubug_init_ubset	src/urlcatcher/sp_urlbug.c	79;"	d	file:
-ubug_init_ubset_way	src/urlcatcher/sp_urlbug.c	88;"	d	file:
+ubug_init_ubset	src/urlcatcher/sp_urlbug.c	78;"	d	file:
+ubug_init_ubset_way	src/urlcatcher/sp_urlbug.c	87;"	d	file:
 ubug_init_urllist	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_urllist(char *urlStr, WEB *webStu)$/;"	f	file:
 ubug_init_weblist	src/urlcatcher/sp_urlbug.c	/^static void ubug_init_weblist(void)$/;"	f	file:
 ubug_is_today_news	src/urlcatcher/sp_urlbug_rule.c	/^int ubug_is_today_news(char *string, int nLimit)$/;"	f
 ubug_job	src/urlcatcher/sp_urlbug.c	/^static void ubug_job(WEBIN *wPoint)$/;"	f	file:
 ubug_list_entity_set	src/urlcatcher/sp_urlbug.c	/^static WEBIN *ubug_list_entity_set(MSLROW data_row)$/;"	f	file:
-ubug_load_config	src/urlcatcher/sp_urlbug.c	/^static void ubug_load_config(const char *config_path)$/;"	f	file:
 ubug_locate_default_rule	src/urlcatcher/sp_urlbug_rule.c	/^int ubug_locate_default_rule($/;"	f
 ubug_main_entrance	src/urlcatcher/sp_urlbug.c	/^static void ubug_main_entrance(void)$/;"	f	file:
 ubug_msg_ctime	src/urlcatcher/sp_urlbug_msg.c	/^static void ubug_msg_ctime(void)$/;"	f	file:
@@ -1013,7 +1011,7 @@ ubug_update_latest_time	src/urlcatcher/sp_urlbug_network.c	/^static void ubug_up
 ud_foff	include/spinc.h	/^    int     ud_foff;        \/* file offset *\/$/;"	m	struct:url_dat
 ud_poff	include/spinc.h	/^    int     ud_poff;        \/* path offset *\/$/;"	m	struct:url_dat
 upMaxTerms	src/dataanalyzer/sp_extbug_global.c	/^int	exbugIpcFd, nExbugPthead, upMaxTerms, nKlistSize;$/;"	v
-upmode	src/dataanalyzer/spextb.h	/^typedef	void	(*upmode)(WDCT *, const char *);$/;"	t
+upmode	src/dataanalyzer/spextb.h	/^typedef void    (*upmode)(WDCT *, const char *);$/;"	t
 urlCatchNum	src/urlcatcher/sp_urlbug_clean.c	/^int	    procCommuFd, urlMaxLen, urlCatchNum;$/;"	v
 urlDataBase	src/urlcatcher/sp_urlbug_clean.c	/^MYSQL	urlDataBase;$/;"	v
 urlGarCol	src/urlcatcher/sp_urlbug_clean.c	/^MGCH	*urlGarCol;$/;"	v
@@ -1026,7 +1024,7 @@ urlTabName	src/urlcatcher/sp_urlbug_clean.c	/^char	confNameBuf[PATH_LEN], urlTab
 url_dat	include/spinc.h	/^struct  url_dat {$/;"	s
 url_layer_extract	src/functionlib/sp_pfun.c	/^void url_layer_extract(UDATA *pData, char *urlStr, int uLen)$/;"	f
 usec_t	include/spinc.h	/^typedef useconds_t      usec_t;$/;"	t
-userName	src/functionlib/mconfctl/museconfctl.c	/^static	char	userName[MIDDLE_BUF + 1];$/;"	v	file:
+userName	src/functionlib/mconfctl/museconfctl.c	/^static  char    userName[MIDDLE_BUF + 1];$/;"	v	file:
 w_buff	include/spnet.h	/^	BUFF   *w_buff;		            \/* store url *\/$/;"	m	struct:web_if
 w_conbuf	include/spnet.h	/^	char   *w_conbuf;		        \/* store website content *\/$/;"	m	struct:web_if
 w_conbufsize	include/spnet.h	/^    int     w_conbufsize;           \/* size of the content buffer *\/$/;"	m	struct:web_if
@@ -1060,13 +1058,13 @@ w_ubuf	include/spnet.h	/^	WEB	    w_ubuf;$/;"	m	struct:web_if
 w_url	include/spnet.h	/^	char   *w_url;			        \/* store url (a temp value) *\/$/;"	m	struct:web_if
 w_urlbufsize	include/spnet.h	/^    int     w_urlbufsize;           \/* size of w_url buffer *\/$/;"	m	struct:web_if
 w_utf8	include/spdict.h	/^	uChar	w_utf8[UTF8_WORD_LEN];$/;"	m	struct:dword
-wb_lterms	src/dataanalyzer/spextb.h	/^	char	*wb_lterms;$/;"	m	struct:wdcomb
-wb_ltimes	src/dataanalyzer/spextb.h	/^		uLong	*wb_ltimes;$/;"	m	union:wdcomb::__anon3
-wc_list	src/dataanalyzer/spextb.h	/^	WST	*wc_list;$/;"	m	struct:wordcnt
-wc_ndiff	src/dataanalyzer/spextb.h	/^	int	wc_ndiff;	\/* total different word *\/$/;"	m	struct:wordcnt
-wc_tbytes	src/dataanalyzer/spextb.h	/^	uLong	wc_tbytes;	\/* total size *\/$/;"	m	struct:wordcnt
-wc_total	src/dataanalyzer/spextb.h	/^	int	wc_total;	\/* total word *\/$/;"	m	struct:wordcnt
-wdcomb	src/dataanalyzer/spextb.h	/^struct	wdcomb {$/;"	s
+wb_lterms	src/dataanalyzer/spextb.h	/^    char    *wb_lterms;$/;"	m	struct:wdcomb
+wb_ltimes	src/dataanalyzer/spextb.h	/^        uLong   *wb_ltimes;$/;"	m	union:wdcomb::__anon3
+wc_list	src/dataanalyzer/spextb.h	/^    WST    *wc_list;$/;"	m	struct:wordcnt
+wc_ndiff	src/dataanalyzer/spextb.h	/^    int     wc_ndiff;   \/* total different word *\/$/;"	m	struct:wordcnt
+wc_tbytes	src/dataanalyzer/spextb.h	/^    uLong   wc_tbytes;  \/* total size *\/$/;"	m	struct:wordcnt
+wc_total	src/dataanalyzer/spextb.h	/^    int     wc_total;   \/* total word *\/$/;"	m	struct:wordcnt
+wdcomb	src/dataanalyzer/spextb.h	/^struct  wdcomb {$/;"	s
 web	include/spnet.h	/^struct	web {$/;"	s
 web_file	include/spnet.h	/^	char	web_file[UFILE_LEN];$/;"	m	struct:web
 web_host	include/spnet.h	/^	char	web_host[UHOST_LEN];$/;"	m	struct:web
@@ -1075,7 +1073,7 @@ web_nlayer	include/spnet.h	/^    int     web_nlayer;             \/* path's laye
 web_path	include/spnet.h	/^	char	web_path[UPATH_LEN];$/;"	m	struct:web
 web_port	include/spnet.h	/^	int	    web_port;$/;"	m	struct:web
 web_txt	include/spnet.h	/^struct	web_txt {$/;"	s
-whead	src/dataanalyzer/spextb.h	/^struct	whead {$/;"	s
+whead	src/dataanalyzer/spextb.h	/^struct  whead {$/;"	s
 wlist	include/spdict.h	/^struct	wlist {$/;"	s
 wmp_atomic	include/spmpool.h	/^    MATOS   wmp_atomic; \/* mutipthread protect *\/$/;"	m	struct:w_mempool
 wmp_bitmap	include/spmpool.h	/^    int    *wmp_bitmap;$/;"	m	struct:w_mempool
@@ -1088,15 +1086,15 @@ wmpool_create	src/functionlib/memorypool/chunkmpool/mpool_web.c	/^WPOOL *wmpool_
 wmpool_destroy	src/functionlib/memorypool/chunkmpool/mpool_web.c	/^void wmpool_destroy(void *handler)$/;"	f
 wmpool_free	src/functionlib/memorypool/chunkmpool/mpool_web.c	/^void wmpool_free(WPOOL *handler, void *free_addr)$/;"	f
 wmpool_malloc	src/functionlib/memorypool/chunkmpool/mpool_web.c	/^void *wmpool_malloc(WPOOL *handler)$/;"	f
-wordcnt	src/dataanalyzer/spextb.h	/^struct	wordcnt {$/;"	s
-wordst	src/dataanalyzer/spextb.h	/^struct	wordst {$/;"	s
+wordcnt	src/dataanalyzer/spextb.h	/^struct  wordcnt {$/;"	s
+wordst	src/dataanalyzer/spextb.h	/^struct  wordst {$/;"	s
 writeDataLock	src/functionlib/log/sp_elog.c	/^static	MATOS	writeDataLock;$/;"	v	file:
 writeStoreLock	src/urlcatcher/sp_urlbug_clean.c	/^MATOS	writeStoreLock;$/;"	v
 writen	src/functionlib/sp_pfun.c	/^int writen(int wFd, void *wBuf, size_t bCount)$/;"	f
-ws_buf	src/dataanalyzer/spextb.h	/^	char	*ws_buf;$/;"	m	struct:wordst
-ws_bytes	src/dataanalyzer/spextb.h	/^	int	ws_bytes;	\/* all bytes *\/$/;"	m	struct:wordst
-ws_cnt	src/dataanalyzer/spextb.h	/^	int	ws_cnt;		\/* occurrence number *\/$/;"	m	struct:wordst
-ws_next	src/dataanalyzer/spextb.h	/^	WST	*ws_next;$/;"	m	struct:wordst
+ws_buf	src/dataanalyzer/spextb.h	/^    char    *ws_buf;$/;"	m	struct:wordst
+ws_bytes	src/dataanalyzer/spextb.h	/^    int     ws_bytes;   \/* all bytes *\/$/;"	m	struct:wordst
+ws_cnt	src/dataanalyzer/spextb.h	/^    int     ws_cnt;     \/* occurrence number *\/$/;"	m	struct:wordst
+ws_next	src/dataanalyzer/spextb.h	/^    WST     *ws_next;$/;"	m	struct:wordst
 wstr	include/spdict.h	/^struct	wstr {$/;"	s
 wt_charset	include/spnet.h	/^	char	wt_charset[CHARSET_LEN];$/;"	m	struct:web_txt
 wt_cinc	include/spnet.h	/^	int     wt_cinc;		\/* per word size at curren charset *\/$/;"	m	struct:web_txt

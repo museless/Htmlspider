@@ -1,9 +1,9 @@
 #ifndef _SPEXTB_H
 #define _SPEXTB_H
 
-/*---------------------
-    define
------------------------*/
+/*---------------------------------------------
+ *                 define
+-*---------------------------------------------*/
 
 #define MAX_UP_TERMS    0xFF
 
@@ -42,9 +42,10 @@
 
 #define PER_DOWN_MAX    0x40
 
-/*---------------------
-    typedef
------------------------*/
+
+/*---------------------------------------------
+ *                  typedef
+-*---------------------------------------------*/
 
 typedef struct  clist   CLISTS;
 typedef struct  whead   WHEAD;
@@ -70,6 +71,7 @@ typedef struct  wdcomb  WDCB;
 typedef void    (*rmode)(WDCT *);
 typedef void    (*upmode)(WDCT *, const char *);
 typedef int     (*exinit)(WDCB *, int);
+
 
 /*---------------------------------------------
  *                   struct
@@ -149,27 +151,13 @@ struct  wdcomb {
     };
 };
 
-/*---------------------
-    global fun
------------------------*/
 
-/* sp_extbug.c */
-void    exbug_time_change(void);
-void    exbug_keep_working(void *pResult);
-
-void    exbug_data_sync(void);
+/*---------------------------------------------
+ *                global fun
+-*---------------------------------------------*/
 
 /* sp_extbug_misc.c */
 void    exbug_print_help(void);
-
-int     exbug_paper_num_read(void);
-void    exbug_paper_num_inc(void);
-void    exbug_paper_sync(void);
-
-/* sp_extbug_message.c */
-void   *exbug_msg_init(int messageFd);
-
-void    exbug_wait_arouse(int waitFd, int wTime);
 
 /* sp_extbug_signal.c */
 int     exbug_signal_init(void);
@@ -193,13 +181,24 @@ void    exbug_word_print(WDCT *printCnt);
 
 void    exbug_wordstru_setting(WDCT *setCnt);
 
-/* sp_extbug_extract.c */
+/* sp_extbug_termsctl.c */
 void    exbug_extract_keyword(WDCT *extDic);
 
 void    exbug_update_terms(WDCT *upList, const char *pInd);
+void    exbug_data_sync(void);
+
+int     exbug_dictionary_load(char *fConf, char *savConf, 
+            char *fName, CLISTS *pTerm, CLISTS *charHead);
+
+int     exbug_findex_load(char *finPath);
+int     exbug_index_load(WHEAD **cStru, char *iName, int nTerms);
+int     exbug_terms_load(WDCB **termStru, char *termFile, int nOff);
 
 /* sp_extbug_error.c */
 void    exbug_sig_error(int nObj);
 void    exbug_perror(const char *string_head, int error_num);
+
+/* sp_extbug_message.c */
+void   *exbug_msg_init(int message_fd);
 
 #endif

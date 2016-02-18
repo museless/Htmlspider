@@ -123,7 +123,7 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
     char    sqlCom[SQL_TCOM_LEN];
 
     if (mysql_real_query(&dbNewsHandler, sqlCom, 
-    sprintf(sqlCom, SET_NEWS_FLAGS, tblNewsName, maskName, pInd)) != FUN_RUN_END)
+        sprintf(sqlCom, SET_NEWS_FLAGS, tblNewsName, maskName, pInd)) != FUN_RUN_END)
         exbug_dberr_deal(&dbNewsHandler, dbNewsName, "exbug_rewind_exmark - mysql_real_query");
 
     return;

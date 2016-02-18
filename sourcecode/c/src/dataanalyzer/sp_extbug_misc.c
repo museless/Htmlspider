@@ -1,125 +1,71 @@
-/*------------------------------------------
-	Source file content Six part
+/*---------------------------------------------
+ *     modification time: 2016-02-17 21:30
+ *     mender: Muse
+ *---------------------------------------------*/
 
-	Part Zero:	Include
-	Part One:	Local data
-	Part Two:	Local function
-	Part Three:	Define
+/*---------------------------------------------
+ *     creation time: 2015-06-01 
+ *     author: Muse 
+ *---------------------------------------------*/
 
-	Part Four:	Help print
-	Part Five:	Total paper num ctl
+/*---------------------------------------------
+ *      Source file content Five part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Local data
+ *      Part Two:   Local function
+ *      Part Three: Define
+ *
+ *      Part Four:  Help print
+ *
+-*---------------------------------------------*/
 
---------------------------------------------*/
+/*---------------------------------------------
+ *            Part Zero: Include
+-*---------------------------------------------*/
 
-/*------------------------------------------
-	Part Zero: Include
---------------------------------------------*/
+#include "sp.h"
 
-#include "spinc.h"
-#include "spdb.h"
 #include "spextb.h"
 #include "speglobal.h"
 
 
-/*------------------------------------------
-	Part One: Local data
---------------------------------------------*/
-
-static	int	nPaperFd;
+/*---------------------------------------------
+ *           Part One: Local data
+-*---------------------------------------------*/
 
 
-/*------------------------------------------
-	Part Four: Help print
-
-	1. exbug_print_help
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Four: Help print
+ *
+ *          1. exbug_print_help
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_print_help-----*/
 void exbug_print_help(void)
 {
-	char	hlpPath[PATH_LEN];
-	char	*pStore;
-	int	fSize;
+    char   *file_store;
+    char    help_file_path[PATH_LEN];
+    int     file_size;
 
-	if(mc_conf_read("extbug_help_locate", CONF_STR, hlpPath, PATH_LEN) == FUN_RUN_FAIL) {
-		mc_conf_print_err("extbug_help_locate");
-		return;
-	}
+    if (mc_conf_read(
+       "extbug_help_locate", CONF_STR, 
+       help_file_path, PATH_LEN) == FUN_RUN_FAIL) {
+        mc_conf_print_err("extbug_help_locate");
+        return;
+    }
 
-	if((fSize = read_all_file(&pStore, hlpPath, 0)) == FUN_RUN_FAIL) {
-		printf("Extbug---> read_all_file: %s: %s\n", hlpPath, strerror(errno));
-		return;
-	}
+    file_size = read_all_file(&file_store, help_file_path, 0);
 
-	printf("%.*s\n\n", fSize, pStore);
+    if (file_size == FUN_RUN_FAIL) {
+        printf("Help file: %s\n", help_file_path);
+        exbug_perror("exbug_print_help - read_all_file", errno);
+        return;
+    }
 
-	free(pStore);
-}
+    printf("%.*s\n\n", file_size, file_store);
 
-
-/*------------------------------------------
-	Part Five: Total paper num ctl
-
-	1. exbug_paper_num_read
-	2. exbug_paper_num_inc
-	3. exbug_paper_sync
-
---------------------------------------------*/
-
-/*-----exbug_paper_num_read-----*/
-int exbug_paper_num_read(void)
-{
-	char	fileName[PATH_LEN];
-	int	nRet = 0;
-
-	if(mc_conf_read("extbug_paper_num_file", CONF_STR, fileName, PATH_LEN) == FUN_RUN_FAIL) {
-		mc_conf_print_err("extbug_paper_num_file");
-		return	FUN_RUN_END;
-	}
-
-	if((nPaperFd = open(fileName, O_RDWR | O_CREAT, FILE_AUTHOR)) == FUN_RUN_FAIL) {
-		perror("Extbug---> exbug_paper_num_read - open");
-		return	FUN_RUN_END;
-	}
-
-	if(read(nPaperFd, &nRet, sizeof(uLong)) == FUN_RUN_FAIL) {
-		perror("Extbug---> exbug_paper_num_read - read");
-		return	FUN_RUN_END;
-	}
-
-	tPaperNum = (nRet) ? nRet : 0;
-
-	return	FUN_RUN_OK;
-}
-
-
-/*-----exbug_paper_num_inc-----*/
-void exbug_paper_num_inc(void)
-{
-	while(!mato_dec_and_test(&nPaperLock))
-		mato_inc(&nPaperLock);
-
-	tPaperNum++;
-	mato_inc(&nPaperLock);
-}
-
-
-/*-----exbug_paper_sync-----*/
-void exbug_paper_sync(void)
-{
-	if(nPaperFd) {
-		printf("Extbug---> total paper num: %ld\n", tPaperNum);
-
-		if(lseek(nPaperFd, 0, SEEK_SET) == FUN_RUN_FAIL) {
-			perror("Extbug---> exbug_paper_sync - lseek");
-	
-		} else {
-			if(write(nPaperFd, &tPaperNum, sizeof(uLong)) == FUN_RUN_FAIL)
-				perror("Extbug---> exbug_paper_sync - write");
-		}
-	
-		close(nPaperFd);
-	}
+    free(file_store);
 }
 

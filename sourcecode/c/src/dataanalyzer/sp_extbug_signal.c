@@ -19,10 +19,7 @@
  *             Part Zero: Include
 -*---------------------------------------------*/
 
-#include "spinc.h"
-#include "spmpool.h"
-#include "spnet.h"
-#include "spdb.h"
+#include "sp.h"
 
 #include "mpctl.h"
 
@@ -99,7 +96,6 @@ static void exbug_signal_handler(int nSignal)
         while(nTimes++ < nExbugPthead && !mato_sub_and_test(&pthreadCtlLock, 0))
             sleep(TAKE_A_SEC);
 
-        exbug_paper_sync();
         exbug_data_sync();
         mgc_all_clean(exbGarCol);
         mgc_one_clean(&extResCol);
