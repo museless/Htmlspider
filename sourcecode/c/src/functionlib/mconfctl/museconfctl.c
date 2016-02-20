@@ -63,7 +63,7 @@ int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
     if ((pEnd = strchr(pStr, '\n')) == NULL)
         return  FUN_RUN_FAIL;
 
-    for(; isspace(*(pEnd - 1)); pEnd--)
+    for (; isspace(*(pEnd - 1)); pEnd--)
             ;   /* nothing */
 
     if (dType == CONF_NUM) {
@@ -112,7 +112,7 @@ void mc_conf_print_err(char *pFind)
 
 
 /*-----mc_load_config-----*/
-void mc_load_config(const char *config_path, const char *user)
+void mc_load_config(const char *user, const char *config_path)
 {
     if (mc_conf_load(user, config_path) == FUN_RUN_FAIL) {
         printf("%s---> load configure failed\n", user);

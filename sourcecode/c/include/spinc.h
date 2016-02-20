@@ -183,7 +183,7 @@ void	mc_conf_unload(void);
 int	    mc_conf_read(char *findStr, int dType, void *dBuf, int dLen);
 void	mc_conf_print_err(char *pFind);
 
-void    mc_load_config(const char *config_path, const char *user);
+void    mc_load_config(const char *user, const char *config_path);
 
 /* sp_misc.c */
 void	sp_stop(void);

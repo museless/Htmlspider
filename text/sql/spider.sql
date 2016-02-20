@@ -45,5 +45,7 @@ Len tinyint(2), State int(2) default 0);
 -*---------------------------------------------*/
 
 create table if not exists Keyword.Example(
-Ind char(48) not null primary key, Keylist varchar(2048) character set utf8 not null, Keynum int(32) not null, Keyflags tinyint(1) default 0) 
+Ind char(48) not null primary key, 
+Keylist varchar(2048) character set utf8 not null, 
+Keynum int(32) not null, Keyflags tinyint(1) default 0) 
 

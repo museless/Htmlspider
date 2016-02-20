@@ -115,7 +115,7 @@ void exbug_option_analyst(int nPara, char **paraList)
     int     conf_flags = 0, time_flags = 0;
     char    ch;
 
-    while ((ch = getopt(nPara, paraList, "ht:c:"))) {
+    while ((ch = getopt(nPara, paraList, "ht:c:")) != FRET_N) {
         switch (ch) {
             case 'h':
                 exbug_print_help();
