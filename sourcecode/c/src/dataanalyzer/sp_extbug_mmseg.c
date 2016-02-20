@@ -16,8 +16,8 @@
     Part Zero: Include
 --------------------------------------------*/
 
-#include "spinc.h"
-#include "spdb.h"
+#include "sp.h"
+
 #include "mmdpool.h"
 #include "spextb.h"
 #include "speglobal.h"
@@ -43,23 +43,23 @@ static  int     exbug_check_word_head(const char *pHead);
 static  WHEAD  *extbug_search_head(CLISTS *pList, const char *pCmp, int wLen);
 
 
-/*------------------------------------------
-    Part Four: Segment main
-
-    1. exbug_segment_entrance
-    2. exbug_simple_segment
-    3. exbug_check_word_head
-    4. extbug_search_head
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Four: Segment main
+ *
+ *          1. exbug_segment_entrance
+ *          2. exbug_simple_segment
+ *          3. exbug_check_word_head
+ *          4. extbug_search_head
+ *
+-*---------------------------------------------*/
 
 /*-----ext_segment_entrance-----*/
 void exbug_segment_entrance(WDCT *wcStru, const char *pNews)
 {
-    const   char    *pMov, *pStr;
-        int nRet, newLen = strlen(pNews);
+    const char *pMov, *pStr;
+    int         nRet, news_len = strlen(pNews);
 
-    for (pStr = pMov = pNews; *pMov && pMov < pNews + newLen; ) {
+    for (pStr = pMov = pNews; *pMov && pMov < pNews + news_len; ) {
         if ((nRet = exbug_check_word_head(pMov)) == FUN_RUN_FAIL) {
             pMov += UTF8_WORD_LEN;
             continue;
@@ -69,19 +69,17 @@ void exbug_segment_entrance(WDCT *wcStru, const char *pNews)
 
         pStr = pMov += ((nRet == FUN_RUN_OK) ? 1 : UTF8_WORD_LEN);
     }
-
-    //exbug_word_print(wcStru);
 }
 
 
 /*-----exbug_simple_segment-----*/
 void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
 {
-    const   char    *strEnd;
-        char    *strHead, *strMov;
-        WHEAD   *headStru;
-        uLong   *pList;
-        int wordSize, wBytes, nCnt, nOff;
+    const char *strEnd;
+    char       *strHead, *strMov;
+    WHEAD      *headStru;
+    uLong      *pList;
+    int         wordSize, wBytes, nCnt, nOff;
 
     for (strEnd = strBeg + sLen; sLen > 0 && strBeg < strEnd; strBeg += wordSize) {
         wordSize = ((sLen > BYTE_CMP_MAX) ? WORD_CMP_MAX : (sLen / UTF8_WORD_LEN));
@@ -93,7 +91,6 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
                 wBytes = wordSize * UTF8_WORD_LEN;
             
                 for (nCnt = 0; nCnt < headStru->dc_cnt; nCnt++, strMov += wBytes) {
-                    //printf("%#x - %#x - %d\n", strMov, strHead, wordSize);
                     if (!strncmp(strMov, strBeg, wBytes))
                         break;
                 }
@@ -119,11 +116,11 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
 /*-----exbug_check_word_head-----*/
 int exbug_check_word_head(const char *pHead)
 {
-    int nCir;
+    int     index = 0;
 
     if ((*pHead & UTF8_WHEAD) == UTF8_WHEAD) {
-        for (nCir = 0; nCir < nSepStr; nCir++) {
-            if (!strncmp(pHead, sepStrStore[nCir].sep_utf8, UTF8_WORD_LEN))
+        for (; index < nSepStr; index++) {
+            if (!strncmp(pHead, sepStrStore[index].sep_utf8, UTF8_WORD_LEN))
                 return  FUN_RUN_END;
         }
 
@@ -197,7 +194,7 @@ void exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes)
 /*-----exbug_word_print-----*/
 void exbug_word_print(WDCT *printCnt)
 {
-    WST *pList = printCnt->wc_list;
+    WST    *pList = printCnt->wc_list;
 
     for (; pList; pList = pList->ws_next)
         printf("%.*s - %d\n", pList->ws_bytes, pList->ws_buf, pList->ws_cnt);
@@ -206,12 +203,12 @@ void exbug_word_print(WDCT *printCnt)
 }
 
 
-/*------------------------------------------
-    Part Six: WordStru control
-
-    1. exbug_wordstru_setting
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Six: WordStru control
+ *
+ *          1. exbug_wordstru_setting
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_wordstru_setting-----*/
 void exbug_wordstru_setting(WDCT *setCnt)

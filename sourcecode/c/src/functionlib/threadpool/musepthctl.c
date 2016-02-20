@@ -1,38 +1,38 @@
-/*-----------------------------------------
-       modification time: 2015.10.26
-            mender: William
--------------------------------------------*/
+/*---------------------------------------------
+ * modification time: 2016.02.20 15:00
+ * mender: Muse
+-*---------------------------------------------*/
 
-/*-----------------------------------------
-        intro: muse pthread pool
--------------------------------------------*/
+/*---------------------------------------------
+ *          intro: muse pthread pool
+-*---------------------------------------------*/
 
-/*------------------------------------------
-    Source file content Six part
+/*---------------------------------------------
+ *      Source file content Six part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Define
+ *      Part Two:   Local data
+ *      Part Three: Local function
+ *
+ *      Part Four:  Muse thpool API
+ *      Part Five:  Associated with thread pool run
+ *      Part Six:   Other part 
+ *      Part Seven: Thread pool error handle
+ *
+-*---------------------------------------------*/
 
-    Part Zero:  Include
-    Part One:   Define
-    Part Two:   Local data
-    Part Three: Local function
-
-    Part Four:  Muse thpool API
-    Part Five:  Associated with thread pool run
-    Part Six:   Other part 
-    Part Seven: Thread pool error handle
-
---------------------------------------------*/
-
-/*------------------------------------------
-           Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *           Part Zero: Include
+-*---------------------------------------------*/
 
 #include "spinc.h"
 #include "mpctl.h"
 
 
-/*------------------------------------------
-           Part Two: Local data
---------------------------------------------*/
+/*---------------------------------------------
+ *           Part Two: Local data
+-*---------------------------------------------*/
 
 enum PTHREAD_STATE {
     PTH_IS_WATCHER,
@@ -44,9 +44,9 @@ enum PTHREAD_STATE {
 };
 
 
-/*------------------------------------------
-         Part Three: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *         Part Three: Local function
+-*---------------------------------------------*/
 
 /* Part Five */
 static  void   *mpc_thread_pool_run(void *thread_para);
@@ -246,28 +246,25 @@ static void mpc_thpool_run_prepration(PTHENT *thread_entity)
     int thread_status;
 
     if ((thread_status = pthread_mutex_lock(&thread_entity->pe_mutex)))
-        mpc_thread_therror(
-        thread_entity,
-        "mpc_thpool_run_prepration - pthread_mutex_lock", thread_status);
+        mpc_thread_therror(thread_entity,
+            "mpc_thpool_run_prepration - pthread_mutex_lock", thread_status);
 
     pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
 
-    if ((thread_status = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
-        mpc_thread_therror(
-        thread_entity,
-        "mpc_thpool_run_prepration - pthread_setcanceltype", thread_status);
+    if ((thread_status = pthread_setcanceltype(
+                            PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
+        mpc_thread_therror(thread_entity,
+            "mpc_thpool_run_prepration - pthread_setcanceltype", thread_status);
 
     thread_entity->pe_flags = PTH_IS_READY;
 
     if ((thread_status = pthread_cond_signal(&thread_entity->pe_cond)))
-        mpc_thread_therror(
-        thread_entity,
-        "mpc_thpool_run_prepration - pthread_cond_signal", thread_status);
+        mpc_thread_therror(thread_entity,
+             "mpc_thpool_run_prepration - pthread_cond_signal", thread_status);
 
     if ((thread_status = pthread_mutex_unlock(&thread_entity->pe_mutex)))
-        mpc_thread_therror(
-        thread_entity,
-        "mpc_thpool_run_prepration - pthread_mutex_unlock", thread_status);
+        mpc_thread_therror(thread_entity,
+            "mpc_thpool_run_prepration - pthread_mutex_unlock", thread_status);
 }
 
 
@@ -373,12 +370,10 @@ static int mpc_thread_create(PTHENT *thread_entity)
     }
 
     while (thread_entity->pe_flags != PTH_IS_READY) {
-        if ((thread_status = 
-             pthread_cond_wait(
-             &thread_entity->pe_cond, &thread_entity->pe_mutex))) {
+        if ((thread_status = pthread_cond_wait(
+                &thread_entity->pe_cond, &thread_entity->pe_mutex))) {
             mpc_thread_perror(
-            "mpc_thread_create - pthread_cond_wait", thread_status);
-
+                "mpc_thread_create - pthread_cond_wait", thread_status);
             return  PTH_RUN_END;
         }
     }

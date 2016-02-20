@@ -5,20 +5,25 @@
 	       include
 -----------------------------*/
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+
 #include <unistd.h>
 
-#define __USE_GNU
 #include <pthread.h>
 
 #include <ctype.h>
 #include <string.h>
 #include <strings.h>
 #include <stdarg.h>
+
 #include <signal.h>
+
 #include <time.h>
 #include <fcntl.h>
+
+#include <getopt.h>
 
 #include <sys/time.h>
 #include <sys/types.h>
@@ -134,7 +139,7 @@ typedef pthread_attr_t  pattr_t;
 typedef unsigned char   uChar;
 typedef unsigned int    uInt;
 typedef unsigned long   uLong;
-typedef useconds_t      usec_t;
+typedef unsigned short  uShort;
 
 typedef struct	stat    STAT;
 typedef struct	tm      TMS;

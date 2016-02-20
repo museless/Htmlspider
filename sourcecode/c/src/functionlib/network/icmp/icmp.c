@@ -45,19 +45,19 @@
 
 /* Part Five */
 static  int     icmp_echo_create(
-                char *write_buf, int buf_len, u_short type, 
-                u_short code, const char *data, int data_len);
+                char *write_buf, int buf_len, uShort type, 
+                uShort code, const char *data, int data_len);
 
-static  void    icmp_type_err_assign_errno(u_short code);
+static  void    icmp_type_err_assign_errno(uShort code);
 
 /* Part Six */
-static  u_short icmp_checksum(u_short *addr, int byte_num);
+static  uShort icmp_checksum(uShort *addr, int byte_num);
 
 /* Part Seven */
 static  int     icmp_resolve_check(
-                ICMP *icmp_data, int icmp_size, u_short check_type, u_short check_code);
+                ICMP *icmp_data, int icmp_size, uShort check_type, uShort check_code);
 
-static  int     icmp_resolve_type_check(ICMP *icmp, u_short code);
+static  int     icmp_resolve_type_check(ICMP *icmp, uShort code);
 static  int     icmp_resolve_type_echo(ICMP *icmp);
 
 
@@ -70,8 +70,8 @@ static  int     icmp_resolve_type_echo(ICMP *icmp);
 -----------------------------------------------*/
 
 /*-----icmp_echo_create-----*/  
-int icmp_create(char *write_buf, int buf_len, u_short type, 
-                u_short code, const char *data, int data_len)
+int icmp_create(char *write_buf, int buf_len, uShort type, 
+                uShort code, const char *data, int data_len)
 {
     if (buf_len < DG_ICMP_MINLEN) {
         errno = EILSEQ;
@@ -91,7 +91,7 @@ int icmp_create(char *write_buf, int buf_len, u_short type,
 
 
 /*-----icmp_resolve-----*/
-int icmp_resolve(u_char *data, int data_len, int type, int code)
+int icmp_resolve(uChar *data, int data_len, int type, int code)
 {
     ICMP   *icmp_data = (ICMP *)data;
 
@@ -122,8 +122,8 @@ int icmp_resolve(u_char *data, int data_len, int type, int code)
 
 /*-----icmp_echo_create-----*/
 static int icmp_echo_create(
-           char *write_buf, int buf_len, u_short type, 
-           u_short code, const char *data, int data_len)
+           char *write_buf, int buf_len, uShort type, 
+           uShort code, const char *data, int data_len)
 {
     ICMPECHO    icmp_echo;
     int         total_size = data_len + TYPE_ECHO_MIN_LEN;
@@ -141,7 +141,7 @@ static int icmp_echo_create(
     memset(&icmp_echo.icmp_pad, 0, 18);
 
     icmp_echo.icmp_entity.icmp_checksum =
-    icmp_checksum((u_short *)&icmp_echo, total_size);
+    icmp_checksum((uShort *)&icmp_echo, total_size);
 
     memcpy(write_buf, &icmp_echo, TYPE_ECHO_MIN_LEN);
     memcpy(write_buf + TYPE_ECHO_MIN_LEN, data, data_len);
@@ -151,7 +151,7 @@ static int icmp_echo_create(
 
 
 /*-----icmp_type_err_assign_errno-----*/
-static void icmp_type_err_assign_errno(u_short code)
+static void icmp_type_err_assign_errno(uShort code)
 {
     switch (code) {
         case  CODE_NETWORK_UNREACH:
@@ -202,9 +202,9 @@ static void icmp_type_err_assign_errno(u_short code)
 -----------------------------------------------*/
 
 /*-----icmp_checksum-----*/
-static u_short icmp_checksum(u_short *addr, int byte_num)
+static uShort icmp_checksum(uShort *addr, int byte_num)
 {
-    u_long  checksum = 0;
+    uLong  checksum = 0;
 
     while (byte_num > 1) {
         checksum += *addr;
@@ -213,12 +213,12 @@ static u_short icmp_checksum(u_short *addr, int byte_num)
     }
 
     if (byte_num)
-        checksum += *(u_char *)addr;
+        checksum += *(uChar *)addr;
 
     while (checksum >> 16)
         checksum = (checksum & 0xFFFF) + (checksum >> 16);
     
-    return  (u_short)(~checksum);
+    return  (uShort)(~checksum);
 }
 
 
@@ -232,15 +232,15 @@ static u_short icmp_checksum(u_short *addr, int byte_num)
 
 /*-----icmp_resolve_check-----*/
 static int icmp_resolve_check(
-           ICMP *icmp, int icmp_size, u_short check_type, u_short check_code)
+           ICMP *icmp, int icmp_size, uShort check_type, uShort check_code)
 {
-    u_short recv_checksum;
+    uShort recv_checksum;
     
     if (icmp->icmp_type == check_type && icmp->icmp_code == check_code) {
         recv_checksum = icmp->icmp_checksum;
         icmp->icmp_checksum = 0;
 
-        icmp->icmp_checksum = icmp_checksum((u_short *)icmp, icmp_size);
+        icmp->icmp_checksum = icmp_checksum((uShort *)icmp, icmp_size);
 
         if (icmp->icmp_checksum != recv_checksum) {
             errno = EBADMSG;
@@ -259,7 +259,7 @@ static int icmp_resolve_check(
 
 
 /*-----icmp_resolve_type_check-----*/
-static int icmp_resolve_type_check(ICMP *icmp, u_short code)
+static int icmp_resolve_type_check(ICMP *icmp, uShort code)
 {
     switch (code) {
         case  TYPE_ECHO_REPLY:

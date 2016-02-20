@@ -63,18 +63,18 @@ typedef struct  icmp_type_echo              ICMPECHO;
 ------------------------------*/
 
 struct internet_ctl_msg_protocal {
-    u_char  icmp_type;
-    u_char  icmp_code;
-    u_short icmp_checksum;
+    uChar   icmp_type;
+    uChar   icmp_code;
+    uShort icmp_checksum;
 };
 
 struct icmp_type_echo {
     ICMP    icmp_entity;
 
-    u_short icmp_echo_id;
-    u_short icmp_echo_seqnum;
+    uShort icmp_echo_id;
+    uShort icmp_echo_seqnum;
 
-    u_char  icmp_pad[18];
+    uChar   icmp_pad[18];
 };
 
 
@@ -82,8 +82,8 @@ struct icmp_type_echo {
         access function
 -------------------------------*/
 
-int icmp_create(char *write_buf, int buf_len, u_short type,
-                u_short code, const char *data, int data_len);
-int icmp_resolve(u_char *data, int data_len, int type, int code);
+int icmp_create(char *write_buf, int buf_len, uShort type,
+                uShort code, const char *data, int data_len);
+int icmp_resolve(uChar *data, int data_len, int type, int code);
 
 #endif

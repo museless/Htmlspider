@@ -13,21 +13,20 @@
 
 --------------------------------------------*/
 
-/*------------------------------------------
-    Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *             Part Zero: Include
+-*---------------------------------------------*/
 
-#include "spinc.h"
+#include "sp.h"
+
 #include "spmpool.h"
-#include "spnet.h"
-#include "spdb.h"
 #include "spextb.h"
 #include "speglobal.h"
 
 
-/*------------------------------------------
-    Part Two: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Two: Local function
+-*---------------------------------------------*/
 
 /* Part Six */
 static  void    exbug_newsdb_unlink(void);
@@ -35,14 +34,14 @@ static  void    exbug_dicdb_unlink(void);
 static  void    exbug_keysdb_unlink(void);
 
 
-/*------------------------------------------
-    Part Four: Database operate
-
-    1. exbug_database_init
-    2. exbug_content_download
-    3. exbug_rewind_exmark
-
---------------------------------------------*/
+/*---------------------------------------------
+ *         Part Four: Database operate
+ *
+ *         1. exbug_database_init
+ *         2. exbug_content_download
+ *         3. exbug_rewind_exmark
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_database_init-----*/
 int exbug_database_init(void)
@@ -100,7 +99,7 @@ int exbug_database_init(void)
 void *exbug_content_download(void)
 {
     MYSQL_RES   *pRes;
-
+    
     if (mysql_query(&dbNewsHandler, sqlSeleCom) != FUN_RUN_END) {
         exbug_dberr_deal(&dbNewsHandler, dbNewsName, "exbug_content_download - mysql_query - sqlSeleCom");
         return  NULL;
@@ -130,29 +129,32 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
 }
 
 
-/*------------------------------------------
-    Part Five: Database module
-
-    1. exbug_module_database_init
-    2. exbug_create_keyword_table
-
---------------------------------------------*/
+/*---------------------------------------------
+ *        Part Five: Database module
+ *
+ *        1. exbug_module_database_init
+ *        2. exbug_create_keyword_table
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_module_database_init-----*/
 int exbug_module_database_init(void)
 {
     /* Mysql Keys handler init */
     if (!mysql_init(&dbKeysHandler)) {
-        elog_write("exbug_module_database_init - mysql_init", "dbKeysHandler", "failed");
+        elog_write("exbug_module_database_init - mysql_init", 
+            "dbKeysHandler", "failed");
         return  FUN_RUN_FAIL;
     }
 
-    if (mc_conf_read("keys_database_name", CONF_STR, dbKeysName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+    if (mc_conf_read("keys_database_name", CONF_STR, 
+            dbKeysName, SQL_DBNAME_LEN) == FRET_N) {
         mc_conf_print_err("keys_database_name");
         return  FUN_RUN_FAIL;
     }
 
-    if (!mysql_real_connect(&dbKeysHandler, NULL, DBUSRNAME, DBUSRKEY, dbKeysName, 0, NULL, 0)) {
+    if (!mysql_real_connect(&dbKeysHandler, NULL, 
+            DBUSRNAME, DBUSRKEY, dbKeysName, 0, NULL, 0)) {
         elog_write("exbug_module_database_init - mysql_real_connect", "keysDataBase", "failed");
         return  FUN_RUN_FAIL;
     }
@@ -173,14 +175,8 @@ void exbug_create_keyword_table(void)
 {
     char    sqlCom[SQL_MCOM_LEN];
 
-    /* get klist size */
-    if (mc_conf_read("extbug_klist_size", CONF_NUM, &nKlistSize, sizeof(int)) == FUN_RUN_FAIL) {
-        mc_conf_print_err("extbug_klist_size");
-        printf("Extbug---> use default size %d for klist\n", (nKlistSize = SQL_NKILST_DEF));
-    }
-
     /* create news table */
-    sprintf(sqlCom, CREAT_KEY_TAB, tblKeysName, nKlistSize);
+    sprintf(sqlCom, CREAT_KEY_TAB, tblKeysName, dbKeysName);
 
     if (mysql_query(&dbKeysHandler, sqlCom) != FUN_RUN_END) {
         exbug_dberr_deal(&dbKeysHandler, dbKeysName, "exbug_create_keyword_table - mysql_query");

@@ -38,9 +38,9 @@ typedef struct  ping_info   PINGIF;
 -------------------------------*/
 
 struct  ping_info {
-    u_long  pi_rrt;
-    u_int   pi_ttl;
-    u_int   pi_seq;
+    uLong  pi_rrt;
+    uInt   pi_ttl;
+    uInt   pi_seq;
 };
 
 

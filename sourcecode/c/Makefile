@@ -1,5 +1,6 @@
 # flags #
 CC		= gcc
+STD99	= -std=c99
 NMFLAGS	= -rdynamic -g -Wall -I include/inclib -I include/inclib/mmdpool -I include/ -fstack-protector-all
 PTFLAGS	= -pthread -lcrypt -lnsl -lm -lc 
 MYFLAGS = -L /usr/local/lib/mysql -lmysqlclient -I /usr/local/include/mysql -lz
@@ -61,8 +62,8 @@ urlcatcher:		$(EXURLB)
 dataanalyzer:	$(EXEXTB)
 
 $(EXURLB) : $(OURLB)
-	$(CC) -o $(EXURLB) $(OURLB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(UBUGINC) $(IPCINC) $(PGFLAGS)
+	$(CC) -o $(EXURLB) $(OURLB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(UBUGINC) $(IPCINC) $(PGFLAGS) $(STD99)
 
 $(EXEXTB) : $(OEXTB)
-	$(CC) -o $(EXEXTB) $(OEXTB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(EBUGINC) $(IPCINC)
+	$(CC) -o $(EXEXTB) $(OEXTB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(EBUGINC) $(IPCINC) $(STD99)
 

@@ -17,7 +17,7 @@ void exbug_sig_error(int nObj)
 {
     if (nObj == PTHREAD_ERROR)
         mato_dec(&pthreadCtlLock);
-
+    
     kill(getpid(), SIGINT);
 }
 

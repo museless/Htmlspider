@@ -292,7 +292,7 @@ int exbug_read_config(void)
         exbug_perror("exbug_read_config - msem_create", errno);
         return  FRET_Z;
     }
-
+    
     if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
         exbug_perror("exbug_read_config - mgc_add - sem", errno);
 
@@ -377,22 +377,23 @@ void exbug_keyword_job(void)
 
 
 /*-----exbug_create_pthread-----*/
-static void exbug_create_pthread(NCONT *pPara)
+void exbug_create_pthread(NCONT *pPara)
 {
-    pth_t   nPth;
+    pth_t   thread_id;
 
     exbug_rewind_exmark(pPara->nc_ind, exbRunSet.emod_maname);
     mato_inc(&freeCtlLock);
 
-    if (pthread_create(&nPth, NULL, exbug_pthread_entrance, (void *)pPara)) {
-        elog_write("exbug_create_pthread - pthread_create", FUNCTION_STR, ERROR_STR);
+    if (pthread_create(&thread_id, NULL, exbug_pthread_entrance, (void *)pPara)) {
+        elog_write("exbug_create_pthread - pthread_create", 
+                FUNCTION_STR, ERROR_STR);
         exbug_sig_error(PROC_ERROR);
     }
 }
 
 
 /*-----exbug_memory_malloc-----*/
-static void *exbug_memory_malloc(int nSize)
+void *exbug_memory_malloc(int nSize)
 {
     void    *pMalloc;
 
@@ -402,14 +403,6 @@ static void *exbug_memory_malloc(int nSize)
     }
 
     return  pMalloc;
-}
-
-
-/*-----exbug_keep_working-----*/
-void exbug_keep_working(void *pResult)
-{
-    if (!mysql_num_rows((MSLRES *)pResult))
-        sleep(TAKE_A_EYECLOSE);
 }
 
 

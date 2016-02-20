@@ -118,7 +118,7 @@ static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
     recv_num -= DG_IP_LEN;
 
     if (!icmp_resolve(
-         (u_char *)(buffer + DG_IP_LEN),
+         (uChar *)(buffer + DG_IP_LEN),
          recv_num, TYPE_ECHO_REPLY, CODE_ECHO_REPLY))
         return  FRET_N;
 

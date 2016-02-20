@@ -642,22 +642,22 @@ hb_nbuck	include/inclib/musealgo/malgo.h	/^	int	hb_nbuck;$/;"	m	struct:hashbucke
 hbcmp	include/inclib/musealgo/malgo.h	/^typedef	int	(*hbcmp)(void *, void *, int);$/;"	t
 hbcreat	include/inclib/musealgo/malgo.h	/^typedef	void	*(*hbcreat)(void *, int, void *);$/;"	t
 hbhash	include/inclib/musealgo/malgo.h	/^typedef	uLong	(*hbhash)(void *, int);$/;"	t
-icmp_checksum	include/inclib/icmp/icmp.h	/^    u_short icmp_checksum;$/;"	m	struct:internet_ctl_msg_protocal
-icmp_checksum	src/functionlib/network/icmp/icmp.c	/^static u_short icmp_checksum(u_short *addr, int byte_num)$/;"	f	file:
-icmp_code	include/inclib/icmp/icmp.h	/^    u_char  icmp_code;$/;"	m	struct:internet_ctl_msg_protocal
-icmp_create	src/functionlib/network/icmp/icmp.c	/^int icmp_create(char *write_buf, int buf_len, u_short type, $/;"	f
+icmp_checksum	include/inclib/icmp/icmp.h	/^    uShort icmp_checksum;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_checksum	src/functionlib/network/icmp/icmp.c	/^static uShort icmp_checksum(uShort *addr, int byte_num)$/;"	f	file:
+icmp_code	include/inclib/icmp/icmp.h	/^    uChar  icmp_code;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_create	src/functionlib/network/icmp/icmp.c	/^int icmp_create(char *write_buf, int buf_len, uShort type, $/;"	f
 icmp_echo_create	src/functionlib/network/icmp/icmp.c	/^static int icmp_echo_create($/;"	f	file:
-icmp_echo_id	include/inclib/icmp/icmp.h	/^    u_short icmp_echo_id;$/;"	m	struct:icmp_type_echo
-icmp_echo_seqnum	include/inclib/icmp/icmp.h	/^    u_short icmp_echo_seqnum;$/;"	m	struct:icmp_type_echo
+icmp_echo_id	include/inclib/icmp/icmp.h	/^    uShort icmp_echo_id;$/;"	m	struct:icmp_type_echo
+icmp_echo_seqnum	include/inclib/icmp/icmp.h	/^    uShort icmp_echo_seqnum;$/;"	m	struct:icmp_type_echo
 icmp_entity	include/inclib/icmp/icmp.h	/^    ICMP    icmp_entity;$/;"	m	struct:icmp_type_echo
-icmp_pad	include/inclib/icmp/icmp.h	/^    u_char  icmp_pad[18];$/;"	m	struct:icmp_type_echo
-icmp_resolve	src/functionlib/network/icmp/icmp.c	/^int icmp_resolve(u_char *data, int data_len, int type, int code)$/;"	f
+icmp_pad	include/inclib/icmp/icmp.h	/^    uChar  icmp_pad[18];$/;"	m	struct:icmp_type_echo
+icmp_resolve	src/functionlib/network/icmp/icmp.c	/^int icmp_resolve(uChar *data, int data_len, int type, int code)$/;"	f
 icmp_resolve_check	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_check($/;"	f	file:
-icmp_resolve_type_check	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_type_check(ICMP *icmp, u_short code)$/;"	f	file:
+icmp_resolve_type_check	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_type_check(ICMP *icmp, uShort code)$/;"	f	file:
 icmp_resolve_type_echo	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_type_echo(ICMP *icmp)$/;"	f	file:
-icmp_type	include/inclib/icmp/icmp.h	/^    u_char  icmp_type;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_type	include/inclib/icmp/icmp.h	/^    uChar  icmp_type;$/;"	m	struct:internet_ctl_msg_protocal
 icmp_type_echo	include/inclib/icmp/icmp.h	/^struct icmp_type_echo {$/;"	s
-icmp_type_err_assign_errno	src/functionlib/network/icmp/icmp.c	/^static void icmp_type_err_assign_errno(u_short code)$/;"	f	file:
+icmp_type_err_assign_errno	src/functionlib/network/icmp/icmp.c	/^static void icmp_type_err_assign_errno(uShort code)$/;"	f	file:
 internet_ctl_msg_protocal	include/inclib/icmp/icmp.h	/^struct internet_ctl_msg_protocal {$/;"	s
 kerNameBuf	src/functionlib/sp_global.c	/^char	kerNameBuf[] = {"Kernel"};$/;"	v
 logBufStru	src/functionlib/log/sp_elog.c	/^static	BUFF	logBufStru;$/;"	v	file:
@@ -810,9 +810,9 @@ pe_flags	include/inclib/mpctl.h	/^    int     pe_flags;$/;"	m	struct:pthread_ent
 pe_mutex	include/inclib/mpctl.h	/^	pmut_t	pe_mutex;$/;"	m	struct:pthread_entity
 pe_run	include/inclib/mpctl.h	/^	pthrun	pe_run;$/;"	m	struct:pthread_entity
 pe_tid	include/inclib/mpctl.h	/^	pth_t	pe_tid;$/;"	m	struct:pthread_entity
-pi_rrt	include/inclib/ping/ping.h	/^    u_long  pi_rrt;$/;"	m	struct:ping_info
-pi_seq	include/inclib/ping/ping.h	/^    u_int   pi_seq;$/;"	m	struct:ping_info
-pi_ttl	include/inclib/ping/ping.h	/^    u_int   pi_ttl;$/;"	m	struct:ping_info
+pi_rrt	include/inclib/ping/ping.h	/^    uLong  pi_rrt;$/;"	m	struct:ping_info
+pi_seq	include/inclib/ping/ping.h	/^    uInt   pi_seq;$/;"	m	struct:ping_info
+pi_ttl	include/inclib/ping/ping.h	/^    uInt   pi_ttl;$/;"	m	struct:ping_info
 ping	src/functionlib/network/ping/ping.c	/^int ping(PINGIF *ping_info, const char *host)$/;"	f
 ping_access	src/functionlib/network/ping/ping.c	/^static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)$/;"	f	file:
 ping_calculate_rrt	src/functionlib/network/ping/ping.c	/^static long ping_calculate_rrt(TMVAL *send_tim, TMVAL *recv_tim)$/;"	f	file:
