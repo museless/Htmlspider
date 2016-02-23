@@ -1,18 +1,19 @@
 #ifndef _SPDB_H
 #define _SPDB_H
 
-/*-----------------------------
-            include
--------------------------------*/
+
+/*---------------------------------------------
+ *                  include
+-*---------------------------------------------*/
 
 #include <mysql.h>
 #include <errmsg.h>
 #include <mysqld_error.h>
 
 
-/*-----------------------------
-            define
--------------------------------*/
+/*---------------------------------------------
+ *                  define
+-*---------------------------------------------*/
 
 #define DBUSRNAME       "root"
 #define DBUSRKEY        "WdSr0922"
@@ -67,9 +68,10 @@ values(\"%.*s\",%d,%d)"
 #define REVIEW_URL      "select * from %s where Url=\"%.*s\""
 #define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url=\"%s%s%s\""
 
-/*-----------------------------
-           for extbug
--------------------------------*/
+
+/*---------------------------------------------
+ *                for extbug
+-*---------------------------------------------*/
 
 #define REVIEW_WORD     "select Word from %s where Word=\"%.*s\""
 
@@ -91,12 +93,13 @@ values(\"%.*s\",%d,%d)"
 #define GET_NEWS_CONT   "select Ind, Content from %s where %s = 0 limit %d"
 #define SET_NEWS_FLAGS  "update %s set %s=1 where Ind=\"%s\""
 
-#define INSERT_KEYWD    "insert %s(Ind, Klist, Keynum) values(\"%s\", \"%.*s\", %d)"
+#define INSERT_KEYWD    "insert %s(Ind, Keyword, Keynum) values(\"%s\", \"%.*s\", %d)"
 #define INSERT_KW_NEXT  ",(\"%s\", \"%.*s\", %d)"
 
-/*-----------------------------
-           typedef
--------------------------------*/
+
+/*---------------------------------------------
+ *                 typedef
+-*---------------------------------------------*/
 
 typedef MYSQL_RES           MSLRES;
 typedef MYSQL_ROW           MSLROW;
@@ -104,9 +107,9 @@ typedef MYSQL_ROW           MSLROW;
 typedef struct  sstrlist    SSTRL;
 
 
-/*-----------------------------
-            struct
--------------------------------*/
+/*---------------------------------------------
+ *                 struct
+-*---------------------------------------------*/
 
 struct  sstrlist {
     SSTRL  *s_next;
@@ -114,9 +117,9 @@ struct  sstrlist {
 };
 
 
-/*-----------------------------
-          extern data
--------------------------------*/
+/*---------------------------------------------
+ *               extern data
+-*---------------------------------------------*/
 
 extern  char   *sqlOpt[];
 extern  int     nrOpt;

@@ -296,6 +296,12 @@ int exbug_read_config(void)
     if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
         exbug_perror("exbug_read_config - mgc_add - sem", errno);
 
+    if (mc_conf_read("keyword_buff_size", CONF_NUM, 
+            &keywordListSize, sizeof(int)) == FRET_N) {
+        keywordListSize = DEF_KBUFF_SIZE;
+        printf("default keyword_buff_size: %d\n", keywordListSize);
+    }
+
     return  FRET_P;
 }
 
@@ -345,9 +351,7 @@ void exbug_keyword_job(void)
     NCONT  *pContent;
     MSLROW  news_data;
 
-    mysql_query(&dbNewsHandler, "set names utf8");
-
-    while (FUN_RUN_OK) {
+    while (FRET_P) {
         if (!(newsRes = exbug_content_download())) {
             sleep(TAKE_A_EYECLOSE);
             continue;
@@ -372,8 +376,6 @@ void exbug_keyword_job(void)
         mgc_one_clean(&extResCol);
         mmdp_reset_default(threadMemPool);
         exbug_data_sync();
-
-        //sp_stop();
     }
 }
 
@@ -397,14 +399,14 @@ void exbug_create_pthread(NCONT *pPara)
 /*-----exbug_memory_malloc-----*/
 void *exbug_memory_malloc(int nSize)
 {
-    void    *pMalloc;
+    void   *addr;
 
-    if (!(pMalloc = mmdp_malloc(threadMemPool, nSize))) {
+    if (!(addr = mmdp_malloc(threadMemPool, nSize))) {
         elog_write("exbug_memory_malloc - mmdp_malloc", "threadMemPool", "failed");
         exbug_sig_error(PROC_ERROR);
     }
 
-    return  pMalloc;
+    return  addr;
 }
 
 

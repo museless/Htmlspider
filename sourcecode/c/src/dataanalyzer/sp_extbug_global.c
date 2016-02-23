@@ -4,13 +4,16 @@
 #include "speglobal.h"
 
 
-/* global data */
+/*---------------------------------------------
+ *                Global data
+-*---------------------------------------------*/
+
 MGCH	*exbGarCol;
 BUFF	*extSaveBuf;
 
-void	*extbugMsgSet;			/* MSGSET */
+void	*extbugMsgSet;			        /* MSGSET */
 void	*threadMemPool, *procMemPool;	/* DMPH */
-void	*ebSemControl;			/* MSEM */
+void	*ebSemControl;			        /* MSEM */
 
 EXBSET	exbRunSet;
 MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
@@ -27,5 +30,5 @@ char	tblKeysName[SQL_TABNAME_LEN], dbKeysName[SQL_DBNAME_LEN];
 MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
 
 uLong	tPaperNum;
-int	exbugIpcFd, nExbugPthead, upMaxTerms, nKlistSize;
+int	    exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
 

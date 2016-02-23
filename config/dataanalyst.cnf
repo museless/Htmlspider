@@ -13,7 +13,7 @@ extbug_pthread_num	= 1
 extbug_update_max	= 128
 
 # dictionary path #
-extbug_noun_path	= ../text/dictionary/noun
+extbug_noun_path	=     ../text/dictionary/noun
 extbug_noun_findex_path	= ../text/dictionary/noun/noun_findex
 
 # file path #
@@ -26,4 +26,3 @@ keys_database_name	= Keyword
 
 # table name #
 word_table_name		= t_word_noun
-

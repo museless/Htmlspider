@@ -48,9 +48,12 @@ static  int nSepStr = sizeof(sepStrStore) / sizeof(sepStrStore[0]);
 -*---------------------------------------------*/
 
 /* Part Four */
-static  void    exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen);
+static  void    exbug_simple_segment(WDCT *pCnt,
+                    const char *strBeg, int segment_len);
+
 static  int     exbug_check_word_head(const char *pHead);
-static  WHEAD  *extbug_search_head(CLISTS *pList, const char *pCmp, int wLen);
+static  WHEAD  *extbug_search_head(CLISTS *pList,
+                    const char *cmp_word, int word_len);
 
 
 /*---------------------------------------------
@@ -66,29 +69,36 @@ static  WHEAD  *extbug_search_head(CLISTS *pList, const char *pCmp, int wLen);
 /*-----ext_segment_entrance-----*/
 void exbug_segment_entrance(WDCT *wcStru, const char *pNews)
 {
-    const char *pMov, *pStr;
+    const char *str_mov, *str_head;
     int         head_type, news_len = strlen(pNews);
 
-    for (pStr = pMov = pNews; *pMov && pMov < pNews + news_len; ) {
-        if ((head_type = exbug_check_word_head(pMov)) == FRET_N)
-            exbug_simple_segment(wcStru, pStr, pMov - pStr);
-
-        pStr = pMov += ((head_type == FUN_RUN_OK) ? 1 : UTF8_WORD_LEN);
+    for (str_head = str_mov = pNews; *str_mov && str_mov < pNews + news_len; ) {
+        if ((head_type = exbug_check_word_head(str_mov)) == FRET_N) {
+            str_mov += UTF8_WORD_LEN;
+            continue;
+        }
+            
+        exbug_simple_segment(wcStru, str_head, str_mov - str_head);
+        str_head = str_mov += ((head_type == FRET_P) ? 1 : UTF8_WORD_LEN);
     }
 }
 
 
 /*-----exbug_simple_segment-----*/
-void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
+void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int segment_len)
 {
-    const char *strEnd;
+    const char *strEnd = strBeg + segment_len;
     char       *strHead, *strMov;
     WHEAD      *headStru;
     uLong      *pList;
     int         wordSize, wBytes, nCnt, nOff;
 
-    for (strEnd = strBeg + sLen; sLen > 0 && strBeg < strEnd; strBeg += wordSize) {
-        wordSize = ((sLen > BYTE_CMP_MAX) ? WORD_CMP_MAX : (sLen / UTF8_WORD_LEN));
+    if (segment_len <= UTF8_WORD_LEN)
+        return;
+
+    for (; segment_len > 0 && strBeg < strEnd; strBeg += wordSize) {
+        wordSize = ((segment_len > BYTE_CMP_MAX) ? 
+                   WORD_CMP_MAX : (segment_len / UTF8_WORD_LEN));
 
         for (; wordSize > 1; wordSize--) {
             if ((headStru = extbug_search_head(&charHeadSave, strBeg, wordSize))) {
@@ -111,7 +121,7 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
         }
 
         wordSize *= UTF8_WORD_LEN;
-        sLen -= wordSize;
+        segment_len -= wordSize;
 
         /* wordSize will be all Bytes */
         exbug_word_add(pCnt, strBeg, wordSize, nCnt);
@@ -122,32 +132,27 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen)
 /*-----exbug_check_word_head-----*/
 int exbug_check_word_head(const char *pHead)
 {
-    int     index = 0;
-
     if ((*pHead & UTF8_WHEAD) == UTF8_WHEAD) {
-        for (; index < nSepStr; index++) {
+        for (int index = 0; index < nSepStr; index++) {
             if (!strncmp(pHead, sepStrStore[index].sep_utf8, UTF8_WORD_LEN))
-                return  FUN_RUN_END;
+                return  FRET_Z;
         }
 
-        return  FUN_RUN_FAIL;
+        return  FRET_N; 
     }
 
-    return  FUN_RUN_OK;
+    return  FRET_P;
 }
 
 
 /*-----extbug_search_head-----*/
-WHEAD *extbug_search_head(CLISTS *headList, const char *pCmp, int wLen)
+WHEAD *extbug_search_head(CLISTS *headList, const char *cmp_word, int word_len)
 {
-    WHEAD   *pWord;
-
-    if (exbug_check_word_head(pCmp) != FUN_RUN_FAIL)
-        return  NULL;
-
-    for (pWord = *((WHEAD **)headList + (wLen - 2)); pWord->dc_cnt != -1 && pWord->dc_off != -1; pWord++) {
-        if (!strncmp(pCmp, pWord->dc_utf8, UTF8_WORD_LEN))
-            return  pWord;
+    WHEAD  *word_head = *((WHEAD **)headList + (word_len - 2));
+    
+    for (; word_head->dc_cnt != -1 && word_head->dc_off != -1; word_head++) {
+        if (!strncmp(cmp_word, word_head->dc_utf8, UTF8_WORD_LEN))
+            return  word_head;
     }
 
     return  NULL;

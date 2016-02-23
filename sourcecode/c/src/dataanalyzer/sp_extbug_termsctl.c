@@ -64,9 +64,8 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
     char   *update_string;
     int     nOff, nCnt;
 
-    update_string = 
-    mmdp_malloc(threadMemPool,
-        (upList->wc_tbytes + (upList->wc_ndiff * PER_WD_MORE)) + 1);
+    update_string = mmdp_malloc(threadMemPool,
+            (upList->wc_tbytes + (upList->wc_ndiff * PER_WD_MORE)) + 1);
 
     if (!update_string) {
         elog_write("exbug_update_terms - mmdp_malloc", FUNCTION_STR, ERROR_STR);
@@ -74,8 +73,8 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
     }
 
     for (nOff = nCnt = 0; pList && nCnt < upMaxTerms; nCnt++) {
-        if (nOff + pList->ws_bytes > nKlistSize)
-            break;  
+        if (nOff + pList->ws_bytes > keywordListSize)
+            break; 
 
         nOff += sprintf(&update_string[nOff], TERMS_FORMAT, 
                     pList->ws_bytes, pList->ws_buf);
@@ -98,10 +97,10 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
     }
 
     buff_size_add(extSaveBuf, (buff_stru_empty(extSaveBuf) ? 
-    sprintf(buff_place_start(extSaveBuf), INSERT_KEYWD, 
-        tblKeysName, pInd, nOff, update_string, upList->wc_ndiff) :
-    sprintf(buff_place_end(extSaveBuf), INSERT_KW_NEXT, 
-        pInd, nOff, update_string, upList->wc_ndiff)));
+        sprintf(buff_place_start(extSaveBuf), INSERT_KEYWD, 
+            tblKeysName, pInd, nOff, update_string, upList->wc_ndiff) :
+        sprintf(buff_place_end(extSaveBuf), INSERT_KW_NEXT, 
+            pInd, nOff, update_string, upList->wc_ndiff)));
 
     mato_inc(&dicDbLock);
 }
@@ -213,8 +212,9 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 {
     WHEAD   *cNext;
     char    *iStore, *iMov;
+    int      term_size = ((nTerms + 1) * sizeof(WHEAD));
 
-    if ((cNext = *cStru = mmdp_malloc(procMemPool, ((nTerms + 1) * sizeof(WHEAD)))) == NULL) {
+    if ((cNext = *cStru = mmdp_malloc(procMemPool, term_size)) == NULL) {
         exbug_perror("exbug_index_load - mmdp_malloc", errno);
         return  FUN_RUN_END;
     }
@@ -259,7 +259,7 @@ int exbug_terms_load(WDCB **termStru, char *termFile, int nOff)
 
     memset(*termStru, 0, sizeof(WDCB));
 
-    if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FUN_RUN_FAIL)
+    if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FRET_N)
         return  FUN_RUN_END;
 
     if (mgc_add(exbGarCol, ((*termStru)->wb_lterms), free) != FUN_RUN_OK)

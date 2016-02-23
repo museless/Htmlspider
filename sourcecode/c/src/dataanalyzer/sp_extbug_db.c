@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-23 13:05:59
+ *     modification time: 2016-02-23 22:30:59
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -76,6 +76,8 @@ int exbug_database_init(void)
         return  FUN_RUN_END;
     }
 
+    mysql_query(&dbNewsHandler, "set names utf8");
+
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_newsdb_unlink) == MGC_FAILED)
         elog_write("exbug_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
 
@@ -117,21 +119,23 @@ int exbug_database_init(void)
 /*-----exbug_content_download-----*/
 void *exbug_content_download(void)
 {
-    MYSQL_RES   *pRes;
+    MSLRES *result;
     
     if (mysql_query(&dbNewsHandler, sqlSeleCom) != FUN_RUN_END) {
-        exbug_dberr_deal(&dbNewsHandler, dbNewsName, "exbug_content_download - mysql_query - sqlSeleCom");
+        exbug_dberr_deal(&dbNewsHandler, dbNewsName,
+            "exbug_content_download - mysql_query - sqlSeleCom");
         return  NULL;
     }
 
-    if ((pRes = mysql_store_result(&dbNewsHandler)) == NULL) {
+    if ((result = mysql_store_result(&dbNewsHandler)) == NULL) {
         if (mysql_errno(&dbNewsHandler))
-            exbug_dberr_deal(&dbNewsHandler, dbNewsName, "exbug_content_download - mysql_store_result");
+            exbug_dberr_deal(&dbNewsHandler, dbNewsName,
+                "exbug_content_download - mysql_store_result");
 
         return  NULL;
     }
 
-    return  pRes;
+    return  result;
 }
 
 
@@ -201,20 +205,21 @@ void exbug_create_keyword_table(void)
     sprintf(sqlCom, CREAT_KEY_TAB, tblKeysName, dbKeysName);
 
     if (mysql_query(&dbKeysHandler, sqlCom) != FUN_RUN_END) {
-        exbug_dberr_deal(&dbKeysHandler, dbKeysName, "exbug_create_keyword_table - mysql_query");
+        exbug_dberr_deal(&dbKeysHandler, dbKeysName,
+            "exbug_create_keyword_table - mysql_query");
         exbug_sig_error(PROC_ERROR);
     }
 }
 
 
-/*------------------------------------------
-    Part Six: Database clean
-
-    1. exbug_newsdb_unlink
-    2. exbug_keysdb_unlink
-    3. exbug_database_close
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Six: Database clean
+ *
+ *          1. exbug_newsdb_unlink
+ *          2. exbug_keysdb_unlink
+ *          3. exbug_database_close
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_newsdb_unlink-----*/
 static void exbug_newsdb_unlink(void)
@@ -244,36 +249,37 @@ void exbug_database_close(void)
 }
 
 
-/*------------------------------------------
-    Part Seven: Database error dispose
-
-    1. exbug_dberr_deal
-
---------------------------------------------*/
+/*---------------------------------------------
+ *     Part Seven: Database error dispose
+ *
+ *     1. exbug_dberr_deal
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_dberr_deal-----*/
 int exbug_dberr_deal(void *sqlHand, char *dbName, char *pHead)
 {
-    MYSQL          *pSql = (MYSQL *)sqlHand;
-    unsigned int    myErrno = mysql_errno(pSql);
-    char            meBuf[32];
+    MYSQL  *sql = (MYSQL *)sqlHand;
+    uInt    my_errno = mysql_errno(sql);
+    char    errno_str[16];
 
-    sprintf(meBuf, "%d", mysql_errno(pSql));
-    elog_write(pHead, (char *)mysql_error(pSql), meBuf);
+    sprintf(errno_str, "%d", mysql_errno(sql));
+    elog_write(pHead, (char *)mysql_error(sql), errno_str);
 
-    if (myErrno == CR_SERVER_LOST || myErrno == CR_SERVER_GONE_ERROR) {
+    if (my_errno == CR_SERVER_LOST || my_errno == CR_SERVER_GONE_ERROR) {
         printf("Extbug---> mysql dropping - reconnect now\n");
-        mysql_close(pSql);
-        mysql_init(pSql);
+        mysql_close(sql);
+        mysql_init(sql);
 
-        if (mysql_real_connect(pSql, NULL, DBUSRNAME, DBUSRKEY, dbName, 0, NULL, 0) == FUN_RUN_END) {
+        if (mysql_real_connect(sql, NULL, 
+                DBUSRNAME, DBUSRKEY, dbName, 0, NULL, 0) == FRET_Z) {
             printf("Extbug---> mysql_server - reconnect ok\n");
             return  FUN_RUN_OK;
         }
 
         printf("Extbug---> reconnect failed\n");
 
-    } else if (myErrno == ER_NO_SUCH_TABLE) {
+    } else if (my_errno == ER_NO_SUCH_TABLE) {
         return  FUN_RUN_END;
     }
 

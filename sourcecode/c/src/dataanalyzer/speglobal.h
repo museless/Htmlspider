@@ -27,6 +27,6 @@ extern	char	tblKeysName[], dbKeysName[];
 extern	MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
 
 extern	uLong	tPaperNum;
-extern	int	exbugIpcFd, nExbugPthead, upMaxTerms, nKlistSize;
+extern	int	exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
 
 #endif
