@@ -1,20 +1,30 @@
-/*------------------------------------------
-    Source file content Seven part
+/*---------------------------------------------
+ *     modification time: 2016-02-23 13:05:59
+ *     mender: Muse
+ *---------------------------------------------*/
 
-    Part Zero:  Include
-    Part One:   Local data
-    Part Two:   Local function
-    Part Three: Define
+/*---------------------------------------------
+ *     creation time: 2015-06-01 
+ *     author: Muse 
+ *---------------------------------------------*/
 
-    Part Four:  Segment main
-    Part Five:  Wordlist control
-    Part Six:   WordStru control
+/*---------------------------------------------
+ *      Source file content Seven part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Local data
+ *      Part Two:   Local function
+ *      Part Three: Define
+ *
+ *      Part Four:  Segment main
+ *      Part Five:  Wordlist control
+ *      Part Six:   WordStru control
+ *
+-*---------------------------------------------*/
 
---------------------------------------------*/
-
-/*------------------------------------------
-    Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *             Part Zero: Include
+-*---------------------------------------------*/
 
 #include "sp.h"
 
@@ -23,9 +33,9 @@
 #include "speglobal.h"
 
 
-/*------------------------------------------
-    Part One: Local data
---------------------------------------------*/
+/*---------------------------------------------
+ *           Part One: Local data
+-*---------------------------------------------*/
 
 static  SEPWORD sepStrStore[] = {{"。"}, {"，"}, {"、"}, {"；"}, {"‘"}, {"’"}, {"“"}, 
             {"”"}, {"［"}, {"］"}, {"｛"}, {"｝"}};
@@ -33,9 +43,9 @@ static  SEPWORD sepStrStore[] = {{"。"}, {"，"}, {"、"}, {"；"}, {"‘"}, {"
 static  int nSepStr = sizeof(sepStrStore) / sizeof(sepStrStore[0]);
 
 
-/*------------------------------------------
-    Part Two: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Two: Local function
+-*---------------------------------------------*/
 
 /* Part Four */
 static  void    exbug_simple_segment(WDCT *pCnt, const char *strBeg, int sLen);
@@ -57,17 +67,13 @@ static  WHEAD  *extbug_search_head(CLISTS *pList, const char *pCmp, int wLen);
 void exbug_segment_entrance(WDCT *wcStru, const char *pNews)
 {
     const char *pMov, *pStr;
-    int         nRet, news_len = strlen(pNews);
+    int         head_type, news_len = strlen(pNews);
 
     for (pStr = pMov = pNews; *pMov && pMov < pNews + news_len; ) {
-        if ((nRet = exbug_check_word_head(pMov)) == FUN_RUN_FAIL) {
-            pMov += UTF8_WORD_LEN;
-            continue;
-        }
+        if ((head_type = exbug_check_word_head(pMov)) == FRET_N)
+            exbug_simple_segment(wcStru, pStr, pMov - pStr);
 
-        exbug_simple_segment(wcStru, pStr, pMov - pStr);
-
-        pStr = pMov += ((nRet == FUN_RUN_OK) ? 1 : UTF8_WORD_LEN);
+        pStr = pMov += ((head_type == FUN_RUN_OK) ? 1 : UTF8_WORD_LEN);
     }
 }
 
@@ -148,13 +154,13 @@ WHEAD *extbug_search_head(CLISTS *headList, const char *pCmp, int wLen)
 }
 
 
-/*------------------------------------------
-    Part Five: Wordlist control
-
-    1. exbug_word_add
-    2. exbug_word_print
-
---------------------------------------------*/
+/*---------------------------------------------
+ *         Part Five: Wordlist control
+ *
+ *         1. exbug_word_add
+ *         2. exbug_word_print
+ *
+-*---------------------------------------------*/
 
 /*-----exbug_word_add-----*/
 void exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes)

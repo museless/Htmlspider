@@ -343,7 +343,9 @@ void exbug_keyword_job(void)
 {
     MSLRES *newsRes;
     NCONT  *pContent;
-    MSLROW  newsRow;
+    MSLROW  news_data;
+
+    mysql_query(&dbNewsHandler, "set names utf8");
 
     while (FUN_RUN_OK) {
         if (!(newsRes = exbug_content_download())) {
@@ -353,13 +355,13 @@ void exbug_keyword_job(void)
 
         mgc_one_add(&extResCol, newsRes);
 
-        while ((newsRow = mysql_fetch_row(newsRes))) {
+        while ((news_data = mysql_fetch_row(newsRes))) {
             msem_wait(ebSemControl);
 
             pContent = exbug_memory_malloc(sizeof(NCONT));
 
-            pContent->nc_ind = (char *)newsRow[0];
-            pContent->nc_cont = (char *)newsRow[1];
+            pContent->nc_ind = (char *)news_data[0];
+            pContent->nc_cont = (char *)news_data[1];
 
             exbug_create_pthread(pContent);
         }

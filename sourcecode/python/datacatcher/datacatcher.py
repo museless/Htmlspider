@@ -256,7 +256,6 @@ class DataCatcher:
                 break
 
             self.final_content += string
-            print(self.final_content)
 
         return  self.final_content
 

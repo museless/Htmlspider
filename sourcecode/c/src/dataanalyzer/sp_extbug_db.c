@@ -1,17 +1,27 @@
-/*------------------------------------------
-    Source file content Eight part
+/*---------------------------------------------
+ *     modification time: 2016-02-23 13:05:59
+ *     mender: Muse
+ *---------------------------------------------*/
 
-    Part Zero:  Include
-    Part One:   Local data
-    Part Two:   Local function
-    Part Three: Define
+/*---------------------------------------------
+ *     creation time: 2015-06-01 
+ *     author: Muse 
+ *---------------------------------------------*/
 
-    Part Four:  Database operate
-    Part Five:  Database module
-    Part Six:   Database clean
-    Part Seven: Database error dispose
-
---------------------------------------------*/
+/*---------------------------------------------
+ *      Source file content Eight part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Local data
+ *      Part Two:   Local function
+ *      Part Three: Define
+ *
+ *      Part Four:  Database operate
+ *      Part Five:  Database module
+ *      Part Six:   Database clean
+ *      Part Seven: Database error dispose
+ *
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *             Part Zero: Include
@@ -53,13 +63,16 @@ int exbug_database_init(void)
         return  FUN_RUN_END;
     }
 
-    if (mc_conf_read("news_database_name", CONF_STR, dbNewsName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+    if (mc_conf_read("news_database_name", CONF_STR, 
+            dbNewsName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("news_database_name");
         return  FUN_RUN_END;
     }
 
-    if (!mysql_real_connect(&dbNewsHandler, NULL, DBUSRNAME, DBUSRKEY, dbNewsName, 0, NULL, 0)) {
-        elog_write("exbug_database_init - mysql_real_connect", "newsDataBase", "failed");
+    if (!mysql_real_connect(&dbNewsHandler, NULL, 
+            DBUSRNAME, DBUSRKEY, dbNewsName, 0, NULL, 0)) {
+        elog_write("exbug_database_init - mysql_real_connect", 
+            "newsDataBase", "failed");
         return  FUN_RUN_END;
     }
 
@@ -68,25 +81,31 @@ int exbug_database_init(void)
 
     /* Mysql Dic handler init */
     if (!mysql_init(&dbDicHandler)) {
-        elog_write("exbug_module_database_init - mysql_init", "dbDicHandler", "failed");
+        elog_write("exbug_module_database_init - mysql_init", 
+            "dbDicHandler", "failed");
         return  FUN_RUN_FAIL;
     }
 
-    if (mc_conf_read("dic_database_name", CONF_STR, dbDicName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+    if (mc_conf_read("dic_database_name", CONF_STR, 
+            dbDicName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("dic_database_name");
         return  FUN_RUN_FAIL;
     }
 
-    if (!mysql_real_connect(&dbDicHandler, NULL, DBUSRNAME, DBUSRKEY, dbDicName, 0, NULL, 0)) {
-        elog_write("exbug_module_database_init - mysql_real_connect", "dicDataBase", "failed");
+    if (!mysql_real_connect(&dbDicHandler, NULL, 
+            DBUSRNAME, DBUSRKEY, dbDicName, 0, NULL, 0)) {
+        elog_write("exbug_module_database_init - mysql_real_connect", 
+            "dicDataBase", "failed");
         return  FUN_RUN_FAIL;
     }
 
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_dicdb_unlink) == MGC_FAILED)
-        elog_write("exbug_module_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
+        elog_write("exbug_module_database_init - mgc_add",
+            FUNCTION_STR, ERROR_STR);
 
     /* read word table name */
-    if (mc_conf_read("word_table_name", CONF_STR, tblWordName, SQL_TABNAME_LEN) == FUN_RUN_FAIL) {
+    if (mc_conf_read("word_table_name", CONF_STR,
+            tblWordName, SQL_TABNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("word_table_name");
         return  FUN_RUN_END;
     }
@@ -122,8 +141,11 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
     char    sqlCom[SQL_TCOM_LEN];
 
     if (mysql_real_query(&dbNewsHandler, sqlCom, 
-        sprintf(sqlCom, SET_NEWS_FLAGS, tblNewsName, maskName, pInd)) != FUN_RUN_END)
-        exbug_dberr_deal(&dbNewsHandler, dbNewsName, "exbug_rewind_exmark - mysql_real_query");
+            sprintf(sqlCom, SET_NEWS_FLAGS, 
+            tblNewsName, maskName, pInd)) != FUN_RUN_END)
+        exbug_dberr_deal(
+            &dbNewsHandler, dbNewsName,
+            "exbug_rewind_exmark - mysql_real_query");
 
     return;
 }
