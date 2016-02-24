@@ -101,6 +101,8 @@ int exbug_database_init(void)
         return  FUN_RUN_FAIL;
     }
 
+    mysql_query(&dbDicHandler, "set names utf8");
+
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_dicdb_unlink) == MGC_FAILED)
         elog_write("exbug_module_database_init - mgc_add",
             FUNCTION_STR, ERROR_STR);
