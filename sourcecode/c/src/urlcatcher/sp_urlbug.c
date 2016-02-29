@@ -380,7 +380,7 @@ static void ubug_set_ubset(const char *way_option)
 --------------------------------------------*/
     
 /*-----ubug_create_pthread-----*/
-static void ubug_create_pthread(WEBIN *web_info)
+void ubug_create_pthread(WEBIN *web_info)
 {
     if (mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)web_info))
         return;
@@ -391,7 +391,7 @@ static void ubug_create_pthread(WEBIN *web_info)
 
 
 /*-----ubug_pthread_entrance-----*/
-static void ubug_pthread_entrance(void *parameters)
+void ubug_pthread_entrance(void *parameters)
 {
     WEBIN  *web_info = (WEBIN *)parameters;
     int     fun_ret;
@@ -449,9 +449,10 @@ static void ubug_main_entrance(void)
         ubug_ping();
 
 		for (urlCatchNum = 0, webPoint = urlSaveList;
-             webPoint != NULL; webPoint = webPoint->w_next) {
+                webPoint != NULL; webPoint = webPoint->w_next) {
             mpc_thread_wait(ubugThreadPool);
 	        ubug_create_pthread(webPoint);
+            sleep(TAKE_A_NOTHING);
 		}
 
 		urlRunSet.ubs_fstf();
@@ -459,7 +460,7 @@ static void ubug_main_entrance(void)
 		if(procCommuFd)
 			sp_msg_frame_run(urlMsgSet, NULL);
 
-		sleep(TAKE_A_LONGSLP);
+		sleep(TAKE_A_LLSLP);
 
 	} while(urlRunSet.ubs_rtime);
 

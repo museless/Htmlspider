@@ -84,10 +84,11 @@ void ubug_ping(void)
     long    time_recv;
 
     ubug_ping_default_init(&ubugPingInfo);
-    time_recv = sp_net_speed_ping(ubugPingInfo.p_host, ubugPingInfo.p_packnum);
+    time_recv = sp_net_speed_ping(
+                    ubugPingInfo.p_host, ubugPingInfo.p_packnum);
 
     if (time_recv < FUN_RUN_OK) {
-        printf("Urlbug---> zero pack to ping\n");
+        printf("Urlbug---> no pack from ping\n");
 
         ubugPingInfo.p_time.tv_sec = 0;
         ubugPingInfo.p_time.tv_usec = 80000;
@@ -97,14 +98,13 @@ void ubug_ping(void)
     ubugPingInfo.p_time.tv_sec = time_recv / MICSEC_PER_SEC;
     ubugPingInfo.p_time.tv_usec = (time_recv % MICSEC_PER_SEC) * 2.5;
 
-    printf(
-    "Urlbug---> current network speed: %lu ms\n",
-    ubugPingInfo.p_time.tv_usec);
+    printf("Urlbug---> current network speed: %lu ms\n",
+        ubugPingInfo.p_time.tv_usec);
 }
 
 
 /*-----ubug_ping_default_init-----*/
-static void ubug_ping_default_init(SPPING *ping_info)
+void ubug_ping_default_init(SPPING *ping_info)
 {
     if (ping_info->p_host[0] == 0 || ping_info->p_packnum == 0) {
         sprintf(ping_info->p_host, DEFAULT_PING_HOST);

@@ -187,7 +187,7 @@ int sp_net_html_download(WEBIN *web_stu)
             }
 
             redire_flags = 
-            sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
+                sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
            
             close(web_stu->w_sock);
             continue;
