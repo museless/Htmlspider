@@ -1,23 +1,33 @@
-/*------------------------------------------
-    Source file content Seven part
+/*---------------------------------------------
+ *     modification time: 2016-02-29 10:27
+ *     mender: Muse
+-*---------------------------------------------*/
 
-    Part Zero:  Include
-    Part One:   Define
-    Part Two:   Local data
-    Part Three: Local function
+/*---------------------------------------------
+ *     creation time: 2015-10-01 
+ *     author: Muse 
+-*---------------------------------------------*/
 
-    Part Four:  Socket control
-    Part Five:  Http protocal
-    Part Six:   Url string operation
-    Part Seven: Ping
-    Part Eight: Web info operation
+/*---------------------------------------------
+ *      Source file content Nine part
+ *
+ *      Part Zero:  Include
+ *      Part One:   Define
+ *      Part Two:   Local data
+ *      Part Three: Local function
+ *
+ *      Part Four:  Socket control
+ *      Part Five:  Http protocal
+ *      Part Six:   Url string operation
+ *      Part Seven: Ping
+ *      Part Eight: Web info operation
+ *
+-*---------------------------------------------*/
 
---------------------------------------------*/
 
-
-/*------------------------------------------
-            Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *           Part Zero: Include
+-*---------------------------------------------*/
 
 #include "spinc.h"
 #include "spnet.h"
@@ -26,32 +36,32 @@
 #include "ping.h"
 
 
-/*------------------------------------------
- *           Part One: Define
- *------------------------------------------*/
+/*---------------------------------------------
+ *              Part One: Define
+-*---------------------------------------------*/
 
 #define ENDHTML_CHK_OFFSET 0x100
 
 
-/*------------------------------------------
-        Part Three: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *         Part Three: Local function
+-*---------------------------------------------*/
 
 /* Part Five */
 static  int     sp_http_redict_check(WEB *dst, WEB *src);
 
 
-/*------------------------------------------
-        Part Four: Socket control
-
-        1. sp_net_set_sockif
-        2. sp_net_sock_connect
-        3. sp_net_sock_read
-        4. sp_net_sock_settimer
-        5. sp_net_sock_init
-        6. sp_net_html_download
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Four: Socket control
+ *
+ *          1. sp_net_set_sockif
+ *          2. sp_net_sock_connect
+ *          3. sp_net_sock_read
+ *          4. sp_net_sock_settimer
+ *          5. sp_net_sock_init
+ *          6. sp_net_html_download
+ *
+-*---------------------------------------------*/
 
 /*-----sp_net_set_sockif-----*/
 int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)

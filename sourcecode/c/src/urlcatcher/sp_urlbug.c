@@ -335,10 +335,10 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
 static int ubug_init_urllist(char *urlStr, WEB *webStu)
 {
     if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_P) {
-        printf(
+        /*printf(
         "Host: %s - Path: %s - File: %s - Layer num: %d\n", 
         webStu->web_host, webStu->web_path, 
-        webStu->web_file, webStu->web_nlayer);
+        webStu->web_file, webStu->web_nlayer);*/
 
         return	FUN_RUN_OK;
     }

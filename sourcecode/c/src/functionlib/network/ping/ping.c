@@ -1,45 +1,46 @@
 /*---------------------------------------------
-        Source code contain Five part
-
-        Part Zero:  Include
-        Part One:   Define
-        Part Two:   Local data
-        Part Three: Local function
-
-        Part Four:  Ping main
-        Part Five:  Network initialize
-
------------------------------------------------*/
+ *     modification time: 2016-02-29 10:27
+ *     mender: Muse
+-*---------------------------------------------*/
 
 /*---------------------------------------------
-        Creation time: 2015/10/29 23:50
-        Creator: William
-
-        Modification time: 2015/10/30 09:10
-        Mender: William
-
------------------------------------------------*/
+ *     creation time: 2015-10-01 
+ *     author: Muse 
+-*---------------------------------------------*/
 
 /*---------------------------------------------
-              Part Zero: Include
------------------------------------------------*/
+ *       Source code contain Six part
+ *
+ *       Part Zero:  Include
+ *       Part One:   Define
+ *       Part Two:   Local data
+ *       Part Three: Local function
+ *
+ *       Part Four:  Ping main
+ *       Part Five:  Network initialize
+ *
+-*---------------------------------------------*/
+
+/*---------------------------------------------
+ *             Part Zero: Include
+-*---------------------------------------------*/
 
 #include "ping.h"
 
 
 /*---------------------------------------------
-               Part One: Define
------------------------------------------------*/
+ *              Part One: Define
+-*---------------------------------------------*/
 
 
 /*---------------------------------------------
-            Part Two: Local data
------------------------------------------------*/
+ *           Part Two: Local data
+-*---------------------------------------------*/
 
 
 /*---------------------------------------------
-          Part Three: Local function
------------------------------------------------*/
+ *         Part Three: Local function
+-*---------------------------------------------*/
 
 /* Part Five */
 static  int     ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info);
@@ -49,11 +50,11 @@ static  long    ping_calculate_rrt(TMVAL *send_tim, TMVAL *recv_tim);
 
 
 /*---------------------------------------------
-           Part Four: Ping main
-
-           1. ping
-
------------------------------------------------*/
+ *          Part Four: Ping main
+ *
+ *          1. ping
+ *
+-*---------------------------------------------*/
 
 /*-----ping-----*/
 int ping(PINGIF *ping_info, const char *host)
@@ -89,14 +90,14 @@ int ping(PINGIF *ping_info, const char *host)
 
 
 /*---------------------------------------------
-           Part Five: Network initialize
-
-           1. ping_access
-           2. ping_socket_get
-           3. ping_send_recv
-           4. ping_set_rrt
-
------------------------------------------------*/
+ *        Part Five: Network initialize
+ *
+ *        1. ping_access
+ *        2. ping_socket_get
+ *        3. ping_send_recv
+ *        4. ping_set_rrt
+ *
+-*---------------------------------------------*/
 
 /*-----ping_access-----*/
 static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
@@ -131,7 +132,7 @@ static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
 
 
 /*-----ping_socket_get-----*/
-static int ping_socket_get(void)
+int ping_socket_get(void)
 {
     struct  protoent    *protocal;
     int     sock;
@@ -153,7 +154,7 @@ static int ping_socket_get(void)
 
 
 /*-----ping_send_recv-----*/
-static int ping_send_recv(int sock, SOCKIF *sock_info, char *buffer)
+int ping_send_recv(int sock, SOCKIF *sock_info, char *buffer)
 {
     socklen_t   sockif_len = sizeof(struct sockaddr);
     int         recv_num;
@@ -173,7 +174,7 @@ static int ping_send_recv(int sock, SOCKIF *sock_info, char *buffer)
 
 
 /*-----ping_calculate_rrt-----*/
-static long ping_calculate_rrt(TMVAL *send_tim, TMVAL *recv_tim)
+long ping_calculate_rrt(TMVAL *send_tim, TMVAL *recv_tim)
 {
     return  (recv_tim->tv_usec > send_tim->tv_usec) ?
             (recv_tim->tv_usec - send_tim->tv_usec) : 0; 

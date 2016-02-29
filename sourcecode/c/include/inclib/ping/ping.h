@@ -19,8 +19,8 @@
 
 #define MAX_PADDATA_LEN     0x40
 
-#define PING_WAIT_SEC       0x1
-#define PING_WAIT_USEC      0x0
+#define PING_WAIT_SEC       0x0
+#define PING_WAIT_USEC      0x280
 
 
 /*-----------------------------
