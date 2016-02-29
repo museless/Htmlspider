@@ -1,6 +1,7 @@
 #ifndef _SP_H
 #define _SP_H
 
+
 /*---------------------------------------------
  *                  include
 -*---------------------------------------------*/
@@ -12,6 +13,5 @@
 #include "sphtml.h"
 #include "spmsg.h"
 #include "spframe.h"
-#include "spdict.h"
 
 #endif

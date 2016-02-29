@@ -28,8 +28,6 @@
 #define	WEB_DATE_LEN            0x8
 #define	WEB_EXTRA_LEN           0x20
 
-#define	WEB_COUNT_LEN           (WEB_EXTRA_LEN + WEB_INDEX_LEN + WEB_TIME_LEN + WEB_DATE_LEN + 3 * sizeof(int))
-
 #define	HTTP_GFILE_STR          "GET %s%s HTTP/1.1\r\nHost: %s\r\n%s"
 
 /* http server respone */
@@ -68,7 +66,7 @@ typedef	struct	web_txt		    TEXT;
 typedef struct  sockaddr        SOCKAD;
 typedef	struct	sockaddr_in	    SOCKIF;
 
-typedef	int     (*fcset)(unsigned char *);
+typedef	int     (*fcset)(uChar *);
 
 
 /*---------------------
@@ -170,10 +168,10 @@ int     sp_http_handle_retcode(
 
 int     sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info);
 char   *sp_http_header_locate(
-        char *http_header, char *data_buff, int *data_size);
+            char *http_header, char *data_buff, int *data_size);
 
 char   *sp_http_compare_latest(
-        const char *last_time, char *http_buff, int *buff_len);
+            const char *last_time, char *http_buff, int *buff_len);
 
 
 int     sp_url_seperate(char *url, int url_len, WEB *web_info);
