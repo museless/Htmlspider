@@ -173,8 +173,6 @@ void   *exbug_content_download(void);  /* ret: MYSQL_RES */
 int     exbug_module_database_init(void);
 void    exbug_create_keyword_table(void);
 
-int     exbug_dberr_deal(void *sqlHand, char *dbName, char *pHead);
-
 /* sp_extbug_mmseg.c */
 void    exbug_segment_entrance(WDCT *wcStru, const char *pNews);
 

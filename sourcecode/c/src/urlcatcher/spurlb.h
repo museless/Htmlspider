@@ -61,8 +61,6 @@ void    ubug_tran_db_whole(void);
 void    ubug_tran_db_force(BUFF *pBuff);
 int     ubug_tran_db_real(BUFF *pBuff);
 
-int     ubug_dberr(MYSQL *sHandler, char *withStr);
-
 /* sp_urlbug_disc.c */
 void    ubug_print_help(void);
 

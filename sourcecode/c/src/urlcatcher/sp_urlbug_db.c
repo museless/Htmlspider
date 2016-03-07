@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-29 22:58:45
+ *     modification time: 2016-03-07 16:07:45
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -39,7 +39,6 @@
  *          4. ubug_tran_db_whole
  *          5. ubug_tran_db_force
  *          6. ubug_tran_db_real
- *          7. ubug_dberr
  *
 -*---------------------------------------------*/
 
@@ -75,8 +74,8 @@ void ubug_create_dbtable(void)
 {
     if (mysql_creat_table(
         &urlDataBase, CREAT_URL_TAB, urlTabName, urlMaxLen) != FUN_RUN_OK) {
-        if (ubug_dberr(
-            &urlDataBase, "ubug_create_dbtable - creatTab") != FUN_RUN_OK)
+        if (mysql_error_log(&urlDataBase, 
+                urlTabName, "ubug_create_dbtable - creatTab") != FUN_RUN_OK)
             ubug_sig_error();
     }
 }
@@ -123,7 +122,8 @@ void ubug_tran_db_force(BUFF *pBuff)
 
     if (!buff_stru_empty(pBuff)) {
         if (ubug_tran_db_real(pBuff) != FUN_RUN_END) {
-            if (ubug_dberr(&urlDataBase, "ubug_tran_db_force - mysql_query") != FUN_RUN_OK)
+            if (mysql_error_log(&urlDataBase, urlTabName, 
+                    "ubug_tran_db_force - mysql_query") != FUN_RUN_OK)
                 ubug_sig_error();
         }
 
@@ -144,18 +144,3 @@ int ubug_tran_db_real(BUFF *pBuff)
 }
 
 
-/*-----ubug_dberr-----*/
-int ubug_dberr(MYSQL *sHandler, char *withStr)
-{
-    uInt    sql_errno = mysql_errno(sHandler);
-
-    elog_write(withStr, FUNCTION_STR, MYERR_STR(sHandler));
-
-    if (sql_errno == CR_SERVER_LOST || sql_errno == CR_SERVER_GONE_ERROR) {
-        if (mysql_real_connect(
-            &urlDataBase, NULL, DBUSRNAME, DBUSRKEY, urlTabName, 0, NULL, 0))
-            return  FUN_RUN_OK;
-    }
-
-    return  FUN_RUN_FAIL;
-}

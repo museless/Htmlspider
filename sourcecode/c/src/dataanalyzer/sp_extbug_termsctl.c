@@ -88,7 +88,7 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
     if (!buff_size_enough(extSaveBuf, nOff + UPKEY_OTH_MAX)) {
         if (mysql_real_query(&dbKeysHandler, 
                 buff_place_start(extSaveBuf), buff_now_size(extSaveBuf))) {
-            if (exbug_dberr_deal(&dbKeysHandler, dbKeysName, 
+            if (mysql_error_log(&dbKeysHandler, dbKeysName, 
                     "exbug_update_terms - mysql_real_query") != FUN_RUN_OK)
                 exbug_sig_error(PTHREAD_ERROR);
         }

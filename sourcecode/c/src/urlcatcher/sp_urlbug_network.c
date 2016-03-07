@@ -189,8 +189,9 @@ static void ubug_update_latest_time(WEBIN *web_stu)
             mato_inc(&writeStoreLock);
 
         if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
-                if (ubug_dberr(&urlDataBase, "send_httpreq - up latest") != FUN_RUN_OK)
-                        ubug_sig_error();
+            if (mysql_error_log(&urlDataBase, 
+                    urlTabName, "send_httpreq - up latest") != FRET_P)
+                ubug_sig_error();
         }
 
         mato_inc(&writeStoreLock);

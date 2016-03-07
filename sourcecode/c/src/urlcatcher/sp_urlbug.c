@@ -270,12 +270,12 @@ static void ubug_init_weblist(void)
     }
 
     WEBIN **pList = &urlSaveList;
-    MSLRES *data_result = 
-            mysql_return_result(&urlDataBase, GET_DIRECTORY, url_store_table_name);
+    MSLRES *data_result = mysql_return_result(&urlDataBase, 
+                            GET_DIRECTORY, url_store_table_name);
 
     if (!data_result) {
-        if (ubug_dberr(
-            &urlDataBase, "ubug_init_weblist - mysql_return_result") != FRET_P)
+        if (mysql_error_log(&urlDataBase, 
+                urlTabName, "ubug_init_weblist - mysql_return_result") != FRET_P)
             ubug_sig_error();
     }
 

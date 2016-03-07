@@ -229,6 +229,7 @@ int     mysql_simple_connect(
         void *sql_handle, const char *database_name, const char *host, int port);
 
 int     mysql_creat_table(void *sql_handle, const char *creat_string, ...);
+int     mysql_error_log(void *sql_handle, char *db_name, char *error_string);
 
 /* sp_bufoper.c */
 
