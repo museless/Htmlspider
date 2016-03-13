@@ -5,9 +5,9 @@
 #----------------------------------------------
 
 __author__ = "Muse"
-__creation_time__ = "2016.02.12 10:35"
-__modification_time__ = "2016.02.03 10:00"
-__intro__ = "news catcher interface"
+__creation_time__ = "2016.02.03 10:00"
+__modification_time__ = "2016.03.14 01:50"
+__intro__ = "news catcher"
 
 
 #----------------------------------------------
@@ -189,4 +189,15 @@ def catcher_work(
         news_uploader.final_insert()
 
         time.sleep(2)
+
+
+#==============================================
+#                   Main
+#==============================================
+
+if __name__ == "__main__":
+    url_receiver, news_uploader, data_catcher = catcher_initialize()
+    url_table, news_table = table_name_get()
+
+    catcher_work(data_catcher, url_receiver, news_uploader, url_table, news_table)
 
