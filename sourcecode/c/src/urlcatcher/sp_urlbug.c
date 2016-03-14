@@ -452,11 +452,10 @@ static void ubug_main_entrance(void)
                 webPoint != NULL; webPoint = webPoint->w_next) {
             mpc_thread_wait(ubugThreadPool);
             ubug_create_pthread(webPoint);
-            sleep(TAKE_A_NOTHING);
         }
 
         urlRunSet.ubs_fstf();
-        sleep(TAKE_A_LLSLP);
+        sleep(TAKE_A_WHILE);
 
     } while(urlRunSet.ubs_rtime);
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-29 10:27
+ *     modification time: 2016-03-14 10:35
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -9,7 +9,7 @@
 -*---------------------------------------------*/
 
 /*---------------------------------------------
- *      Source file content Nine part
+ *      Source file content Eight part
  *
  *      Part Zero:  Include
  *      Part One:   Define
@@ -20,7 +20,6 @@
  *      Part Five:  Http protocal
  *      Part Six:   Url string operation
  *      Part Seven: Ping
- *      Part Eight: Web info operation
  *
 -*---------------------------------------------*/
 
@@ -107,7 +106,7 @@ int sp_net_sock_read(
     int nSock, char *savBuf, int bufLimit, 
     int readTimes, int nSec, long microSec)
 {
-    char    *check_point;
+    char   *check_point;
     int     cont_offset, str_size, zero_times = 8;
 
     for (cont_offset = 0; readTimes > 0 && zero_times; readTimes--) {
@@ -200,18 +199,18 @@ int sp_net_html_download(WEBIN *web_stu)
 }
 
 
-/*------------------------------------------
-        Part Five: Http protocal
-
-        1. sp_http_interact
-        2. sp_http_header_locate
-        3. sp_http_compare_latest
-        4. sp_http_handle_request
-        5. sp_http_handle_retcode
-        6. sp_http_handle_30x
-        7. sp_http_redict_check
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Five: Http protocal
+ *
+ *          1. sp_http_interact
+ *          2. sp_http_header_locate
+ *          3. sp_http_compare_latest
+ *          4. sp_http_handle_request
+ *          5. sp_http_handle_retcode
+ *          6. sp_http_handle_30x
+ *          7. sp_http_redict_check
+ *
+-*---------------------------------------------*/
 
 /*-----sp_http_interact-----*/
 int sp_http_interact(WEBIN *web_stu)
@@ -340,13 +339,13 @@ static int sp_http_redict_check(WEB *dst, WEB *src)
 }
 
 
-/*------------------------------------------
-        Part Six: Url string operation
-
-        1. sp_url_seperate
-        2. sp_url_count_nlayer
-
---------------------------------------------*/
+/*---------------------------------------------
+ *       Part Six: Url string operation
+ *
+ *       1. sp_url_seperate
+ *       2. sp_url_count_nlayer
+ *
+-*---------------------------------------------*/
 
 /*-----sp_url_seperate-----*/
 int sp_url_seperate(char *url, int url_len, WEB *web_info)
@@ -417,12 +416,12 @@ int sp_url_path_count_nlayer(char *url)
 }
 
 
-/*------------------------------------------
-        Part Seven: Ping
-
-        1. sp_net_speed_ping
-
---------------------------------------------*/
+/*---------------------------------------------
+ *             Part Seven: Ping
+ *
+ *             1. sp_net_speed_ping
+ *
+-*---------------------------------------------*/
 
 /*-----sp_net_speed_ping-----*/
 long sp_net_speed_ping(const char *ping_host, int num_pack)
@@ -444,11 +443,4 @@ long sp_net_speed_ping(const char *ping_host, int num_pack)
 
     return  (num_pack) ? (total_time / num_pack) : FUN_RUN_FAIL;
 }
-
-
-/*------------------------------------------
-        Part Eight: Web info operation
-
---------------------------------------------*/
-
 

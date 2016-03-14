@@ -150,7 +150,7 @@ int ping_socket_get(void)
     }
  
     if(sp_net_sock_settimer(
-       sock, PING_WAIT_SEC, PING_WAIT_USEC, SO_SNDTIMEO) == FRET_N) {
+       sock, PING_SEND_WAIT_SEC, PING_SEND_WAIT_USEC, SO_SNDTIMEO) == FRET_N) {
         close(sock);
         return  FRET_N;
     }

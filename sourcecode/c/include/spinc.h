@@ -118,6 +118,7 @@
 #define	TAKE_A_SLEEP    0x40
 #define	TAKE_A_LONGSLP  0x80
 #define	TAKE_A_LLSLP    0x12C
+#define TAKE_A_WHILE    0x258
 
 /* sleep time: microsec */
 #define	MICSEC_PER_SEC	1000000

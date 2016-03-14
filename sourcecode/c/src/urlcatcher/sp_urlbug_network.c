@@ -12,12 +12,12 @@
 /*---------------------------------------------
  *        Source file content Six part
  *
- *	        Part Zero:	Include
- *	        Part One:	Local data
- *	        Part Two:	Local function
- *	        Part Three:	Define
+ *          Part Zero:  Include
+ *          Part One:   Local data
+ *          Part Two:   Local function
+ *          Part Three: Define
  *
- *	        Part Four:  Ping network
+ *          Part Four:  Ping network
  *          Part Five:  Network event 
  *
 -*---------------------------------------------*/
@@ -33,12 +33,12 @@
 
 
 /*------------------------------------------
-	       Part One: Local data
+           Part One: Local data
 --------------------------------------------*/
 
 
 /*------------------------------------------
-	     Part Two: Local function
+         Part Two: Local function
 --------------------------------------------*/
 
 /* Part Four */
@@ -50,26 +50,26 @@ static  void    ubug_update_latest_time(WEBIN *web_stu);
 
 
 /*------------------------------------------
-	        Part Three: Define
+            Part Three: Define
 --------------------------------------------*/
 
 
-/*------------------------------------------
-	    Part Four: Ping network
-
-        1. ubug_init_pinginfo
-        2. ubug_ping
-        3. ubug_ping_default_init
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Four: Ping network
+ *
+ *          1. ubug_init_pinginfo
+ *          2. ubug_ping
+ *          3. ubug_ping_default_init
+ *
+-*---------------------------------------------*/
 
 /*-----ubug_init_pinginfo-----*/
 void ubug_init_pinginfo(void)
 {
-	if (mc_conf_read(
+    if (mc_conf_read(
         "ping_host", CONF_STR, 
         ubugPingInfo.p_host, SMALL_BUF) == FUN_RUN_FAIL)
-		mc_conf_print_err("ping_host");
+        mc_conf_print_err("ping_host");
 
     if (mc_conf_read(
         "ping_packet", CONF_NUM,
@@ -113,19 +113,19 @@ void ubug_ping_default_init(SPPING *ping_info)
 }
 
 
-/*------------------------------------------
-           Part Five: Network event
-
-	       1. ubug_html_download
-           2. ubug_handle_httpreq
-           3. ubug_update_latest_time
-
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part Five: Network event
+ *
+ *          1. ubug_html_download
+ *          2. ubug_handle_httpreq
+ *          3. ubug_update_latest_time
+ *
+-*---------------------------------------------*/
 
 /*-----ubug_html_download-----*/
 int ubug_html_download(WEBIN *web_stu)
 {
-	int	    cont_offset, byte_read;
+    int     cont_offset, byte_read;
 
     if (sp_net_html_download(web_stu) != FRET_P) {
         elog_write(
@@ -146,7 +146,7 @@ int ubug_html_download(WEBIN *web_stu)
     cont_offset += (byte_read == FUN_RUN_FAIL) ? 0 : byte_read;
     close(web_stu->w_sock);
 
-	return	cont_offset;
+    return  cont_offset;
 }
 
 
@@ -154,12 +154,12 @@ int ubug_html_download(WEBIN *web_stu)
 static int ubug_handle_httpreq(WEBIN *web_stu)
 {
     char   *string_point;
+    int     string_size = web_stu->w_contoffset;
 
     web_stu->w_contoffset = 
     (string_point = strstr(web_stu->w_conbuf, "\r\n\r\n")) ? 
     string_point - web_stu->w_conbuf : strlen(web_stu->w_conbuf);
 
-    int string_size = web_stu->w_contoffset;
     string_point = sp_http_compare_latest(
                    web_stu->w_latest, string_point, &string_size);
 
@@ -168,14 +168,14 @@ static int ubug_handle_httpreq(WEBIN *web_stu)
         ubug_update_latest_time(web_stu);
     }
 
-	return	web_stu->w_contoffset;
+    return  web_stu->w_contoffset;
 }
 
 
 /*-----ubug_update_latest_time-----*/
 static void ubug_update_latest_time(WEBIN *web_stu)
 {
-    char	sqlCom[SQL_SCOM_LEN]; 
+    char    sqlCom[SQL_SCOM_LEN]; 
 
     if (++web_stu->w_latestcnt == LATEST_UPGRADE_LIMIT) {
         sprintf(
@@ -195,7 +195,7 @@ static void ubug_update_latest_time(WEBIN *web_stu)
         }
 
         mato_inc(&writeStoreLock);
-	}
+    }
 }
 
 
