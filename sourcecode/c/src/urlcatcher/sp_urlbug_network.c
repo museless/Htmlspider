@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2015-12-02 09:03:47
+ *     modification time: 2016-03-07 13:15:47
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -22,9 +22,9 @@
  *
 -*---------------------------------------------*/
 
-/*------------------------------------------
-            Part Zero: Include
---------------------------------------------*/
+/*---------------------------------------------
+ *            Part Zero: Include
+-*---------------------------------------------*/
 
 #include "sp.h"
 
@@ -32,14 +32,14 @@
 #include "spurlb.h"
 
 
-/*------------------------------------------
-           Part One: Local data
---------------------------------------------*/
+/*---------------------------------------------
+ *          Part One: Local data
+-*---------------------------------------------*/
 
 
-/*------------------------------------------
-         Part Two: Local function
---------------------------------------------*/
+/*---------------------------------------------
+ *         Part Two: Local function
+-*---------------------------------------------*/
 
 /* Part Four */
 static  void    ubug_ping_default_init(SPPING *ping_info);
@@ -47,11 +47,6 @@ static  void    ubug_ping_default_init(SPPING *ping_info);
 /* Part Five */
 static  int     ubug_handle_httpreq(WEBIN *web_info);
 static  void    ubug_update_latest_time(WEBIN *web_stu);
-
-
-/*------------------------------------------
-            Part Three: Define
---------------------------------------------*/
 
 
 /*---------------------------------------------
@@ -81,22 +76,21 @@ void ubug_init_pinginfo(void)
 /*-----ubug_ping-----*/
 void ubug_ping(void)
 {
-    long    time_recv;
+    long    recv;
 
     ubug_ping_default_init(&ubugPingInfo);
-    time_recv = sp_net_speed_ping(
-                    ubugPingInfo.p_host, ubugPingInfo.p_packnum);
+    recv = sp_net_speed_ping(ubugPingInfo.p_host, ubugPingInfo.p_packnum);
 
-    if (time_recv < FUN_RUN_OK) {
-        printf("Urlbug---> no pack from ping\n");
+    if (recv < (ubugPingInfo.p_packnum >> 1)) {
+        printf("Urlbug---> ping failed - use default\n");
 
         ubugPingInfo.p_time.tv_sec = 0;
         ubugPingInfo.p_time.tv_usec = 80000;
         return;
     }
 
-    ubugPingInfo.p_time.tv_sec = time_recv / MICSEC_PER_SEC;
-    ubugPingInfo.p_time.tv_usec = (time_recv % MICSEC_PER_SEC) * 2.5;
+    ubugPingInfo.p_time.tv_sec = recv / MICSEC_PER_SEC;
+    ubugPingInfo.p_time.tv_usec = (recv % MICSEC_PER_SEC) * 3.0;
 
     printf("Urlbug---> current network speed: %lu ms\n",
         ubugPingInfo.p_time.tv_usec);
