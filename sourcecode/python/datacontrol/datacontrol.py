@@ -57,7 +57,9 @@ class DataControl:
         db = database_name, charset = "utf8")
             
         self.cursor = self.controler.cursor()
-        self.thread_lock = thread.allocate_lock()
+
+        self.exec_lock = thread.allocate_lock()
+        self.insert_lock = thread.allocate_lock()
 
     #------------------------------------------
     #               Destructor 
@@ -128,7 +130,9 @@ class DataControl:
         if self.insert_head == "" or self.insert_field == "":
             return  None
 
+        self.insert_lock.acquire()
         self.insert_buff.append(self.insert_field % parameters)
+        self.insert_lock.release()
  
     #------------------------------------------
     #        final insert to the mysql 
@@ -170,9 +174,9 @@ class DataControl:
         if sql_string == "":
             return  None
 
-        self.thread_lock.acquire()
+        self.exec_lock.acquire()
         result = self.cursor.execute(sql_string.encode("utf8"))
-        self.thread_lock.release()
+        self.exec_lock.release()
 
         return  result 
 
