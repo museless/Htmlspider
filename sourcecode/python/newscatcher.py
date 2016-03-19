@@ -17,6 +17,7 @@ __intro__ = "news catcher"
 import urllib
 import time
 import chardet
+import thread
 
 from datacatcher import DataCatcher
 from datacontrol import DataControl
@@ -182,9 +183,10 @@ def catcher_work(
         results = url_receiver.cursor.fetchall()
 
         for data_row in results:
-            handle_url_result(
-            data_row, data_catcher, url_receiver, 
-            news_uploader, url_tabname, news_tabname)
+            thread.start_new_thread(
+                handle_url_result,
+                (data_row, data_catcher, url_receiver, 
+                news_uploader, url_tabname, news_tabname))
 
         news_uploader.final_insert()
 

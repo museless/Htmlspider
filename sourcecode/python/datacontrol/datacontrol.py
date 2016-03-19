@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.02.03 10:05"
+__modification_time__ = "2016.03.19 17:25"
 __intro__ = "it was a mysql client"
 
 
@@ -15,7 +15,7 @@ __intro__ = "it was a mysql client"
 #----------------------------------------------
 
 import MySQLdb
-import chardet
+import thread
 
 from datacontrolconfig import * 
 
@@ -57,6 +57,7 @@ class DataControl:
         db = database_name, charset = "utf8")
             
         self.cursor = self.controler.cursor()
+        self.thread_lock = thread.allocate_lock()
 
     #------------------------------------------
     #               Destructor 
@@ -82,7 +83,7 @@ class DataControl:
         if limit != -1:
             select += "limit %d" % limit
 
-        return  self.execute(select)
+        return  self.__execute(select)
 
     #------------------------------------------
     #        joint to the create string 
@@ -102,7 +103,7 @@ class DataControl:
         else:
             return  None
     
-        self.execute(create)
+        self.__execute(create)
 
     #------------------------------------------
     #       joint to the insert sql head 
@@ -138,7 +139,7 @@ class DataControl:
            self.insert_head == "" or self.insert_field == "":
             return  None
 
-        self.execute(
+        self.__execute(
         u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
 
         self.insert_buff = []
@@ -159,17 +160,21 @@ class DataControl:
             update_string += \
             "where %s" % UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX]
 
-        self.execute(update_string % parameters)
+        self.__execute(update_string % parameters)
 
     #------------------------------------------
     #    execute the sql command by string
     #------------------------------------------
 
-    def execute(self, sql_string):
+    def __execute(self, sql_string):
         if sql_string == "":
             return  None
 
-        return  self.cursor.execute(sql_string.encode("utf8"))
+        self.thread_lock.acquire()
+        result = self.cursor.execute(sql_string.encode("utf8"))
+        self.thread_lock.release()
+
+        return  result 
 
     #------------------------------------------
     #             string escaping
