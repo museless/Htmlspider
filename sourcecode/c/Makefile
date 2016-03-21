@@ -3,7 +3,7 @@ CC		= gcc
 STD99	= -std=c99
 NMFLAGS	= -rdynamic -g -Wall -I include/inclib -I include/inclib/mmdpool -I include/ -fstack-protector-all
 PTFLAGS	= -pthread -lcrypt -lnsl -lm -lc 
-MYFLAGS = -L /usr/local/lib/mysql -lmysqlclient -I /usr/local/include/mysql -lz
+MYFLAGS = -L/usr/local/lib/mysql -lmysqlclient -I /usr/local/include/mysql -lz
 PGFLAGS = -I include/inclib/ping -I include/inclib/icmp
 
 UBUGINC = -I src/urlcatcher

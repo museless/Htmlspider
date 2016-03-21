@@ -12,9 +12,9 @@ create database if not exists Keyword;
  *          drop all example table
 -*---------------------------------------------*/
 
-drop table Url.Example;
-drop table News.Example;
-drop table Keyword.Example;
+drop table if exists Url.Example;
+drop table if exists News.Example;
+drop table if exists Keyword.Example;
 
 
 /*---------------------------------------------

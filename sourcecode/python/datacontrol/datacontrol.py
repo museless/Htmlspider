@@ -52,9 +52,9 @@ class DataControl:
 
     def __init__(self, database_name):
         self.controler = \
-        MySQLdb.connect(
-        user = UserName, passwd = UserPassword, 
-        db = database_name, charset = "utf8")
+            MySQLdb.connect(
+            user = UserName, passwd = UserPassword, 
+            db = database_name, charset = "utf8", unix_socket="/tmp/mysql.sock")
             
         self.cursor = self.controler.cursor()
 
