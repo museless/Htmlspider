@@ -5,7 +5,7 @@
 #----------------------------------------------
 
 __author__ = "Muse"
-__creation_time__ = "2016.03.16 00:50"
+__creation_time__ = "2016.03.23 07:40"
 __modification_time__ = "2016.03.16 00:50"
 __intro__ = "Keyword relator"
 
@@ -16,7 +16,7 @@ __intro__ = "Keyword relator"
 
 import time
 
-from datacontrol import DataControl
+from relate import KeywordRelater
 
 
 #----------------------------------------------
@@ -26,7 +26,7 @@ from datacontrol import DataControl
 def relator_initialize():
     keyword_supporter = DataControl("Keyword");
 
-    return  None, keyword_supporter
+    return  KeywordRelater(), keyword_supporter
 
 
 #----------------------------------------------
@@ -57,7 +57,12 @@ def upload_news(data_catcher, news_uploader, url_id, url, charset):
 #----------------------------------------------
 
 def handle_keyword_list(relator, data_row):
-    pass
+    words = data_row.rsplit(data_row, ",")
+
+    for target_word in words:
+        for relate_word in words:
+            if relate_word != target_word:
+                relator.relating(target_word, relate_word)
 
 
 #----------------------------------------------
