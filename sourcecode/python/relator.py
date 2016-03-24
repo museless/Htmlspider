@@ -5,8 +5,8 @@
 #----------------------------------------------
 
 __author__ = "Muse"
-__creation_time__ = "2016.03.23 07:40"
-__modification_time__ = "2016.03.16 00:50"
+__creation_time__ = "2016.03.16 00:50"
+__modification_time__ = "2016.03.24 09:30"
 __intro__ = "Keyword relator"
 
 
@@ -40,24 +40,11 @@ def table_name_get():
 
 
 #----------------------------------------------
-#           upload news content
-#----------------------------------------------
-
-def upload_news(data_catcher, news_uploader, url_id, url, charset):
-    title, source = data_catcher.title_and_data_source(charset)
-
-    news_uploader.pre_insert(
-        str(url_id), time.strftime("%H:%M"), \
-        source, news_uploader.escaping(title), url, \
-        news_uploader.escaping(data_catcher.news_content(charset)))
-
-
-#----------------------------------------------
 #           handle keyword list
 #----------------------------------------------
 
 def handle_keyword_list(relator, data_row):
-    words = data_row.rsplit(data_row, ",")
+    words = data_row.rsplit(data_row[2], ",")
 
     for target_word in words:
         for relate_word in words:
