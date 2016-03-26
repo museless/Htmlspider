@@ -14,4 +14,17 @@ __intro__ = "keyword relater conf"
 #             Config parameters
 #----------------------------------------------
 
-Export_time = 5 * 60
+# in second
+Export_time = 300
+
+# data map template
+RelationDataTemplate = """
+# -*- coding:utf8 -*-
+
+RelationMap = %s
+
+TimeStamp = %d
+
+TimeString = "%s"
+
+"""

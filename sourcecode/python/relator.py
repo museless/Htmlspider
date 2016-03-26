@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.03.16 00:50"
-__modification_time__ = "2016.03.24 09:30"
+__modification_time__ = "2016.03.26 16:30"
 __intro__ = "Keyword relator"
 
 
@@ -14,8 +14,7 @@ __intro__ = "Keyword relator"
 #                  Import
 #----------------------------------------------
 
-import time
-
+from datacontrol import DataControl
 from relate import KeywordRelater
 
 
@@ -24,9 +23,9 @@ from relate import KeywordRelater
 #----------------------------------------------
 
 def relator_initialize():
-    keyword_supporter = DataControl("Keyword");
+    keyword_supporter = DataControl("Keyword")
 
-    return  KeywordRelater(), keyword_supporter
+    return  KeywordRelater("../../text/relation/"), keyword_supporter
 
 
 #----------------------------------------------
@@ -44,7 +43,7 @@ def table_name_get():
 #----------------------------------------------
 
 def handle_keyword_list(relator, data_row):
-    words = data_row.rsplit(data_row[2], ",")
+    words = data_row.rsplit(data_row[1], ",")
 
     for target_word in words:
         for relate_word in words:
@@ -57,14 +56,13 @@ def handle_keyword_list(relator, data_row):
 #----------------------------------------------
 
 def relator_work(relator, keyword_supporter, keyword_table, keylist_num = 32):
-    last_timstamp = int(time.time())
-
     while True:
         keyword_supporter.select(2, keyword_table, keylist_num)
         results = keyword_supporter.cursor.fetchall()
 
         for data_row in results:
             handle_keyword_list(relator, data_row)
+            keyword_supporter.update(2, data_row[0], 1)
 
 
 #==============================================
