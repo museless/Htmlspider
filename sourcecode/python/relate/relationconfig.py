@@ -15,7 +15,7 @@ __intro__ = "keyword relater conf"
 #----------------------------------------------
 
 # in second
-Export_time = 300
+Export_time = 60
 
 # data map template
 RelationDataTemplate = """

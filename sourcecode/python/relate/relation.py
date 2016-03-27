@@ -38,7 +38,7 @@ class KeywordRelater:
 
     # relate block index
     TIMES = 0
-    LATEST = 0
+    LATEST = 1
 
     #------------------------------------------
     #              Constructor
@@ -59,8 +59,8 @@ class KeywordRelater:
     def __del__(self):
         unfinish_data_path = "%s/unfinish.py" % self.data_path
 
-        with open(unfinish_data_path, "w") as file_desc:
-            self.__write_map(file_desc)
+        file_desc = open(unfinish_data_path, "w")
+        self.__write_map(file_desc)
 
     #------------------------------------------
     #          reload unfinish map
@@ -87,12 +87,11 @@ class KeywordRelater:
             self.__relation_map[target] = {}
 
         if self.__relation_map[target].has_key(relate) == False:
-            self.__relation_map[target][relate] = [0, 0]
+            self.__relation_map[target][relate] = [0]
 
         relate_block = self.__relation_map[target][relate]
 
         relate_block[self.TIMES] += 1
-        relate_block[self.LATEST] = time.time()
 
         self.__write_timestamp = int(time.time())
 
@@ -104,7 +103,8 @@ class KeywordRelater:
 
     def __relation_map_save(self):
         if self.__start_timestamp + Export_time < self.__write_timestamp:
-            data_file = "%s/%s.py" % (self.data_path, time_str)
+            data_file = "%s/%s.py" % \
+                (self.data_path, time.strftime("%Y%m%d%H%M%S"))
 
             with open(data_file, "w") as file_desc:
                 self.__write_map(file_desc)

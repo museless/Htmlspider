@@ -125,6 +125,7 @@ void exbug_option_analyst(int nPara, char **paraList)
             case 'c':
                 mc_load_config("Extbug", optarg);
                 conf_flags = 1;
+                break;
 
             case 't':
                 exbug_tblname_set(optarg);

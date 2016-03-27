@@ -38,9 +38,8 @@ URL_INDEX = 1
 def catcher_initialize():
     url_receiver = DataControl("Url");
     news_uploader = DataControl("News")
-    data_catcher = DataCatcher()
 
-    return  url_receiver, news_uploader, data_catcher
+    return  url_receiver, news_uploader
 
 
 #----------------------------------------------
@@ -141,9 +140,8 @@ def upload_news(data_catcher, news_uploader, url_id, url, charset):
 #             handle url result
 #----------------------------------------------
 
-def handle_url_result(
-    data_row, data_catcher, url_receiver, 
-    news_uploader, url_tabname):
+def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
+    data_catcher = DataCatcher()
 
     url = data_row[URL_INDEX]
     url_id = data_row[URL_ID_INDEX]
@@ -173,8 +171,8 @@ def handle_url_result(
 #----------------------------------------------
 
 def catcher_work(
-    data_catcher, url_receiver, news_uploader, 
-    url_tabname, news_tabname, url_limit = 32, thread_limit = 8):
+    url_receiver, news_uploader, url_tabname, 
+    news_tabname, url_limit = 32, thread_limit = 8):
 
     news_uploader.create(1, news_tabname) 
     news_uploader.insert_ready(1, news_tabname)
@@ -182,19 +180,21 @@ def catcher_work(
     while True:
         url_receiver.select(1, url_tabname, url_limit)
         results = url_receiver.cursor.fetchall()
+        thread_count = 0
 
         for data_row in results:
-            for index in range(thread_limit):
-                thread_entity = threading.Thread(target = handle_url_result, 
-                    args = (data_row, data_catcher, url_receiver, 
-                    news_uploader, url_tabname))
+            thread_entity = threading.Thread(target = handle_url_result,
+                args = (data_row, url_receiver, news_uploader, url_tabname))
 
-                thread_entity.start()
+            thread_entity.start()
+            thread_count += 1
 
-            while threading.activeCount() > 1:
-                pass
+            if thread_count == thread_limit:
+                while threading.activeCount() > 1:
+                    pass 
                 
-        news_uploader.final_insert()
+                news_uploader.final_insert()
+                thread_count = 0
 
 
 #==============================================
@@ -202,8 +202,8 @@ def catcher_work(
 #==============================================
 
 if __name__ == "__main__":
-    url_receiver, news_uploader, data_catcher = catcher_initialize()
+    url_receiver, news_uploader = catcher_initialize()
     url_table, news_table = table_name_get()
 
-    catcher_work(data_catcher, url_receiver, news_uploader, url_table, news_table)
+    catcher_work(url_receiver, news_uploader, url_table, news_table)
 

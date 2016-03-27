@@ -1,4 +1,4 @@
-#-*- coding:utf8 -*-
+#-*- coding: utf8 -*-
 
 #----------------------------------------------
 #                Code header
@@ -14,6 +14,9 @@ __intro__ = "Keyword relator"
 #                  Import
 #----------------------------------------------
 
+import time
+import sys
+
 from datacontrol import DataControl
 from relate import KeywordRelater
 
@@ -23,7 +26,7 @@ from relate import KeywordRelater
 #----------------------------------------------
 
 def relator_initialize():
-    keyword_supporter = DataControl("Keyword")
+    keyword_supporter = DataControl("Keyword", "")
 
     return  KeywordRelater("../../text/relation/"), keyword_supporter
 
@@ -35,7 +38,7 @@ def relator_initialize():
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
 
-    return  "K" + time_str
+    return  "K" + "20160321" 
 
 
 #----------------------------------------------
@@ -43,12 +46,13 @@ def table_name_get():
 #----------------------------------------------
 
 def handle_keyword_list(relator, data_row):
-    words = data_row.rsplit(data_row[1], ",")
+    words = data_row[1].rsplit(";")
 
     for target_word in words:
-        for relate_word in words:
-            if relate_word != target_word:
-                relator.relating(target_word, relate_word)
+        if target_word != "":
+            for relate_word in words:
+                if relate_word != target_word and relate_word != "":
+                    relator.relating(target_word, relate_word)
 
 
 #----------------------------------------------
@@ -62,7 +66,8 @@ def relator_work(relator, keyword_supporter, keyword_table, keylist_num = 32):
 
         for data_row in results:
             handle_keyword_list(relator, data_row)
-            keyword_supporter.update(2, data_row[0], 1)
+            keyword_supporter.update(2, keyword_table, 1, data_row[0])
+            time.sleep(16)
 
 
 #==============================================

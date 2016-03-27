@@ -46,6 +46,6 @@ UpdateSql = {
     1: [u"State = %d", "ID = %d"],
 
     # relator
-    2: [u"Ind = \"%s\"", "Keyflags = %d"],
+    2: [u"Keyflags = %d", "Ind = \"%s\""],
 }
 
