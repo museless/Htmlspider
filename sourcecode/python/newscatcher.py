@@ -48,7 +48,7 @@ def catcher_initialize():
 
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
-    time_str = "20160321"
+    time_str = "20160328"
 
     return  "U" + time_str, "N" + time_str
 
@@ -172,7 +172,7 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
 
 def catcher_work(
     url_receiver, news_uploader, url_tabname, 
-    news_tabname, url_limit = 32, thread_limit = 8):
+    news_tabname, url_limit = 6, thread_limit = 4):
 
     news_uploader.create(1, news_tabname) 
     news_uploader.insert_ready(1, news_tabname)
@@ -180,21 +180,17 @@ def catcher_work(
     while True:
         url_receiver.select(1, url_tabname, url_limit)
         results = url_receiver.cursor.fetchall()
-        thread_count = 0
 
         for data_row in results:
             thread_entity = threading.Thread(target = handle_url_result,
                 args = (data_row, url_receiver, news_uploader, url_tabname))
 
             thread_entity.start()
-            thread_count += 1
 
-            if thread_count == thread_limit:
-                while threading.activeCount() > 1:
-                    pass 
+        while threading.activeCount() > 1:
+            pass 
                 
-                news_uploader.final_insert()
-                thread_count = 0
+        news_uploader.final_insert()
 
 
 #==============================================

@@ -59,6 +59,8 @@ class DataControl:
             
         self.cursor = self.controler.cursor()
 
+        self.__get_mysql_variables()
+
         self.exec_lock = thread.allocate_lock()
         self.insert_lock = thread.allocate_lock()
 
@@ -122,7 +124,9 @@ class DataControl:
 
         self.insert_field = \
         u"(%s)" % InsertSql[operate_id][self.INSERT_FORMAT_INDEX]
- 
+
+        self.insert_total_len = 0
+
     #------------------------------------------
     #          insert to insert list 
     #------------------------------------------
@@ -132,7 +136,12 @@ class DataControl:
             return  None
 
         self.insert_lock.acquire()
-        self.insert_buff.append(self.insert_field % parameters)
+
+        data = self.insert_field % parameters
+
+        if self.insert_total_len + len(data) > 
+
+        self.insert_buff.append(data)
         self.insert_lock.release()
  
     #------------------------------------------
