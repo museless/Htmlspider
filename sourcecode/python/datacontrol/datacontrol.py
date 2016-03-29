@@ -50,7 +50,7 @@ class DataControl:
     #               Constructor
     #------------------------------------------
 
-    def __init__(self, database_name, charseting = "utf8"):
+    def __init__(self, database_name, charseting = "utf8", max_allow_packet = 0):
         self.controler = \
             MySQLdb.connect(
             user = UserName, passwd = UserPassword, 
@@ -59,17 +59,30 @@ class DataControl:
             
         self.cursor = self.controler.cursor()
 
-        self.__get_mysql_variables()
-
         self.exec_lock = thread.allocate_lock()
         self.insert_lock = thread.allocate_lock()
+
+        self.__get_mysql_variables(max_allow_packet)
 
     #------------------------------------------
     #               Destructor 
     #------------------------------------------
 
     def __del__(self):
-        pass
+        self.final_insert()
+
+    #------------------------------------------
+    #        get mysql limited variables
+    #------------------------------------------
+
+    def __get_mysql_variables(self, max_allow_packet):
+        self.max_allow_packet = max_allow_packet
+
+        if max_allow_packet == 0:
+            self.__execute("show variables like '%max_allowed_packet%'")
+            result = self.cursor.fetchall()
+
+            self.max_allow_packet = int(result[0][1])
 
     #------------------------------------------
     #        joint to the select string 
@@ -138,17 +151,24 @@ class DataControl:
         self.insert_lock.acquire()
 
         data = self.insert_field % parameters
+        length = len(data) * 3
 
-        if self.insert_total_len + len(data) > 
+        if self.insert_total_len + length > self.max_allow_packet - 256:
+            self.final_insert(False)
+            self.insert_total_len = 0
 
         self.insert_buff.append(data)
+        self.insert_total_len += length
         self.insert_lock.release()
  
     #------------------------------------------
     #        final insert to the mysql 
     #------------------------------------------
  
-    def final_insert(self):
+    def final_insert(self, need_lock = True):
+        if need_lock:
+            self.insert_lock.acquire()           
+
         if self.insert_buff == [] or \
            self.insert_head == "" or self.insert_field == "":
             return  None
@@ -157,6 +177,9 @@ class DataControl:
         u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
 
         self.insert_buff = []
+
+        if need_lock:
+            self.insert_lock.release()
 
     #------------------------------------------
     #        joint to the update string 

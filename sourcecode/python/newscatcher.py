@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.02.03 10:00"
-__modification_time__ = "2016.03.14 01:50"
+__modification_time__ = "2016.03.29 22:50"
 __intro__ = "news catcher"
 
 
@@ -14,10 +14,7 @@ __intro__ = "news catcher"
 #                  Import
 #----------------------------------------------
 
-import urllib
-import time
-import thread
-import threading
+import urllib, time, threading
 
 from datacatcher import DataCatcher
 from datacontrol import DataControl
@@ -37,7 +34,7 @@ URL_INDEX = 1
 
 def catcher_initialize():
     url_receiver = DataControl("Url");
-    news_uploader = DataControl("News")
+    news_uploader = DataControl("News", max_allow_packet = 32 * 1024)
 
     return  url_receiver, news_uploader
 
@@ -48,7 +45,6 @@ def catcher_initialize():
 
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
-    time_str = "20160328"
 
     return  "U" + time_str, "N" + time_str
 
@@ -62,9 +58,9 @@ def url_data_get(url_receiver, url_tabname, url, url_id):
 
     try:
         url_data = urllib.urlopen(url)
-    except:
-        print("Url: %s cannot get" % url)
+    except IOError, error_str:
         url_receiver.update(1, url_tabname, 2, url_id)
+        return  None
 
     if url_data != None:
         ret_code = url_data.getcode()
@@ -172,7 +168,7 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
 
 def catcher_work(
     url_receiver, news_uploader, url_tabname, 
-    news_tabname, url_limit = 6, thread_limit = 4):
+    news_tabname, url_limit = 4, thread_limit = 4):
 
     news_uploader.create(1, news_tabname) 
     news_uploader.insert_ready(1, news_tabname)
@@ -182,16 +178,13 @@ def catcher_work(
         results = url_receiver.cursor.fetchall()
 
         for data_row in results:
-            thread_entity = threading.Thread(target = handle_url_result,
+            thread_entity = threading.Thread(
+                target = handle_url_result,
                 args = (data_row, url_receiver, news_uploader, url_tabname))
 
             thread_entity.start()
 
-        while threading.activeCount() > 1:
-            pass 
-                
-        news_uploader.final_insert()
-
+        time.sleep(2)
 
 #==============================================
 #                   Main
