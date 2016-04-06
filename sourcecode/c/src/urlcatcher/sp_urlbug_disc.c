@@ -41,7 +41,6 @@
 void ubug_print_help(void)
 {
     STAT    stat_buf;
-    char   *help_content;
     int     help_fd;
 
     help_fd = open("../sourcecode/c/src/urlcatcher/urlbug.hlp", O_RDWR);
@@ -56,21 +55,17 @@ void ubug_print_help(void)
         exit(FUN_RUN_FAIL); 
     }
 
-    if ((help_content = malloc(stat_buf.st_size + 1)) == NULL) {
-        ubug_perror("ubug_print_help - malloc", errno);
-        exit(FUN_RUN_FAIL);
-    }
-
-    help_content[stat_buf.st_size] = 0;
+    char    help_content[stat_buf.st_size + 1];
 
     if (readn(help_fd, help_content, stat_buf.st_size) == FUN_RUN_FAIL) {
         ubug_perror("ubug_print_help - readn", errno);
         exit(FUN_RUN_FAIL);
     }
 
+    help_content[stat_buf.st_size] = 0;
+
     printf("%s\n", help_content);
     
-    free(help_content);
     close(help_fd);
 }
 

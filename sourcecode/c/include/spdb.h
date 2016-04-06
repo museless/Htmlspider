@@ -66,7 +66,7 @@ values(\"%.*s\",%d,%d)"
 #define TRAN_URL        ",(\"%.*s\",%d,%d)"
 
 #define REVIEW_URL      "select * from %s where Url=\"%.*s\""
-#define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url=\"%s%s%s\""
+#define UPDATE_LATEST   "update UALL set Latest=\"%s\" where Url like \"%%%s%s%s\""
 
 
 /*---------------------------------------------

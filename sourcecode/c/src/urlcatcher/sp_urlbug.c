@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2015-11-23 23:14:59
+ *     modification time: 2016-04-04 22:00:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -35,11 +35,6 @@
 
 #include "spuglobal.h"
 #include "spurlb.h"
-
-
-/*---------------------------------------------
- *          Part One: Local data
--*---------------------------------------------*/
 
 
 /*---------------------------------------------
@@ -258,7 +253,7 @@ static int ubug_init_dbuf(BUFF **pBuff)
 
 
 /*-----ubug_init_weblist-----*/
-static void ubug_init_weblist(void)
+void ubug_init_weblist(void)
 {
     char    url_store_table_name[MIDDLE_BUF];
 
@@ -299,7 +294,7 @@ static void ubug_init_weblist(void)
 
 
 /*-----ubug_list_entity_set-----*/
-static WEBIN *ubug_list_entity_set(MSLROW data_row)
+WEBIN *ubug_list_entity_set(MSLROW data_row)
 {
     WEBIN   *list_point;
 
@@ -312,10 +307,10 @@ static WEBIN *ubug_list_entity_set(MSLROW data_row)
     if (!ubug_init_urllist(data_row[0], &((list_point)->w_ubuf)))
         ubug_sig_error();
 
-    if (data_row[1]) {
-        (list_point)->w_latest[strlen(data_row[1])] = 0;
-        strcpy((list_point)->w_latest, data_row[1]);
-    }
+    (list_point)->w_latest[0] = 0;
+
+    if (data_row[1])
+        sprintf((list_point)->w_latest, data_row[1]);
 
     list_point->w_latestcnt = list_point->w_conbufsize = 
     list_point->w_urlbufsize = list_point->w_contoffset = 0;
@@ -353,8 +348,8 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
 static void ubug_set_ubset(const char *way_option)
 {
     ubug_init_ubset(
-    NULL, ubug_text_abstract_cont, ubug_tran_db,
-    ubug_tran_db_whole, ubug_html_download, RUN_PERN);
+        NULL, ubug_text_abstract_cont, ubug_tran_db,
+        ubug_tran_db_whole, ubug_html_download, RUN_PERN);
 
     if (!strcmp(way_option, "normal")) {
         ubug_init_ubset_way(
@@ -408,7 +403,7 @@ void ubug_pthread_entrance(void *parameters)
 
 
 /*-----ubug_pthread_apply_for_resource-----*/
-static int ubug_pthread_apply_for_resource(WEBIN *web_info)
+int ubug_pthread_apply_for_resource(WEBIN *web_info)
 {
     if (!(web_info->w_conbuf = wmpool_malloc(contStorePool))) {
         ubug_perror("ubug_pthread_apply_for_resource - contbuf", errno);
@@ -417,7 +412,6 @@ static int ubug_pthread_apply_for_resource(WEBIN *web_info)
 
     if (!(web_info->w_url = wmpool_malloc(urlStorePool))) {
         wmpool_free(contStorePool, web_info->w_conbuf);
-
         ubug_perror("ubug_pthread_apply_for_resource - url", errno);
         return  FRET_N;
     }
@@ -441,12 +435,12 @@ static int ubug_pthread_apply_for_resource(WEBIN *web_info)
 -*---------------------------------------------*/
 
 /*-----ubug_main_entrance-----*/
-static void ubug_main_entrance(void)
+void ubug_main_entrance(void)
 {
     WEBIN   *webPoint;
 
     do {
-        ubug_ping();
+        /* ubug_ping(); */
 
         for (urlCatchNum = 0, webPoint = urlSaveList;
                 webPoint != NULL; webPoint = webPoint->w_next) {
@@ -464,7 +458,7 @@ static void ubug_main_entrance(void)
 
 
 /*-----ubug_text_abstract_cont-----*/
-static void ubug_text_abstract_cont(WEBIN *abPoint)
+void ubug_text_abstract_cont(WEBIN *abPoint)
 {
     ubug_job(abPoint);
 }

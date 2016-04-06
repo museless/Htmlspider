@@ -81,13 +81,13 @@ int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)
 /*-----sp_net_sock_connect-----*/
 int sp_net_sock_connect(SOCKIF *sockInfo)
 {
-    int sock;
+    int     sock;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == FUN_RUN_FAIL)
         return  FUN_RUN_END;
 
-    if (sp_net_sock_settimer(
-        sock, TAKE_A_NOTHING, 0, SO_SNDTIMEO) == FUN_RUN_FAIL) {
+    if (sp_net_sock_settimer(sock, 
+           TAKE_A_NOTHING, 0, SO_SNDTIMEO) == FUN_RUN_FAIL) {
         close(sock);
         return  FUN_RUN_END;
     }
@@ -143,7 +143,7 @@ int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
 {
     TMVAL  time_val;
 
-    if(nFlags != SO_RCVTIMEO && nFlags != SO_SNDTIMEO)
+    if (nFlags != SO_RCVTIMEO && nFlags != SO_SNDTIMEO)
         return  FUN_RUN_FAIL;
 
     time_val.tv_sec = nSec;
@@ -185,9 +185,7 @@ int sp_net_html_download(WEBIN *web_stu)
                 break;
             }
 
-            redire_flags = 
-                sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
-           
+            redire_flags = sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
             close(web_stu->w_sock);
             continue;
         }
@@ -248,7 +246,7 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 
     if ((location = strnstr(data_buff, http_header, *data_size))) {
         locate_end = 
-        strnstr(location, "\r\n", *data_size - (location - data_buff));
+            strnstr(location, "\r\n", *data_size - (location - data_buff));
 
         if (!locate_end)
             return  NULL;
@@ -278,7 +276,7 @@ char *sp_http_compare_latest(
         }
     }
 
-	if(!strncmp(header + string_size, last_time, string_size))
+	if (!strncmp(header + string_size, last_time, string_size))
 		return	NULL;
 
     *buff_len = string_size;
@@ -291,8 +289,8 @@ char *sp_http_compare_latest(
 int sp_http_handle_request(WEBIN *web_stu)
 {
     return  sp_http_handle_retcode(
-            web_stu->w_conbuf, web_stu->w_size, 
-            sp_http_interact(web_stu), web_stu);
+                web_stu->w_conbuf, web_stu->w_size, 
+                sp_http_interact(web_stu), web_stu);
 }
 
 
@@ -431,7 +429,7 @@ long sp_net_speed_ping(const char *ping_host, int num_pack)
     int     count;
 
     for (count = total_time = 0; count < num_pack; ) {
-        if (ping(&ping_info, ping_host) != FUN_RUN_OK) {
+        if (ping(&ping_info, ping_host) != FRET_P) {
             perror("Ping---> ping error");
             num_pack--;
             continue;

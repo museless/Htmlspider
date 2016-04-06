@@ -22,7 +22,7 @@
 #define PING_WAIT_SEC       0x0
 #define PING_WAIT_USEC      0x280
 
-#define PING_SEND_WAIT_SEC  0x1
+#define PING_SEND_WAIT_SEC  0x2
 #define PING_SEND_WAIT_USEC 0x0
 
 

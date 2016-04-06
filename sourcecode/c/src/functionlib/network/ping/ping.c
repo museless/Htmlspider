@@ -100,7 +100,7 @@ int ping(PINGIF *ping_info, const char *host)
 -*---------------------------------------------*/
 
 /*-----ping_access-----*/
-static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
+int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
 {
     char    buffer[DG_ICMP_MAXLEN];
     TMVAL   send_time, recv_time;
@@ -143,14 +143,14 @@ int ping_socket_get(void)
     if ((sock = socket(AF_INET, SOCK_RAW, protocal->p_proto)) == FRET_N)
         return  FRET_N;
 
-    if(sp_net_sock_settimer(
-       sock, PING_WAIT_SEC, PING_WAIT_USEC, SO_RCVTIMEO) == FRET_N) {
+    if (sp_net_sock_settimer(sock, PING_WAIT_SEC, 
+           PING_WAIT_USEC, SO_RCVTIMEO) == FRET_N) {
         close(sock);
         return  FRET_N;
     }
  
-    if(sp_net_sock_settimer(
-       sock, PING_SEND_WAIT_SEC, PING_SEND_WAIT_USEC, SO_SNDTIMEO) == FRET_N) {
+    if (sp_net_sock_settimer(sock, PING_SEND_WAIT_SEC, 
+           PING_SEND_WAIT_USEC, SO_SNDTIMEO) == FRET_N) {
         close(sock);
         return  FRET_N;
     }

@@ -70,6 +70,9 @@ void ubug_init_pinginfo(void)
         "ping_packet", CONF_NUM,
         &ubugPingInfo.p_packnum, sizeof(int)) == FUN_RUN_FAIL)
         mc_conf_print_err("ping_packet");
+
+    ubugPingInfo.p_time.tv_sec = 0;
+    ubugPingInfo.p_time.tv_usec = 80000;
 }
 
 
@@ -122,10 +125,8 @@ int ubug_html_download(WEBIN *web_stu)
     int     cont_offset, byte_read;
 
     if (sp_net_html_download(web_stu) != FRET_P) {
-        elog_write(
-        "ubug_html_download - sp_net_html_download",
-        web_stu->w_ubuf.web_host, HERROR_STR);
-
+        elog_write("ubug_html_download - sp_net_html_download",
+            web_stu->w_ubuf.web_host, HERROR_STR);
         return  FRET_Z;
     }
 
@@ -137,7 +138,7 @@ int ubug_html_download(WEBIN *web_stu)
                 WMP_PAGESIZE - cont_offset, UBUG_NREAD, 
                 ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
-    cont_offset += (byte_read == FUN_RUN_FAIL) ? 0 : byte_read;
+    cont_offset += (byte_read == FRET_N) ? 0 : byte_read;
     close(web_stu->w_sock);
 
     return  cont_offset;
@@ -145,51 +146,48 @@ int ubug_html_download(WEBIN *web_stu)
 
 
 /*-----ubug_handle_httpreq-----*/
-static int ubug_handle_httpreq(WEBIN *web_stu)
+int ubug_handle_httpreq(WEBIN *web_stu)
 {
     char   *string_point;
-    int     string_size = web_stu->w_contoffset;
 
     web_stu->w_contoffset = 
-    (string_point = strstr(web_stu->w_conbuf, "\r\n\r\n")) ? 
-    string_point - web_stu->w_conbuf : strlen(web_stu->w_conbuf);
+        (string_point = strstr(web_stu->w_conbuf, "\r\n\r\n")) ?
+         string_point - web_stu->w_conbuf : strlen(web_stu->w_conbuf);
+
+    int     string_size = web_stu->w_contoffset;
 
     string_point = sp_http_compare_latest(
-                   web_stu->w_latest, string_point, &string_size);
+                   web_stu->w_latest, web_stu->w_conbuf, &string_size);
 
-    if (!string_point) {
+    if (string_point) {
         sprintf(web_stu->w_latest, "%.*s", string_size, string_point);
         ubug_update_latest_time(web_stu);
+        return  web_stu->w_contoffset;
     }
 
-    return  web_stu->w_contoffset;
+    return  FRET_N;
 }
 
 
 /*-----ubug_update_latest_time-----*/
-static void ubug_update_latest_time(WEBIN *web_stu)
+void ubug_update_latest_time(WEBIN *web_stu)
 {
     char    sqlCom[SQL_SCOM_LEN]; 
 
-    if (++web_stu->w_latestcnt == LATEST_UPGRADE_LIMIT) {
-        sprintf(
-        sqlCom, UPDATE_LATEST, web_stu->w_latest, 
+    sprintf(sqlCom, UPDATE_LATEST, web_stu->w_latest, 
         web_stu->w_ubuf.web_host, web_stu->w_ubuf.web_path,
         web_stu->w_ubuf.web_file);
 
-        web_stu->w_latestcnt = 0;
-
-        while (!mato_dec_and_test(&writeStoreLock))
-            mato_inc(&writeStoreLock);
-
-        if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
-            if (mysql_error_log(&urlDataBase, 
-                    urlTabName, "send_httpreq - up latest") != FRET_P)
-                ubug_sig_error();
-        }
-
+    while (!mato_dec_and_test(&writeStoreLock))
         mato_inc(&writeStoreLock);
+
+    if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
+        if (mysql_error_log(&urlDataBase, urlTabName, 
+                "send_httpreq - up latest") != FRET_P)
+            ubug_sig_error();
     }
+
+    mato_inc(&writeStoreLock);
 }
 
 
