@@ -1,0 +1,5 @@
+#!/bin/bash
+# start newscatcher
+
+cd ../sourcecode/python/
+python newscatcher.py&
