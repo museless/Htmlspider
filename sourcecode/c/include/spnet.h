@@ -150,7 +150,7 @@ extern	char	*rPac;
 
 /* sp_network.c */
 int     sp_net_sock_init(WEBIN *web_stu);
-int     sp_net_set_sockif(const char *host_name, SOCKIF *sInfo);
+int     sp_net_set_sockif(const char *hostName, SOCKIF *sInfo);
 int     sp_net_sock_connect(SOCKIF *sockInfo);
 
 int     sp_net_sock_read(

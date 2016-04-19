@@ -755,7 +755,7 @@ pi_rrt	include/inclib/ping/ping.h	/^    uLong  pi_rrt;$/;"	m	struct:ping_info
 pi_seq	include/inclib/ping/ping.h	/^    uInt   pi_seq;$/;"	m	struct:ping_info
 pi_ttl	include/inclib/ping/ping.h	/^    uInt   pi_ttl;$/;"	m	struct:ping_info
 ping	src/functionlib/network/ping/ping.c	/^int ping(PINGIF *ping_info, const char *host)$/;"	f
-ping_access	src/functionlib/network/ping/ping.c	/^int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)$/;"	f
+ping_access	src/functionlib/network/ping/ping.c	/^static int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)$/;"	f	file:
 ping_calculate_rrt	src/functionlib/network/ping/ping.c	/^long ping_calculate_rrt(TMVAL *send_tim, TMVAL *recv_tim)$/;"	f
 ping_info	include/inclib/ping/ping.h	/^struct  ping_info {$/;"	s
 ping_send_recv	src/functionlib/network/ping/ping.c	/^int ping_send_recv(int sock, SOCKIF *sock_info, char *buffer)$/;"	f
@@ -800,8 +800,9 @@ shm_mov	include/inclib/museipc/mshm.h	/^	void	*shm_mov;$/;"	m	struct:mshm
 shm_sembuf	include/inclib/museipc/mshm.h	/^	MSEM	*shm_sembuf;$/;"	m	struct:mshm
 shm_start	include/inclib/museipc/mshm.h	/^	void	*shm_start;$/;"	m	struct:mshm
 sigIntLock	src/dataanalyzer/sp_extbug_signal.c	/^static  pmut_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
-sigIntLock	src/urlcatcher/sp_urlbug_signal.c	/^static  pmut_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
+sigIntLock	src/urlcatcher/sp_urlbug_signal.c	/^static	pmut_t	sigIntLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
 sigSegLock	src/dataanalyzer/sp_extbug_signal.c	/^static  pmut_t  sigSegLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
+sigSegLock	src/urlcatcher/sp_urlbug_signal.c	/^static	pmut_t	sigSegLock = PTHREAD_MUTEX_INITIALIZER;$/;"	v	file:
 sigfun	include/spinc.h	/^typedef void	(*sigfun)(int);$/;"	t
 sp_html_code_location	src/functionlib/sp_html.c	/^char *sp_html_code_location($/;"	f
 sp_html_get_tag_string	src/functionlib/sp_html.c	/^char *sp_html_get_tag_string(char *tag_start, int *tag_len)$/;"	f
@@ -907,22 +908,22 @@ ubug_create_dbtable	src/urlcatcher/sp_urlbug_db.c	/^void ubug_create_dbtable(voi
 ubug_create_pthread	src/urlcatcher/sp_urlbug.c	/^void ubug_create_pthread(WEBIN *web_info)$/;"	f
 ubug_db_clean	src/urlcatcher/sp_urlbug_clean.c	/^void ubug_db_clean(void *pNULL)$/;"	f
 ubug_free_weblist	src/urlcatcher/sp_urlbug_clean.c	/^void ubug_free_weblist(void *pNull)$/;"	f
-ubug_handle_httpreq	src/urlcatcher/sp_urlbug_network.c	/^int ubug_handle_httpreq(WEBIN *web_stu)$/;"	f
+ubug_handle_httpreq	src/urlcatcher/sp_urlbug_network.c	/^static int ubug_handle_httpreq(WEBIN *web_stu)$/;"	f	file:
 ubug_html_download	src/urlcatcher/sp_urlbug_network.c	/^int ubug_html_download(WEBIN *web_stu)$/;"	f
 ubug_init_database	src/urlcatcher/sp_urlbug_db.c	/^void ubug_init_database(void)$/;"	f
 ubug_init_dbuf	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_dbuf(BUFF **pBuff)$/;"	f	file:
 ubug_init_pinginfo	src/urlcatcher/sp_urlbug_network.c	/^void ubug_init_pinginfo(void)$/;"	f
 ubug_init_signal	src/urlcatcher/sp_urlbug_signal.c	/^void ubug_init_signal(void)$/;"	f
 ubug_init_source_pool	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_source_pool(void)$/;"	f	file:
-ubug_init_ubset	src/urlcatcher/sp_urlbug.c	73;"	d	file:
-ubug_init_ubset_way	src/urlcatcher/sp_urlbug.c	82;"	d	file:
+ubug_init_ubset	src/urlcatcher/sp_urlbug.c	78;"	d	file:
+ubug_init_ubset_way	src/urlcatcher/sp_urlbug.c	87;"	d	file:
 ubug_init_urllist	src/urlcatcher/sp_urlbug.c	/^static int ubug_init_urllist(char *urlStr, WEB *webStu)$/;"	f	file:
-ubug_init_weblist	src/urlcatcher/sp_urlbug.c	/^void ubug_init_weblist(void)$/;"	f
+ubug_init_weblist	src/urlcatcher/sp_urlbug.c	/^static void ubug_init_weblist(void)$/;"	f	file:
 ubug_is_today_news	src/urlcatcher/sp_urlbug_rule.c	/^int ubug_is_today_news(char *string, int nLimit)$/;"	f
 ubug_job	src/urlcatcher/sp_urlbug.c	/^static void ubug_job(WEBIN *wPoint)$/;"	f	file:
-ubug_list_entity_set	src/urlcatcher/sp_urlbug.c	/^WEBIN *ubug_list_entity_set(MSLROW data_row)$/;"	f
+ubug_list_entity_set	src/urlcatcher/sp_urlbug.c	/^static WEBIN *ubug_list_entity_set(MSLROW data_row)$/;"	f	file:
 ubug_locate_default_rule	src/urlcatcher/sp_urlbug_rule.c	/^int ubug_locate_default_rule($/;"	f
-ubug_main_entrance	src/urlcatcher/sp_urlbug.c	/^void ubug_main_entrance(void)$/;"	f
+ubug_main_entrance	src/urlcatcher/sp_urlbug.c	/^static void ubug_main_entrance(void)$/;"	f	file:
 ubug_msg_ctime	src/urlcatcher/sp_urlbug_msg.c	/^static void ubug_msg_ctime(void)$/;"	f	file:
 ubug_msg_init	src/urlcatcher/sp_urlbug_msg.c	/^void *ubug_msg_init(int msgFd)$/;"	f
 ubug_msg_send	src/urlcatcher/sp_urlbug_msg.c	/^static int ubug_msg_send(int sendFd)$/;"	f	file:
@@ -930,7 +931,7 @@ ubug_perror	src/urlcatcher/sp_urlbug_err.c	/^void ubug_perror(char *errStr, int 
 ubug_ping	src/urlcatcher/sp_urlbug_network.c	/^void ubug_ping(void)$/;"	f
 ubug_ping_default_init	src/urlcatcher/sp_urlbug_network.c	/^void ubug_ping_default_init(SPPING *ping_info)$/;"	f
 ubug_print_help	src/urlcatcher/sp_urlbug_disc.c	/^void ubug_print_help(void)$/;"	f
-ubug_pthread_apply_for_resource	src/urlcatcher/sp_urlbug.c	/^int ubug_pthread_apply_for_resource(WEBIN *web_info)$/;"	f
+ubug_pthread_apply_for_resource	src/urlcatcher/sp_urlbug.c	/^static int ubug_pthread_apply_for_resource(WEBIN *web_info)$/;"	f	file:
 ubug_pthread_entrance	src/urlcatcher/sp_urlbug.c	/^void ubug_pthread_entrance(void *parameters)$/;"	f
 ubug_reach_url_head	src/urlcatcher/sp_urlbug_rule.c	/^char *ubug_reach_url_head(char *pSrc, char *pLimit)$/;"	f
 ubug_send_message	src/urlcatcher/sp_urlbug_msg.c	/^static int ubug_send_message(int msgFd)$/;"	f	file:
@@ -940,13 +941,13 @@ ubug_set_ubset	src/urlcatcher/sp_urlbug.c	/^static void ubug_set_ubset(const cha
 ubug_setting	src/urlcatcher/spuglobal.h	/^struct ubug_setting {$/;"	s
 ubug_sig_error	src/urlcatcher/sp_urlbug_err.c	/^void ubug_sig_error(void)$/;"	f
 ubug_signal_handler	src/urlcatcher/sp_urlbug_signal.c	/^void ubug_signal_handler(int nSign)$/;"	f
-ubug_text_abstract_cont	src/urlcatcher/sp_urlbug.c	/^void ubug_text_abstract_cont(WEBIN *abPoint)$/;"	f
+ubug_text_abstract_cont	src/urlcatcher/sp_urlbug.c	/^static void ubug_text_abstract_cont(WEBIN *abPoint)$/;"	f	file:
 ubug_time_change	src/urlcatcher/sp_urlbug_msg.c	/^static void ubug_time_change(void)$/;"	f	file:
 ubug_tran_db	src/urlcatcher/sp_urlbug_db.c	/^void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)$/;"	f
 ubug_tran_db_force	src/urlcatcher/sp_urlbug_db.c	/^void ubug_tran_db_force(BUFF *pBuff)$/;"	f
 ubug_tran_db_real	src/urlcatcher/sp_urlbug_db.c	/^int ubug_tran_db_real(BUFF *pBuff)$/;"	f
 ubug_tran_db_whole	src/urlcatcher/sp_urlbug_db.c	/^void ubug_tran_db_whole(void)$/;"	f
-ubug_update_latest_time	src/urlcatcher/sp_urlbug_network.c	/^void ubug_update_latest_time(WEBIN *web_stu)$/;"	f
+ubug_update_latest_time	src/urlcatcher/sp_urlbug_network.c	/^static void ubug_update_latest_time(WEBIN *web_stu)$/;"	f	file:
 ud_foff	include/spinc.h	/^    int     ud_foff;        \/* file offset *\/$/;"	m	struct:url_dat
 ud_poff	include/spinc.h	/^    int     ud_poff;        \/* path offset *\/$/;"	m	struct:url_dat
 upMaxTerms	src/dataanalyzer/sp_extbug_global.c	/^int	    exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;$/;"	v

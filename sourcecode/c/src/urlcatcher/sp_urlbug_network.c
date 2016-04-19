@@ -1,7 +1,7 @@
 /*---------------------------------------------
- *     modification time: 2016-04-19 09:35:00
+ *     modification time: 2016-03-07 13:15:47
  *     mender: Muse
--*---------------------------------------------*/
+ *---------------------------------------------*/
 
 /*---------------------------------------------
  *     file: sp_urlbug_network.c 
@@ -130,14 +130,13 @@ int ubug_html_download(WEBIN *web_stu)
         return  FRET_Z;
     }
 
-    if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N) {
-        close(web_stu->w_sock);
+    if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N)
         return  FRET_N;
-    }
 
-    byte_read = sp_net_sock_read(web_stu->w_sock, 
-        web_stu->w_conbuf + cont_offset, WMP_PAGESIZE - cont_offset, 
-        UBUG_NREAD, ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
+    byte_read = sp_net_sock_read(
+                web_stu->w_sock, web_stu->w_conbuf + cont_offset,
+                WMP_PAGESIZE - cont_offset, UBUG_NREAD, 
+                ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
     cont_offset += (byte_read == FRET_N) ? 0 : byte_read;
     close(web_stu->w_sock);
@@ -157,8 +156,8 @@ int ubug_handle_httpreq(WEBIN *web_stu)
 
     int     string_size = web_stu->w_contoffset;
 
-    string_point = sp_http_compare_latest(web_stu->w_latest, 
-            web_stu->w_conbuf, &string_size);
+    string_point = sp_http_compare_latest(
+                   web_stu->w_latest, web_stu->w_conbuf, &string_size);
 
     if (string_point) {
         sprintf(web_stu->w_latest, "%.*s", string_size, string_point);
