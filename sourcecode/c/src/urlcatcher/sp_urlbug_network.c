@@ -132,6 +132,7 @@ int ubug_html_download(WEBIN *web_stu)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N)
         return  FRET_N;
 =======
@@ -140,6 +141,12 @@ int ubug_html_download(WEBIN *web_stu)
         retun  FRET_N;
     }
 >>>>>>> 6f5be9f1d7f01ed32fd56174612f1852168e1f59
+=======
+    if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N) {
+        close(web_stu->w_sock);
+        return  FRET_N;
+    }
+>>>>>>> parent of ae7d533... Revert "Fixed a bug"
 =======
     if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N) {
         close(web_stu->w_sock);

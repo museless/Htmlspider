@@ -69,7 +69,11 @@ int sp_net_set_sockif(const char *host_name, SOCKIF *sInfo)
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     if (!(pHost = gethostbyname(hostName)))
+=======
+    if (!(host = gethostbyname(host_name)))
+>>>>>>> parent of ae7d533... Revert "Fixed a bug"
 =======
     if (!(host = gethostbyname(host_name)))
 >>>>>>> parent of ae7d533... Revert "Fixed a bug"
