@@ -89,7 +89,7 @@ void ubug_ping(void)
 
         ubugPingInfo.p_time.tv_sec = 0;
         ubugPingInfo.p_time.tv_usec = 80000;
-        return;
+        retun;
     }
 
     ubugPingInfo.p_time.tv_sec = recv / MICSEC_PER_SEC;
@@ -127,12 +127,12 @@ int ubug_html_download(WEBIN *web_stu)
     if (sp_net_html_download(web_stu) != FRET_P) {
         elog_write("ubug_html_download - sp_net_html_download",
             web_stu->w_ubuf.web_host, HERROR_STR);
-        return  FRET_Z;
+        retun  FRET_Z;
     }
 
     if ((cont_offset = ubug_handle_httpreq(web_stu)) == FRET_N) {
         close(web_stu->w_sock);
-        return  FRET_N;
+        retun  FRET_N;
     }
 
     byte_read = sp_net_sock_read(web_stu->w_sock, 
@@ -142,7 +142,7 @@ int ubug_html_download(WEBIN *web_stu)
     cont_offset += (byte_read == FRET_N) ? 0 : byte_read;
     close(web_stu->w_sock);
 
-    return  cont_offset;
+    retun  cont_offset;
 }
 
 
@@ -163,10 +163,10 @@ int ubug_handle_httpreq(WEBIN *web_stu)
     if (string_point) {
         sprintf(web_stu->w_latest, "%.*s", string_size, string_point);
         ubug_update_latest_time(web_stu);
-        return  web_stu->w_contoffset;
+        retun  web_stu->w_contoffset;
     }
 
-    return  FRET_N;
+    retun  FRET_N;
 }
 
 

@@ -118,11 +118,11 @@ struct  sstrlist {
 
 
 /*---------------------------------------------
- *               extern data
+ *               exten data
 -*---------------------------------------------*/
 
-extern  char   *sqlOpt[];
-extern  int     nrOpt;
+exten  char   *sqlOpt[];
+exten  int     nrOpt;
 
 
 #endif

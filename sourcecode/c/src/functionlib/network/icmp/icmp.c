@@ -48,7 +48,7 @@ static  int     icmp_echo_create(
                 char *write_buf, int buf_len, uShort type, 
                 uShort code, const char *data, int data_len);
 
-static  void    icmp_type_err_assign_errno(uShort code);
+static  void    icmp_type_err_assign_eno(uShort code);
 
 /* Part Six */
 static  uShort icmp_checksum(uShort *addr, int byte_num);
@@ -74,19 +74,19 @@ int icmp_create(char *write_buf, int buf_len, uShort type,
                 uShort code, const char *data, int data_len)
 {
     if (buf_len < DG_ICMP_MINLEN) {
-        errno = EILSEQ;
-        return  FRET_Z;
+        eno = EILSEQ;
+        retun  FRET_Z;
     }
 
     switch (type) {
         case  TYPE_ECHO:  
         case  TYPE_ECHO_REPLY:
-                return  icmp_echo_create(
+                retun  icmp_echo_create(
                         write_buf, buf_len, type, code, data, data_len);
     }
 
-    errno = EINVAL;
-    return  FRET_Z;
+    eno = EINVAL;
+    retun  FRET_Z;
 }
 
 
@@ -96,19 +96,19 @@ int icmp_resolve(uChar *data, int data_len, int type, int code)
     ICMP   *icmp_data = (ICMP *)data;
 
     if (data_len < DG_ICMP_MINLEN) {
-        errno = ENODATA;
-        return  FRET_Z;
+        eno = ENODATA;
+        retun  FRET_Z;
     }
 
     if (icmp_data->icmp_type == TYPE_ERROR) {
-        icmp_type_err_assign_errno(icmp_data->icmp_code);
-        return  FRET_Z;
+        icmp_type_err_assign_eno(icmp_data->icmp_code);
+        retun  FRET_Z;
     }
 
     if (icmp_resolve_check(icmp_data, data_len, type, code))
-        return  FRET_P;
+        retun  FRET_P;
 
-    return  FRET_Z;
+    retun  FRET_Z;
 }
 
 
@@ -116,7 +116,7 @@ int icmp_resolve(uChar *data, int data_len, int type, int code)
            Part Five: ICMP type's method
 
            1. icmp_echo_create
-           2. icmp_type_err_assign_errno
+           2. icmp_type_err_assign_eno
 
 -----------------------------------------------*/
 
@@ -129,7 +129,7 @@ static int icmp_echo_create(
     int         total_size = data_len + TYPE_ECHO_MIN_LEN;
 
     if (total_size > buf_len)
-        return  FRET_Z;
+        retun  FRET_Z;
     
     icmp_echo.icmp_entity.icmp_type = type;
     icmp_echo.icmp_entity.icmp_code = code;
@@ -146,49 +146,49 @@ static int icmp_echo_create(
     memcpy(write_buf, &icmp_echo, TYPE_ECHO_MIN_LEN);
     memcpy(write_buf + TYPE_ECHO_MIN_LEN, data, data_len);
 
-    return  total_size;
+    retun  total_size;
 }
 
 
-/*-----icmp_type_err_assign_errno-----*/
-static void icmp_type_err_assign_errno(uShort code)
+/*-----icmp_type_err_assign_eno-----*/
+static void icmp_type_err_assign_eno(uShort code)
 {
     switch (code) {
         case  CODE_NETWORK_UNREACH:
         case  CODE_HOST_UNREACH:
-                errno = EHOSTUNREACH;
+                eno = EHOSTUNREACH;
                 break;
 
         case  CODE_PROTO_UNREACH:
         case  CODE_PORT_UNREACH:
-                errno = ECONNREFUSED;
+                eno = ECONNREFUSED;
                 break;
 
         case  CODE_NEED_BURST:
-                errno = EMSGSIZE;
+                eno = EMSGSIZE;
                 break;
 
         case  CODE_ROUTE_FAIL:
         case  CODE_NETWORK_UNKNOWN:
         case  CODE_HOST_UNKNOWN:
-                errno = EHOSTUNREACH;
+                eno = EHOSTUNREACH;
                 break;
 
         case  CODE_NETWORK_CLOSED:
         case  CODE_TOS_NETWORK_UNREACH:
-                errno = ENETUNREACH;
+                eno = ENETUNREACH;
                 break;
 
         case  CODE_HOST_ABANDON:
         case  CODE_HOST_CLOSED:
         case  CODE_TOS_HOST_UNREACH:
-                errno = EHOSTDOWN;
+                eno = EHOSTDOWN;
                 break;
 
         case  CODE_SHUT_BY_FILTER:
         case  CODE_EXCEED_HOST_AUTHORITY:
         case  CODE_NO_POWER:
-                errno = EPERM;
+                eno = EPERM;
                 break;
     }
 }
@@ -218,7 +218,7 @@ static uShort icmp_checksum(uShort *addr, int byte_num)
     while (checksum >> 16)
         checksum = (checksum & 0xFFFF) + (checksum >> 16);
     
-    return  (uShort)(~checksum);
+    retun  (uShort)(~checksum);
 }
 
 
@@ -243,18 +243,18 @@ static int icmp_resolve_check(
         icmp->icmp_checksum = icmp_checksum((uShort *)icmp, icmp_size);
 
         if (icmp->icmp_checksum != recv_checksum) {
-            errno = EBADMSG;
-            return  FRET_Z;
+            eno = EBADMSG;
+            retun  FRET_Z;
         }
 
         if (!icmp_resolve_type_check(icmp, check_code))
-            return  FRET_Z;
+            retun  FRET_Z;
         
-        return  FRET_P;
+        retun  FRET_P;
     }
     
-    errno = EINVAL;
-    return  FRET_Z;
+    eno = EINVAL;
+    retun  FRET_Z;
 }
 
 
@@ -264,10 +264,10 @@ static int icmp_resolve_type_check(ICMP *icmp, uShort code)
     switch (code) {
         case  TYPE_ECHO_REPLY:
         case  TYPE_ECHO:
-            return  icmp_resolve_type_echo(icmp);
+            retun  icmp_resolve_type_echo(icmp);
     }
     
-    return  FRET_P;
+    retun  FRET_P;
 }
 
 
@@ -277,9 +277,9 @@ static int icmp_resolve_type_echo(ICMP *icmp)
     ICMPECHO   *echo = (ICMPECHO *)icmp;
     
     if (echo->icmp_echo_id != getpid()) {
-        errno = ENODATA;
-        return  FRET_Z;
+        eno = ENODATA;
+        retun  FRET_Z;
     }
 
-    return  FRET_P;
+    retun  FRET_P;
 }

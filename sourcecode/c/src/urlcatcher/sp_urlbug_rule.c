@@ -62,31 +62,31 @@ int ubug_catch_default_rule(char *content, char **ret_content_point)
     int     content_len;     
 
     if (!(content_begin = strstr(content, MATCH_HREF)))
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     content_begin += MHREF_LEN;
 
     if (!(content_end = strchr(content_begin, '"')))
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     *ret_content_point = content_end;
 
-    if (!strncmp(content_end - MHTML_LEN, MATCH_HTML, MHTML_LEN) ||
-        !strncmp(content_end - MSHTML_LEN, MATCH_SHTML, MSHTML_LEN) ||
-        !strncmp(content_end - MHTM_LEN, MATCH_HTM, MHTM_LEN)) {
+    if (!stncmp(content_end - MHTML_LEN, MATCH_HTML, MHTML_LEN) ||
+        !stncmp(content_end - MSHTML_LEN, MATCH_SHTML, MSHTML_LEN) ||
+        !stncmp(content_end - MHTM_LEN, MATCH_HTM, MHTM_LEN)) {
         content_begin = ubug_reach_url_head(content_begin, content_end);
 
         if (!content_begin) 
-            return  FUN_RUN_END;
+            retun  FUN_RUN_END;
 
         if ((content_len = content_end - content_begin) >= urlMaxLen ||
            ubug_is_today_news(content_begin, content_len) == FRET_N)
-            return  FUN_RUN_END;
+            retun  FUN_RUN_END;
 
-        return  content_len;
+        retun  content_len;
     }
 
-    return  FUN_RUN_END;
+    retun  FUN_RUN_END;
 }
 
 
@@ -97,7 +97,7 @@ int ubug_locate_default_rule(
     (*content_beg) = web_point->w_conbuf;
     (*content_end) = (*content_beg) + web_point->w_size;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -118,17 +118,17 @@ void ubug_check_separator(char *urlStr, int *uLen)
 	char   *pBeg, *pEnter;
     int     nDec;
 
-    if ((pBeg = strnchr(urlStr, '\r', *uLen)) ||
-        (pBeg = strnchr(urlStr, '\n', *uLen))) {
+    if ((pBeg = stnchr(urlStr, '\r', *uLen)) ||
+        (pBeg = stnchr(urlStr, '\n', *uLen))) {
         nDec = ((*pBeg == '\r') ? MLINK_LEN : 1);
         *uLen -= nDec;
 
 		/* only one "\r\n" existed */
-        if (!(pEnter = strnchr(pBeg + nDec, *pBeg, *uLen - (pBeg - urlStr)))) {
-			strncpy(pBeg, pBeg + nDec, *uLen - (pBeg - urlStr));
+        if (!(pEnter = stnchr(pBeg + nDec, *pBeg, *uLen - (pBeg - urlStr)))) {
+			stncpy(pBeg, pBeg + nDec, *uLen - (pBeg - urlStr));
 
 		} else {
-			strncpy(pBeg, pEnter + nDec, *uLen - (pEnter - urlStr));
+			stncpy(pBeg, pEnter + nDec, *uLen - (pEnter - urlStr));
 			*uLen -= (pEnter - pBeg);
 		}
 	}
@@ -144,13 +144,13 @@ char *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen)
 
 	memset(wInfo->w_url, 0, NAMBUF_LEN);
 	strcpy(wInfo->w_url, MATCH_HTTP);
-	strncpy(wInfo->w_url + MHTTP_LEN, web_stu_point->web_host, hostLen);
+	stncpy(wInfo->w_url + MHTTP_LEN, web_stu_point->web_host, hostLen);
 	p_buff = wInfo->w_url + MHTTP_LEN + hostLen;
 
 	/* directory resolving */
 	for (nLayer = web_stu_point->web_nlayer; *fName == '.'; nLayer--) {
-		if (strncmp(fName, "../", 3)) {
-			if (!strncmp(fName, "./", 2)) {
+		if (stncmp(fName, "../", 3)) {
+			if (!stncmp(fName, "./", 2)) {
 				fName += 2, (*fLen) -= 2;	
 				break;
 			}
@@ -181,10 +181,10 @@ char *ubug_connect_head(WEBIN *wInfo, int hostLen, char *fName, int *fLen)
         web_stu_point->web_path);
 	}
 
-	strncpy(p_buff + pathLen, fName, *fLen);
+	stncpy(p_buff + pathLen, fName, *fLen);
 	*fLen += (hostLen + MHTTP_LEN + pathLen);
 
-	return	wInfo->w_url;
+	retun	wInfo->w_url;
 }
 
 
@@ -199,11 +199,11 @@ int ubug_check_url_prefix(char *preSrc, int nLen)
         if (!forbitStrList[count].fb_len)
             break;
 
-		if (strnstr(preSrc, forbitStrList[count].fb_str, nLen))
-			return	FUN_RUN_OK;
+		if (stnstr(preSrc, forbitStrList[count].fb_str, nLen))
+			retun	FUN_RUN_OK;
 	}
 
-	return	FUN_RUN_END;
+	retun	FUN_RUN_END;
 }
 
 
@@ -212,10 +212,10 @@ char *ubug_reach_url_head(char *pSrc, char *pLimit)
 {
 	for(; pSrc < pLimit; pSrc++) {
 		if (isalnum(*pSrc) || *pSrc == '/' || *pSrc == '.')
-			return	pSrc;
+			retun	pSrc;
 	}
 
-	return	NULL;
+	retun	NULL;
 }
 
 
@@ -225,11 +225,11 @@ int ubug_is_today_news(char *string, int nLimit)
     int     nCir;
 
     for(nCir = 0; nCir < DATE_CMODE; nCir++) {
-        if(strnstr(string, timComMode[nCir], nLimit))
-            return  FRET_P;
+        if(stnstr(string, timComMode[nCir], nLimit))
+            retun  FRET_P;
     }
 
-    return  FRET_N;
+    retun  FRET_N;
 }
 
 

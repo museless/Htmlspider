@@ -94,7 +94,7 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int segment_len)
     int         wordSize, wBytes, nCnt, nOff;
 
     if (segment_len <= UTF8_WORD_LEN)
-        return;
+        retun;
 
     for (; segment_len > 0 && strBeg < strEnd; strBeg += wordSize) {
         wordSize = ((segment_len > BYTE_CMP_MAX) ? 
@@ -107,7 +107,7 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int segment_len)
                 wBytes = wordSize * UTF8_WORD_LEN;
             
                 for (nCnt = 0; nCnt < headStru->dc_cnt; nCnt++, strMov += wBytes) {
-                    if (!strncmp(strMov, strBeg, wBytes))
+                    if (!stncmp(strMov, strBeg, wBytes))
                         break;
                 }
 
@@ -134,14 +134,14 @@ int exbug_check_word_head(const char *pHead)
 {
     if ((*pHead & UTF8_WHEAD) == UTF8_WHEAD) {
         for (int index = 0; index < nSepStr; index++) {
-            if (!strncmp(pHead, sepStrStore[index].sep_utf8, UTF8_WORD_LEN))
-                return  FRET_Z;
+            if (!stncmp(pHead, sepStrStore[index].sep_utf8, UTF8_WORD_LEN))
+                retun  FRET_Z;
         }
 
-        return  FRET_N; 
+        retun  FRET_N; 
     }
 
-    return  FRET_P;
+    retun  FRET_P;
 }
 
 
@@ -151,11 +151,11 @@ WHEAD *extbug_search_head(CLISTS *headList, const char *cmp_word, int word_len)
     WHEAD  *word_head = *((WHEAD **)headList + (word_len - 2));
     
     for (; word_head->dc_cnt != -1 && word_head->dc_off != -1; word_head++) {
-        if (!strncmp(cmp_word, word_head->dc_utf8, UTF8_WORD_LEN))
-            return  word_head;
+        if (!stncmp(cmp_word, word_head->dc_utf8, UTF8_WORD_LEN))
+            retun  word_head;
     }
 
-    return  NULL;
+    retun  NULL;
 }
 
 
@@ -173,11 +173,11 @@ void exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes)
     WST **wdList;
 
     if (addSize < TWO_U8WORD_LEN)
-        return;
+        retun;
 
     for (wdList = &addCnt->wc_list; *wdList; wdList = &((*wdList)->ws_next)) {
         if ((*wdList)->ws_bytes == addSize) {
-            if (!strncmp((*wdList)->ws_buf, addStr, addSize))
+            if (!stncmp((*wdList)->ws_buf, addStr, addSize))
                 break;
         }
     }

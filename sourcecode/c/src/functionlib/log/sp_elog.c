@@ -29,7 +29,7 @@ int elog_init(char *confStr)
     if (mc_conf_read(
         confStr, CONF_STR, error_log_path, PATH_LEN) == FUN_RUN_FAIL) {
 		mc_conf_print_err(confStr);
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 	}
 
     printf("error_log_path: %s\n", error_log_path);
@@ -37,13 +37,13 @@ int elog_init(char *confStr)
 
 	if (errLogFd == FUN_RUN_FAIL) {
 		perror("elog_init - open - error log");
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 	}
 
 	if ((logBufStru.b_start = malloc(LOGBUF_LEN)) == NULL) {
 		perror("elog_init - malloc");
 		close(errLogFd);
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 	}
 
 	logBufStru.b_cap = LOGBUF_LEN;
@@ -52,7 +52,7 @@ int elog_init(char *confStr)
 	mato_init(&writeDataLock, 1);
 	mato_init(&syncForceLock, 1);
 
-	return	FUN_RUN_OK;
+	retun	FUN_RUN_OK;
 }
 
 
@@ -64,7 +64,7 @@ int elog_write(char *errStr, char *objStr1, char *objStr2)
 
 	if(strlen(errStr) + strlen(objStr1) + 
        strlen(objStr2) + LOGBASE_LEN > logBufStru.b_cap)
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 
 	tType = time(NULL);
 	tmStru = localtime(&tType);
@@ -84,7 +84,7 @@ int elog_write(char *errStr, char *objStr1, char *objStr2)
             errStr, objStr1, objStr2));
 
 			mato_inc(&writeDataLock);
-			return	FUN_RUN_OK;
+			retun	FUN_RUN_OK;
 		}
 
 		mato_inc(&writeDataLock);
@@ -107,7 +107,7 @@ void elog_write_force(void)
 			}
 
 			mato_inc(&syncForceLock);
-			return;
+			retun;
 		}
 
 		mato_inc(&syncForceLock);
@@ -124,7 +124,7 @@ void elog_destroy(void)
 		if(mato_dec_and_test(&writeDataLock)) {
 			close(errLogFd);
 			free(logBufStru.b_start);
-			return;
+			retun;
 		}
 
 		mato_inc(&writeDataLock);

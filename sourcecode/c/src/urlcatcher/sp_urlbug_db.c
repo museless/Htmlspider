@@ -63,7 +63,7 @@ void ubug_init_database(void)
     }
 
     if (mgc_add(urlGarCol, NULL_POINT, ubug_db_clean) == MGC_FAILED)
-        ubug_perror("ubug_init_database - mgc_add", errno);
+        ubug_perror("ubug_init_database - mgc_add", eno);
 
     ubug_create_dbtable();
 }
@@ -137,7 +137,7 @@ void ubug_tran_db_force(BUFF *pBuff)
 /*-----ubug_tran_db_real-----*/
 int ubug_tran_db_real(BUFF *pBuff)
 {
-    return
+    retun
     (!buff_stru_empty(pBuff)) ? 
     mysql_real_query(
     &urlDataBase, buff_place_start(pBuff), buff_now_size(pBuff)) : FUN_RUN_FAIL;

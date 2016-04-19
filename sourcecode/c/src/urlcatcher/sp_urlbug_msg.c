@@ -48,7 +48,7 @@ static  int     ubug_send_message(int msgFd);
 /*-----ubug_msg_init-----*/
 void *ubug_msg_init(int msgFd)
 {
-	return
+	retun
 
     sp_msg_frame_init(
     "URLBUG", PART_URLBUG, msgFd,
@@ -66,7 +66,7 @@ static void ubug_msg_ctime(void)
 /*-----ubug_msg_send-----*/
 static int ubug_msg_send(int sendFd)
 {
-	return	ubug_send_message(sendFd);
+	retun	ubug_send_message(sendFd);
 }
 
 
@@ -99,10 +99,10 @@ static int ubug_send_message(int msgFd)
 
 		if (sp_msg_write(msgFd, &sendMsg) == FUN_RUN_FAIL) {
 			elog_write("ubug_send_message - sp_msg_write", FUNCTION_STR, ERROR_STR);
-			return	FUN_RUN_FAIL;
+			retun	FUN_RUN_FAIL;
 		}
 	}
 
-	return	FUN_RUN_OK;
+	retun	FUN_RUN_OK;
 }
 

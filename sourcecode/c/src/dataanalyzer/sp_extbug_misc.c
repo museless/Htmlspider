@@ -53,8 +53,8 @@ void exbug_print_help(void)
 
     if (file_size == FRET_N) {
         printf("Help file: %s\n", help_file_path);
-        exbug_perror("exbug_print_help - read_all_file", errno);
-        return;
+        exbug_perror("exbug_print_help - read_all_file", eno);
+        retun;
     }
 
     printf("%.*s\n\n", file_size, file_store);

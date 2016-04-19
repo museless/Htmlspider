@@ -99,7 +99,7 @@ HTTP_GFILE_STR	include/spnet.h	31;"	d
 HTTP_PORT	include/spnet.h	50;"	d
 HTTP_RECALL	include/spinc.h	74;"	d
 HUGE_BUF	include/spinc.h	81;"	d
-ICMP	include/inclib/icmp/icmp.h	/^typedef struct  internet_ctl_msg_protocal   ICMP;$/;"	t	typeref:struct:internet_ctl_msg_protocal
+ICMP	include/inclib/icmp/icmp.h	/^typedef struct  intenet_ctl_msg_protocal   ICMP;$/;"	t	typeref:struct:intenet_ctl_msg_protocal
 ICMPECHO	include/inclib/icmp/icmp.h	/^typedef struct  icmp_type_echo              ICMPECHO;$/;"	t	typeref:struct:icmp_type_echo
 INSERT_KEYWD	include/spdb.h	96;"	d
 INSERT_KW_NEXT	include/spdb.h	97;"	d
@@ -584,9 +584,9 @@ hb_nbuck	include/inclib/musealgo/malgo.h	/^	int	hb_nbuck;$/;"	m	struct:hashbucke
 hbcmp	include/inclib/musealgo/malgo.h	/^typedef	int	(*hbcmp)(void *, void *, int);$/;"	t
 hbcreat	include/inclib/musealgo/malgo.h	/^typedef	void	*(*hbcreat)(void *, int, void *);$/;"	t
 hbhash	include/inclib/musealgo/malgo.h	/^typedef	uLong	(*hbhash)(void *, int);$/;"	t
-icmp_checksum	include/inclib/icmp/icmp.h	/^    uShort icmp_checksum;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_checksum	include/inclib/icmp/icmp.h	/^    uShort icmp_checksum;$/;"	m	struct:intenet_ctl_msg_protocal
 icmp_checksum	src/functionlib/network/icmp/icmp.c	/^static uShort icmp_checksum(uShort *addr, int byte_num)$/;"	f	file:
-icmp_code	include/inclib/icmp/icmp.h	/^    uChar   icmp_code;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_code	include/inclib/icmp/icmp.h	/^    uChar   icmp_code;$/;"	m	struct:intenet_ctl_msg_protocal
 icmp_create	src/functionlib/network/icmp/icmp.c	/^int icmp_create(char *write_buf, int buf_len, uShort type, $/;"	f
 icmp_echo_create	src/functionlib/network/icmp/icmp.c	/^static int icmp_echo_create($/;"	f	file:
 icmp_echo_id	include/inclib/icmp/icmp.h	/^    uShort icmp_echo_id;$/;"	m	struct:icmp_type_echo
@@ -597,11 +597,11 @@ icmp_resolve	src/functionlib/network/icmp/icmp.c	/^int icmp_resolve(uChar *data,
 icmp_resolve_check	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_check($/;"	f	file:
 icmp_resolve_type_check	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_type_check(ICMP *icmp, uShort code)$/;"	f	file:
 icmp_resolve_type_echo	src/functionlib/network/icmp/icmp.c	/^static int icmp_resolve_type_echo(ICMP *icmp)$/;"	f	file:
-icmp_type	include/inclib/icmp/icmp.h	/^    uChar   icmp_type;$/;"	m	struct:internet_ctl_msg_protocal
+icmp_type	include/inclib/icmp/icmp.h	/^    uChar   icmp_type;$/;"	m	struct:intenet_ctl_msg_protocal
 icmp_type_echo	include/inclib/icmp/icmp.h	/^struct icmp_type_echo {$/;"	s
-icmp_type_err_assign_errno	src/functionlib/network/icmp/icmp.c	/^static void icmp_type_err_assign_errno(uShort code)$/;"	f	file:
-internet_ctl_msg_protocal	include/inclib/icmp/icmp.h	/^struct internet_ctl_msg_protocal {$/;"	s
-kerNameBuf	src/functionlib/sp_global.c	/^char	kerNameBuf[] = {"Kernel"};$/;"	v
+icmp_type_err_assign_eno	src/functionlib/network/icmp/icmp.c	/^static void icmp_type_err_assign_eno(uShort code)$/;"	f	file:
+intenet_ctl_msg_protocal	include/inclib/icmp/icmp.h	/^struct intenet_ctl_msg_protocal {$/;"	s
+kerNameBuf	src/functionlib/sp_global.c	/^char	kerNameBuf[] = {"Kenel"};$/;"	v
 keywordListSize	src/dataanalyzer/sp_extbug_global.c	/^int	    exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;$/;"	v
 logBufStru	src/functionlib/log/sp_elog.c	/^static	BUFF	logBufStru;$/;"	v	file:
 mafree	include/spinc.h	/^typedef void	(*mafree)(void *);$/;"	t
@@ -729,7 +729,7 @@ mwrt	src/dataanalyzer/spextb.h	/^typedef void    (*mwrt)(void *);$/;"	t
 mysql_creat_table	src/functionlib/dboper/dboper.c	/^int mysql_creat_table(void *sql_handle, const char *creat_string, ...)$/;"	f
 mysql_error_log	src/functionlib/dboper/dboper.c	/^int mysql_error_log(void *sql_handle, char *db_name, char *error_string)$/;"	f
 mysql_execl_query	src/functionlib/dboper/dboper.c	/^int mysql_execl_query(void *sql_handle, const char *sql, va_list ap_list)$/;"	f
-mysql_return_result	src/functionlib/dboper/dboper.c	/^void *mysql_return_result(void *sql_handle, const char *sql_string, ...)$/;"	f
+mysql_retun_result	src/functionlib/dboper/dboper.c	/^void *mysql_retun_result(void *sql_handle, const char *sql_string, ...)$/;"	f
 mysql_simple_connect	src/functionlib/dboper/dboper.c	/^int mysql_simple_connect($/;"	f
 mysql_string_exist_check	src/functionlib/dboper/dboper.c	/^int mysql_string_exist_check(void *chkSql, char *chkCom)$/;"	f
 nExbugPthead	src/dataanalyzer/sp_extbug_global.c	/^int	    exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;$/;"	v
@@ -871,8 +871,8 @@ stack_pop	src/functionlib/container/container.c	/^int stack_pop(STACK *stack_stu
 stack_push	src/functionlib/container/container.c	/^int stack_push(STACK *stack_stu, void *data)$/;"	f
 stack_top	include/inclib/container/container.h	/^    Byte   *stack_top;$/;"	m	struct:stack
 strchrb	src/functionlib/sp_pfun.c	/^char *strchrb(char *strBeg, int nLimit, char fCh)$/;"	f
-strnchr	src/functionlib/sp_pfun.c	/^inline char *strnchr(char *findBuf, char needCh, int nLimit)$/;"	f
-strnstr	src/functionlib/sp_pfun.c	/^inline char *strnstr(char *findBuf, const char *needStr, int nLimit)$/;"	f
+stnchr	src/functionlib/sp_pfun.c	/^inline char *stnchr(char *findBuf, char needCh, int nLimit)$/;"	f
+stnstr	src/functionlib/sp_pfun.c	/^inline char *stnstr(char *findBuf, const char *needStr, int nLimit)$/;"	f
 syncForceLock	src/functionlib/log/sp_elog.c	/^static	MATOS	syncForceLock;$/;"	v	file:
 tPaperNum	src/dataanalyzer/sp_extbug_global.c	/^uLong	tPaperNum;$/;"	v
 tbNameBuf	src/functionlib/sp_global.c	/^char	tbNameBuf[] = {"TextBug"};$/;"	v
@@ -1022,7 +1022,7 @@ wt_foff	include/spnet.h	/^    int     wt_foff;$/;"	m	struct:web_txt
 wt_gsize	include/spnet.h	/^	int	    wt_gsize;		\/* size of get content *\/$/;"	m	struct:web_txt
 wt_id	include/spnet.h	/^	char	wt_id[DBURL_ID_LEN];$/;"	m	struct:web_txt
 wt_index	include/spnet.h	/^	char	wt_index[WEB_INDEX_LEN];$/;"	m	struct:web_txt
-wt_pattern	include/spnet.h	/^	uChar	wt_pattern;$/;"	m	struct:web_txt
+wt_patten	include/spnet.h	/^	uChar	wt_patten;$/;"	m	struct:web_txt
 wt_plsize	include/spnet.h	/^	int	    wt_plsize;$/;"	m	struct:web_txt
 wt_poff	include/spnet.h	/^    int     wt_poff;$/;"	m	struct:web_txt
 wt_pool	include/spnet.h	/^	char   *wt_pool;$/;"	m	struct:web_txt

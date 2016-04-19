@@ -9,7 +9,7 @@ char	*sqlOpt[] = {"db", "--default-file = my.cnf"};
 int	nrOpt = (sizeof(sqlOpt) / sizeof(char *));
 
 /* spinc.h */
-char	kerNameBuf[] = {"Kernel"};
+char	kerNameBuf[] = {"Kenel"};
 char	ubNameBuf[] = {"UrlBug"};
 char	tbNameBuf[] = {"TextBug"};
 char	ebNameBuf[] = {"ExtBug"};

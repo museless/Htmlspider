@@ -59,7 +59,7 @@ int sp_normal_init(
 	if (msgFd) {
 		if (!(*msgSet = minitFun(msgFd))) {
             sp_normal_error("sp_normal_init - msg_init");
-			return	FUN_RUN_END;
+			retun	FUN_RUN_END;
 		}
 	
 		if (mgc_add(*garCol, *msgSet, (gcfun)sp_msg_frame_destroy) == MGC_FAILED)
@@ -69,13 +69,13 @@ int sp_normal_init(
 	/* elog init */
     if (elog_init(errLoc) == FUN_RUN_FAIL) {
 		sp_normal_error("sp_normal_init - elog_init"); 
-		return	FUN_RUN_END;
+		retun	FUN_RUN_END;
 	}
 
     if (mgc_add(*garCol, NULL_POINT, (gcfun)elog_destroy) == MGC_FAILED)
         sp_normal_error("sp_normal_init - mgc_add - elog");
 
-	return	FUN_RUN_OK;
+	retun	FUN_RUN_OK;
 }
 
 
@@ -90,6 +90,6 @@ int sp_normal_init(
 /* should wait ownNameSave was inited */
 static void sp_normal_error(char *error_string)
 {
-    printf("%s---> %s: %s\n", ownNameSave, error_string, strerror(errno));
+    printf("%s---> %s: %s\n", ownNameSave, error_string, strerror(eno));
 }
 

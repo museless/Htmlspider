@@ -51,19 +51,19 @@ struct ubug_setting {
 	    global data
 -----------------------------*/
 
-extern	WEBIN  *urlSaveList;
-extern	WPOOL  *contStorePool, *urlStorePool;
-extern	MSGSET *urlMsgSet;
-extern	MGCH   *urlGarCol;
-extern	void   *ubugThreadPool;	/* PTHPOOL (mpctl.h) */
-extern	UBSET	urlRunSet;
-extern	MYSQL	urlDataBase;
-extern  SPPING  ubugPingInfo;
+exten	WEBIN  *urlSaveList;
+exten	WPOOL  *contStorePool, *urlStorePool;
+exten	MSGSET *urlMsgSet;
+exten	MGCH   *urlGarCol;
+exten	void   *ubugThreadPool;	/* PTHPOOL (mpctl.h) */
+exten	UBSET	urlRunSet;
+exten	MYSQL	urlDataBase;
+exten  SPPING  ubugPingInfo;
 
-extern	int	    procCommuFd, urlMaxLen, urlCatchNum;
-extern	MATOS	writeStoreLock;
+exten	int	    procCommuFd, urlMaxLen, urlCatchNum;
+exten	MATOS	writeStoreLock;
 
-extern	FBSTR	forbitStrList[];
-extern	char	confNameBuf[], urlTabName[];
+exten	FBSTR	forbitStrList[];
+exten	char	confNameBuf[], urlTabName[];
 
 #endif

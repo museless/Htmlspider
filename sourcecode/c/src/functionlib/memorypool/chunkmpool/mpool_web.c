@@ -51,12 +51,12 @@ WPOOL *wmpool_create(int clip_num, int per_clip_size)
 	int	    bitmap_num;
 
 	if (clip_num < 1 || per_clip_size <= 0) {
-        errno = EINVAL;
-		return	NULL;
+        eno = EINVAL;
+		retun	NULL;
 	}
 
 	if (!(handle = malloc(sizeof(WPOOL))))
-		return	NULL;
+		retun	NULL;
 
     mato_init(&handle->wmp_atomic, 1); 
 
@@ -64,17 +64,17 @@ WPOOL *wmpool_create(int clip_num, int per_clip_size)
 	handle->wmp_clip = clip_num;
 
     if (!(handle->wmp_start = malloc(handle->wmp_psize * handle->wmp_clip)))
-		return	NULL;
+		retun	NULL;
 
     bitmap_num = clip_num / WMP_BITS_PER_BITMAP;
     bitmap_num += ((clip_num % WMP_BITS_PER_BITMAP) ? 1 : 0);
 
     if (!(handle->wmp_bitmap = calloc(bitmap_num, sizeof(int)))) {
         free(handle->wmp_start);
-        return	NULL;
+        retun	NULL;
     }
 
-	return	handle;
+	retun	handle;
 }
 
 
@@ -100,16 +100,16 @@ void *wmpool_malloc(WPOOL *handler)
 
     mato_inc(&handler->wmp_atomic);
 
-    char    *return_addr = NULL;
+    char    *retun_addr = NULL;
 
     if (bit_offset != handler->wmp_clip) {
-        return_addr = (bit_offset * handler->wmp_psize) + handler->wmp_start;
+        retun_addr = (bit_offset * handler->wmp_psize) + handler->wmp_start;
 
     } else {
-        errno = ESPIPE;
+        eno = ESPIPE;
     }
 
-	return  return_addr;
+	retun  retun_addr;
 }
 
 
@@ -119,11 +119,11 @@ void *wmpool_calloc(WPOOL *handler)
     void	*calloc_addr;
 
 	if (!(calloc_addr = wmpool_malloc(handler)))
-        return  NULL;
+        retun  NULL;
 
 	memset(calloc_addr, 0, handler->wmp_psize);
 
-	return  calloc_addr;
+	retun  calloc_addr;
 }
 
 
@@ -134,7 +134,7 @@ void wmpool_free(WPOOL *handler, void *free_addr)
 	int	    num_bits, *bitmap_pointer;
 
     if (addr > (handler->wmp_start + (handler->wmp_psize * (handler->wmp_clip - 1))))
-		return;
+		retun;
 
     num_bits = (uInt)((addr - handler->wmp_start) / handler->wmp_psize);
 

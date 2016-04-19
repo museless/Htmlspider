@@ -60,13 +60,13 @@ int exbug_database_init(void)
     if (mc_conf_read("news_database_name", CONF_STR, 
             dbNewsName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("news_database_name");
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
     if (!mysql_simple_connect(&dbNewsHandler, dbNewsName, NULL, 0)) {
         elog_write("exbug_database_init - mysql_simple_connect", 
             "dbNewsHandler", "Failed");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     mysql_query(&dbNewsHandler, "set names utf8");
@@ -78,13 +78,13 @@ int exbug_database_init(void)
     if (mc_conf_read("dic_database_name", CONF_STR, 
             dbDicName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("dic_database_name");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (!mysql_simple_connect(&dbDicHandler, dbDicName, NULL, 0)) {
         elog_write("exbug_database_init - mysql_simple_connect", 
             "dbDicHandler", "Failed");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     mysql_query(&dbDicHandler, "set names utf8");
@@ -97,10 +97,10 @@ int exbug_database_init(void)
     if (mc_conf_read("word_table_name", CONF_STR,
             tblWordName, SQL_TABNAME_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err("word_table_name");
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -112,18 +112,18 @@ void *exbug_content_download(void)
     if (mysql_query(&dbNewsHandler, sqlSeleCom) != FUN_RUN_END) {
         mysql_error_log(&dbNewsHandler, dbNewsName,
             "exbug_content_download - mysql_query - sqlSeleCom");
-        return  NULL;
+        retun  NULL;
     }
 
     if ((result = mysql_store_result(&dbNewsHandler)) == NULL) {
-        if (mysql_errno(&dbNewsHandler))
+        if (mysql_eno(&dbNewsHandler))
             mysql_error_log(&dbNewsHandler, dbNewsName,
                 "exbug_content_download - mysql_store_result");
 
-        return  NULL;
+        retun  NULL;
     }
 
-    return  result;
+    retun  result;
 }
 
 
@@ -139,7 +139,7 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
             &dbNewsHandler, dbNewsName,
             "exbug_rewind_exmark - mysql_real_query");
 
-    return;
+    retun;
 }
 
 
@@ -158,13 +158,13 @@ int exbug_module_database_init(void)
     if (mc_conf_read("keys_database_name", CONF_STR, 
             dbKeysName, SQL_DBNAME_LEN) == FRET_N) {
         mc_conf_print_err("keys_database_name");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (!mysql_simple_connect(&dbKeysHandler, dbKeysName, NULL, 0)) {
         elog_write("exbug_module_database_init - mysql_simple_connect", 
             "dbKeysHandler", "Failed");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_keysdb_unlink) == MGC_FAILED)
@@ -174,7 +174,7 @@ int exbug_module_database_init(void)
 
     mato_init(&dicDbLock, 1);
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 

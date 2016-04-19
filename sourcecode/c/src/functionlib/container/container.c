@@ -27,24 +27,24 @@ STACK *stack_init(int frame_size)
     STACK   *stack_stu;
 
     if (frame_size < 0) {
-        errno = EINVAL;
-        return  NULL;
+        eno = EINVAL;
+        retun  NULL;
     }
 
     if (!(stack_stu = malloc(sizeof(STACK))))
-        return  NULL;
+        retun  NULL;
 
     stack_stu->stack_bytes = STACK_DEF_SIZE;
 
     if (!(stack_stu->stack_top = malloc(stack_stu->stack_bytes)))
-        return  NULL;
+        retun  NULL;
 
     stack_stu->stack_current = stack_stu->stack_top;
 
     stack_stu->stack_frame_size = frame_size; 
     stack_stu->stack_num_frame = stack_stu->stack_bytes / frame_size;
 
-    return  stack_stu;
+    retun  stack_stu;
 }
 
 
@@ -52,19 +52,19 @@ STACK *stack_init(int frame_size)
 int stack_push(STACK *stack_stu, void *data)
 {
     if (!stack_stu || !data) {
-        errno = EINVAL;
-        return  FUN_RUN_END;
+        eno = EINVAL;
+        retun  FUN_RUN_END;
     }
 
     if (!stack_stu->stack_num_frame)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     memcpy(stack_stu->stack_current, data, stack_stu->stack_frame_size);
 
     stack_stu->stack_current += stack_stu->stack_frame_size;
     stack_stu->stack_num_frame--;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -72,19 +72,19 @@ int stack_push(STACK *stack_stu, void *data)
 int stack_pop(STACK *stack_stu, void *buff, int buff_size)
 {
     if (!stack_stu || !buff) {
-        errno = EINVAL;
-        return  FUN_RUN_END;
+        eno = EINVAL;
+        retun  FUN_RUN_END;
     }
 
     if (buff_size < stack_stu.stack_frame_size)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     stack_stu->stack_current -= stack_stu->stack_frame_size;
     memcpy(buff, stack_stu->stack_current, stack_stu->stack_frame_size);
 
     stack_stu->stack_num_frame++;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 

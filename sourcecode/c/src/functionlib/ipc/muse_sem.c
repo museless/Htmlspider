@@ -37,22 +37,22 @@ MSEM *msem_create(char *semFile, int nShares, int nProj)
 	MSEM	*semHand;
 
 	if (!semFile || !(semHand = malloc(sizeof(MSEM))))
-		return	NULL;
+		retun	NULL;
 
 	if ((semHand->sem_id = semget(ftok(semFile, nProj), 1, IPC_CREAT | USR_RDWR)) == MIPC_FAIL)
-		return	NULL;
+		retun	NULL;
 
 	semUnion.sem_val = nShares;
 
 	if (semctl(semHand->sem_id, 0, SETVAL, semUnion) == MIPC_FAIL)
-		return	NULL;
+		retun	NULL;
 
 	semHand->sem_wait.sem_flg = semHand->sem_wake.sem_flg = SEM_UNDO;
 	semHand->sem_wait.sem_num = semHand->sem_wake.sem_num = 0;
 	semHand->sem_wait.sem_op = -1;
 	semHand->sem_wake.sem_op = 1;
 
-	return	semHand;
+	retun	semHand;
 }
 
 
@@ -62,17 +62,17 @@ MSEM *msem_link(char *semFile, int nProj)
 	MSEM	*semLink;
 
 	if (!semFile || !(semLink = malloc(sizeof(MSEM))))
-		return	NULL;
+		retun	NULL;
 
     if ((semLink->sem_id = semget(ftok(semFile, nProj), 0, USR_RDWR)) == MIPC_FAIL)
-		return	NULL;
+		retun	NULL;
 
 	semLink->sem_wait.sem_flg = semLink->sem_wake.sem_flg = SEM_UNDO;
 	semLink->sem_wait.sem_num = semLink->sem_wake.sem_num = 0;
 	semLink->sem_wait.sem_op = -1;
 	semLink->sem_wake.sem_op = 1;
 
-	return	semLink;
+	retun	semLink;
 }
 
 
@@ -86,16 +86,16 @@ int msem_wait_empty(MSEM *smHand, int nOperator)
 	waitEmpty.sem_op = -nOperator;
 
 	if (semop(smHand->sem_id, &waitEmpty, 1) == MIPC_FAIL)
-		return	MIPC_FAIL;
+		retun	MIPC_FAIL;
 
-	return	MIPC_OK;
+	retun	MIPC_OK;
 }
 
 
 /*-----msem_wait-----*/
 inline int msem_wait(MSEM *waitSem)
 {
-    return	(semop(waitSem->sem_id, &waitSem->sem_wait, 1) == MIPC_FAIL) ?
+    retun	(semop(waitSem->sem_id, &waitSem->sem_wait, 1) == MIPC_FAIL) ?
             MIPC_FAIL : MIPC_OK;
 }
 
@@ -103,7 +103,7 @@ inline int msem_wait(MSEM *waitSem)
 /*-----msem_wake-----*/
 inline int msem_wake(MSEM *wakeSem)
 {
-    return	(semop(wakeSem->sem_id, &wakeSem->sem_wake, 1) == MIPC_FAIL) ?
+    retun	(semop(wakeSem->sem_id, &wakeSem->sem_wake, 1) == MIPC_FAIL) ?
             MIPC_FAIL : MIPC_OK;
 }
 

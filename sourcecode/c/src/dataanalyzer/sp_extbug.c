@@ -105,7 +105,7 @@ int main(int argc, char *argv[])
 
     mgc_all_clean(exbGarCol);
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -153,10 +153,10 @@ void exbug_option_analyst(int nPara, char **paraList)
 void exbug_access(void)
 {
     if (mainly_init() == FRET_Z) 
-        return;
+        retun;
 
     if (exbug_database_init() == FRET_Z || exbug_mempool_init() == FRET_Z)
-        return;
+        retun;
 
     if (exbug_dictionary_load(
        "extbug_noun_findex_path", "extbug_noun_path", "noun", 
@@ -194,12 +194,12 @@ static int mainly_init(void)
     if (!sp_normal_init(
         "Extbug", &exbGarCol, (MSGSET **)&extbugMsgSet, 
         exbug_msg_init, "extbug_err_locate", exbugIpcFd))
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     /* mgc one init */
     if (mgc_one_init(&extResCol, (gcfun)mysql_free_result, TRY_MORE) == MGC_FAILED) {
-        exbug_perror("mainly_init - mgc_one_init", errno);
-        return  FUN_RUN_END;
+        exbug_perror("mainly_init - mgc_one_init", eno);
+        retun  FUN_RUN_END;
     }
 
     /* atomic type parameter init */
@@ -208,13 +208,13 @@ static int mainly_init(void)
     mato_init(&nPaperLock, 1);
 
     if (exbug_read_config() == FRET_Z)
-        return  FRET_Z;
+        retun  FRET_Z;
 
     exbug_data_init();
 
     sprintf(sqlSeleCom, GET_NEWS_CONT, tblNewsName, exbRunSet.emod_maname, nExbugPthead);
 
-    return  exbug_signal_init();
+    retun  exbug_signal_init();
 }
 
 
@@ -245,22 +245,22 @@ void exbug_tblname_set(char *time_string)
 static int exbug_mempool_init(void)
 {
     if ((threadMemPool = mmdp_create(upMaxTerms * PER_WORD_MAX)) == NULL) {
-        exbug_perror("exbug_mempool_init - mmdp_create thread", errno);
-        return  FUN_RUN_END;    
+        exbug_perror("exbug_mempool_init - mmdp_create thread", eno);
+        retun  FUN_RUN_END;    
     }
 
     if (mgc_add(exbGarCol, threadMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
-        exbug_perror("exbug_mempool_init - mgc_add - threadMemPool", errno);
+        exbug_perror("exbug_mempool_init - mgc_add - threadMemPool", eno);
 
     if ((procMemPool = mmdp_create(PROC_MP_SIZE)) == NULL) {
-        exbug_perror("exbug_mempool_init - mmdp_create proc", errno);
-        return  FUN_RUN_END;    
+        exbug_perror("exbug_mempool_init - mmdp_create proc", eno);
+        retun  FUN_RUN_END;    
     }
 
     if (mgc_add(exbGarCol, procMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
-        exbug_perror("exbug_mempool_init - mgc_add - procMemPool", errno);
+        exbug_perror("exbug_mempool_init - mgc_add - procMemPool", eno);
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -272,13 +272,13 @@ int exbug_read_config(void)
     if (mc_conf_read(
         "extbug_pthread_num", CONF_NUM, &nExbugPthead, sizeof(int)) == FRET_N) {
         mc_conf_print_err("extbug_pthread_num");
-        return  FRET_Z;
+        retun  FRET_Z;
     }
 
     if (mc_conf_read(
         "extbug_update_max", CONF_NUM, &upMaxTerms, sizeof(int)) == FRET_N) {
         mc_conf_print_err("extbug_update_max");
-        return  FRET_Z;
+        retun  FRET_Z;
     }
 
     upMaxTerms = ((upMaxTerms > MAX_UP_TERMS) ? MAX_UP_TERMS : upMaxTerms) + 1;
@@ -286,16 +286,16 @@ int exbug_read_config(void)
     if (mc_conf_read(
         "extbug_sem_key_file", CONF_STR, path_string, PATH_LEN) == FRET_N) {
         mc_conf_print_err("extbug_sem_key_file");
-        return  FRET_Z;
+        retun  FRET_Z;
     }
 
     if (!(ebSemControl = msem_create(path_string, nExbugPthead, PROJ_PTH_CTL))) {
-        exbug_perror("exbug_read_config - msem_create", errno);
-        return  FRET_Z;
+        exbug_perror("exbug_read_config - msem_create", eno);
+        retun  FRET_Z;
     }
     
     if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
-        exbug_perror("exbug_read_config - mgc_add - sem", errno);
+        exbug_perror("exbug_read_config - mgc_add - sem", eno);
 
     if (mc_conf_read("keyword_buff_size", CONF_NUM, 
             &keywordListSize, sizeof(int)) == FRET_N) {
@@ -303,7 +303,7 @@ int exbug_read_config(void)
         printf("default keyword_buff_size: %d\n", keywordListSize);
     }
 
-    return  FRET_P;
+    retun  FRET_P;
 }
 
 
@@ -311,7 +311,7 @@ int exbug_read_config(void)
 void exbug_work_prepare(void)
 {
     if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_database_close) == MGC_FAILED)
-        exbug_perror("exbug_work_prepare - mgc_add - dbclose", errno);
+        exbug_perror("exbug_work_prepare - mgc_add - dbclose", eno);
 }
 
 
@@ -319,20 +319,20 @@ void exbug_work_prepare(void)
 int exbug_work_setting(void)
 {
     if (exbug_module_database_init() == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     if ((extSaveBuf = buff_stru_init(SQL_HHCOM_LEN)) == NULL) {
         elog_write(
         "exbug_work_setting - buff_stru_init", FUNCTION_STR, ERROR_STR);
 
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (mgc_add(exbGarCol, extSaveBuf, buff_stru_free_all) == MGC_FAILED)
         elog_write("exbug_work_setting - mgc_add - extSaveBuf", 
             FUNCTION_STR, ERROR_STR);
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -407,7 +407,7 @@ void *exbug_memory_malloc(int nSize)
         exbug_sig_error(PROC_ERROR);
     }
 
-    return  addr;
+    retun  addr;
 }
 
 
@@ -441,5 +441,5 @@ void *exbug_pthread_entrance(void *pPara)
     mato_dec(&freeCtlLock);
     msem_wake(ebSemControl);
 
-    return  NULL;
+    retun  NULL;
 }

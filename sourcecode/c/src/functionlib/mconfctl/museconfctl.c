@@ -26,22 +26,22 @@ int mc_conf_load(const char *pUser, const char *confPath)
     sprintf(userName, "%.*s", MIDDLE_BUF, pUser);
 
     if((confStoreFd = open(confPath, O_RDWR)) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     if(fstat(confStoreFd, &stBuf) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     confctlBuff.b_size = confctlBuff.b_cap = stBuf.st_size + 1;
 
     if((confctlBuff.b_start = malloc(confctlBuff.b_cap)) == NULL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     if(readn(confStoreFd, confctlBuff.b_start, stBuf.st_size) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     ((char *)confctlBuff.b_start)[stBuf.st_size] = 0;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -52,16 +52,16 @@ int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
     int     nMul = 0;
 
     if (!(pStr = strstr(confctlBuff.b_start, findStr)))
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     if ((pStr = strchr(pStr, '=')) == NULL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     for (pStr += 1; isspace(*pStr); pStr++)
         ;   /* nothing */
 
     if ((pEnd = strchr(pStr, '\n')) == NULL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     for (; isspace(*(pEnd - 1)); pEnd--)
             ;   /* nothing */
@@ -81,14 +81,14 @@ int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
 
     } else if (dType == CONF_STR) {
         dLen = (((pEnd - pStr) > dLen) ? dLen : pEnd - pStr);
-        strncpy((char *)dBuf, pStr, dLen);
+        stncpy((char *)dBuf, pStr, dLen);
         ((char *)dBuf)[dLen] = 0;
 
     } else {
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 

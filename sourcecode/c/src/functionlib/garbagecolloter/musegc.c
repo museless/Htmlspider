@@ -17,12 +17,12 @@ MGCH *mgc_init(void)
 	MGCH	*newGc;
 
 	if ((newGc = (MGCH *)sbrk((intptr_t)sizeof(MGCH))) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	newGc->mgch_num = 0;
 	newGc->mgch_end = newGc->mgch_list = NULL;
 
-	return	newGc;
+	retun	newGc;
 }
 
 
@@ -32,7 +32,7 @@ int mgc_add(MGCH *pMgch, void *pObj, gcfun pHandler)
 	MGC    *pNew;
 
 	if (!pObj || !pHandler || (pNew = (MGC *)sbrk((intptr_t)sizeof(MGC))) == NULL)
-		return	MGC_FAILED;
+		retun	MGC_FAILED;
 
 	pNew->mgc_obj = pObj;
 	pNew->mgc_cleaner = pHandler;
@@ -44,7 +44,7 @@ int mgc_add(MGCH *pMgch, void *pObj, gcfun pHandler)
 
 	pMgch->mgch_end = pNew;
 
-	return	MGC_OK;
+	retun	MGC_OK;
 }
 
 
@@ -72,7 +72,7 @@ void mgc_all_clean(MGCH *pMgch)
 int mgc_one_init(MGCO *pMgco, gcfun pCleaner, int nLimit)
 {
 	if (!pMgco || !pCleaner)
-		return	MGC_FAILED;
+		retun	MGC_FAILED;
 
 	pMgco->mgco_obj = NULL;
 	pMgco->mgco_cleaner = pCleaner;
@@ -80,18 +80,18 @@ int mgc_one_init(MGCO *pMgco, gcfun pCleaner, int nLimit)
 	
 	mato_init(&pMgco->mgco_lock, 1);
 
-	return	MGC_OK;
+	retun	MGC_OK;
 }
 
 /*-----mgc_one_add-----*/
 int mgc_one_add(MGCO *pMgco, void *pObj)
 {
 	if (!pObj || !pMgco)
-		return	MGC_FAILED;
+		retun	MGC_FAILED;
 
 	pMgco->mgco_obj = pObj;
 
-	return	MGC_OK;
+	retun	MGC_OK;
 }
 
 
@@ -106,7 +106,7 @@ void mgc_one_clean(MGCO *pMgco)
 	}
 
 	if (nCount == pMgco->mgco_tlimit)
-		return;
+		retun;
 
 	if (pMgco->mgco_obj) {
 		pMgco->mgco_cleaner(pMgco->mgco_obj);

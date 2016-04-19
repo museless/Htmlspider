@@ -50,7 +50,7 @@ SSORTS	*sp_shell_sort_init(ssmov smFun, ssass smAssign, ssprog smProgress, sscmr
 	SSORTS	*pStru;
 
 	if(!(pStru = fMalloc(mHandler, sizeof(SSORTS))))
-		return	NULL;
+		retun	NULL;
 
 	pStru->sst_mv = smFun;
 	pStru->sst_assign = smAssign;
@@ -58,7 +58,7 @@ SSORTS	*sp_shell_sort_init(ssmov smFun, ssass smAssign, ssprog smProgress, sscmr
 	pStru->sst_cmprep = smCmprep;
 	pStru->sst_free = freeFun;
 
-	return	pStru;
+	retun	pStru;
 }
 
 
@@ -69,7 +69,7 @@ void sp_shell_sort(SSORTS *ssStru, void *sortBuf, int nLimit)
 	int	nBeg, nCir;
 
 	if(nLimit < SS_MIN_INPUT)
-		return;
+		retun;
 
 	for(nCir = nLimit >> 1; nCir > 0; nCir--) {
 		pSort = ssStru->sst_assign((pHandler = sortBuf));

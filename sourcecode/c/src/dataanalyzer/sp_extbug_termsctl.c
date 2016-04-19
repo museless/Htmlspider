@@ -53,7 +53,7 @@ static int  fileIndexBuf[WORD_LEN_LIMIT];
 /*-----exbug_extract_keyword-----*/
 void exbug_extract_keyword(WDCT *extDic)
 {
-    return;
+    retun;
 }
 
 
@@ -149,17 +149,17 @@ int exbug_dictionary_load(char *fConf, char *savConf,
 
     if (mc_conf_read(fConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err(fConf);
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (exbug_findex_load(dicPath) == FUN_RUN_FAIL) {
         printf("Extbug---> exbug_findex_load failed\n");
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     if (mc_conf_read(savConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
         mc_conf_print_err(savConf);
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
     }
 
     for (nCnt = 0; nCnt < WORD_LEN_LIMIT; nCnt++) {
@@ -169,7 +169,7 @@ int exbug_dictionary_load(char *fConf, char *savConf,
 
         if (fileIndexBuf[nCnt]) {
             if (!exbug_terms_load(pContent, nameBuf, nCnt))
-                return  FUN_RUN_FAIL;
+                retun  FUN_RUN_FAIL;
         }
 
         sprintf(nameBuf, "%s/Index%d", dicPath, nCnt + 2);
@@ -177,11 +177,11 @@ int exbug_dictionary_load(char *fConf, char *savConf,
 
         if (fileIndexBuf[nCnt]) {
             if (!exbug_index_load(pHead, nameBuf, fileIndexBuf[nCnt]))
-                return  FUN_RUN_FAIL;
+                retun  FUN_RUN_FAIL;
         }
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -192,7 +192,7 @@ int exbug_findex_load(char *finPath)
     int    *inBuf = fileIndexBuf;
 
     if (read_all_file(&fiPoint, finPath, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     for (pMov = fiPoint; *pMov; pMov++, inBuf++) {
         *inBuf = atoi(pMov);
@@ -203,7 +203,7 @@ int exbug_findex_load(char *finPath)
 
     free(fiPoint);
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -215,29 +215,29 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
     int      term_size = ((nTerms + 1) * sizeof(WHEAD));
 
     if ((cNext = *cStru = mmdp_malloc(procMemPool, term_size)) == NULL) {
-        exbug_perror("exbug_index_load - mmdp_malloc", errno);
-        return  FUN_RUN_END;
+        exbug_perror("exbug_index_load - mmdp_malloc", eno);
+        retun  FUN_RUN_END;
     }
 
     if (read_all_file(&iStore, iName, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     for (iMov = iStore; *iMov; iMov++, cNext++) {
-        strncpy(cNext->dc_utf8, iMov, UTF8_WORD_LEN);
+        stncpy(cNext->dc_utf8, iMov, UTF8_WORD_LEN);
         iMov += (UTF8_WORD_LEN + 1);
 
         cNext->dc_off = atoi(iMov);
 
         if ((iMov = strchr(iMov, '\t')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - one", errno);
-            return  FUN_RUN_END;
+            exbug_perror("exbug_index_load - strchr - one", eno);
+            retun  FUN_RUN_END;
         }
 
         cNext->dc_cnt = atoi(++iMov);
 
         if ((iMov = strchr(iMov, '\n')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - two", errno);
-            return  FUN_RUN_END;
+            exbug_perror("exbug_index_load - strchr - two", eno);
+            retun  FUN_RUN_END;
         }
     }
 
@@ -245,7 +245,7 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 
     cNext->dc_cnt = cNext->dc_off = -1;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -253,23 +253,23 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 int exbug_terms_load(WDCB **termStru, char *termFile, int nOff)
 {
     if ((*termStru = mmdp_malloc(procMemPool, sizeof(WDCB))) == NULL) {
-        exbug_perror("exbug_terms_load - mmdp_malloc", errno);
-        return  FUN_RUN_END;
+        exbug_perror("exbug_terms_load - mmdp_malloc", eno);
+        retun  FUN_RUN_END;
     }
 
     memset(*termStru, 0, sizeof(WDCB));
 
     if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FRET_N)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     if (mgc_add(exbGarCol, ((*termStru)->wb_lterms), free) != FUN_RUN_OK)
         printf("Extbug---> exbug_terms_load - mgc_add failed\n");
 
     if (exbRunSet.emod_exinit) {
         if (!exbRunSet.emod_exinit(*termStru, nOff))
-            return  FUN_RUN_END;
+            retun  FUN_RUN_END;
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 

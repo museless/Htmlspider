@@ -40,7 +40,7 @@ static  int     exbug_msg_send(int sendFd);
 /*-----exbug_msg_init-----*/
 void *exbug_msg_init(int message_fd)
 {
-    return  sp_msg_frame_init(ebNameBuf, PART_EXTBUG,
+    retun  sp_msg_frame_init(ebNameBuf, PART_EXTBUG,
                 message_fd, TAKE_A_SHNAP, exbug_msg_ctime, 
                 exbug_msg_kwork, exbug_msg_send);
 }
@@ -63,7 +63,7 @@ void exbug_msg_kwork(void *pPara)
 /*-----exbug_msg_send-----*/
 int exbug_msg_send(int sendFd)
 {
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
