@@ -127,6 +127,7 @@ int ubug_html_download(WEBIN *web_stu)
     if (sp_net_html_download(web_stu) != FRET_P) {
         elog_write("ubug_html_download - sp_net_html_download",
             web_stu->w_ubuf.web_host, HERROR_STR);
+        close(web_stu->w_sock);
         return  FRET_Z;
     }
 
@@ -140,6 +141,7 @@ int ubug_html_download(WEBIN *web_stu)
         UBUG_NREAD, ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
     cont_offset += (byte_read == FRET_N) ? 0 : byte_read;
+
     close(web_stu->w_sock);
 
     return  cont_offset;

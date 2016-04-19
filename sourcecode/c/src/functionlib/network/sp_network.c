@@ -84,17 +84,17 @@ int sp_net_sock_connect(SOCKIF *sockInfo)
     int     sock;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == FUN_RUN_FAIL)
-        return  FUN_RUN_END;
+        return  FRET_N;
 
     if (sp_net_sock_settimer(sock, 
            TAKE_A_NOTHING, 0, SO_SNDTIMEO) == FUN_RUN_FAIL) {
         close(sock);
-        return  FUN_RUN_END;
+        return  FRET_N;
     }
 
     if (connect(sock, (SOCKAD *)sockInfo, sizeof(SOCKIF)) == FUN_RUN_FAIL) {
         close(sock);
-        return  FUN_RUN_END;
+        return  FRET_N;
     }
 
     return  sock;
@@ -158,7 +158,7 @@ int sp_net_sock_init(WEBIN *web_stu)
     if (!sp_net_set_sockif(web_stu->w_ubuf.web_host, &web_stu->w_sockif))
         return  FRET_N;
 	
-    if (!(web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)))
+    if ((web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)) == FRET_N)
         return  FRET_N;
     
     return  FRET_P;
