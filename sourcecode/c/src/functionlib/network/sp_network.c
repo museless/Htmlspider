@@ -63,16 +63,16 @@ static  int     sp_http_redict_check(WEB *dst, WEB *src);
 -*---------------------------------------------*/
 
 /*-----sp_net_set_sockif-----*/
-int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)
+int sp_net_set_sockif(const char *host_name, SOCKIF *sInfo)
 {
-    struct  hostent *pHost;
+    struct hostent  *host;
 
-    if (!(pHost = gethostbyname(hostName)))
+    if (!(host = gethostbyname(host_name)))
         return  FUN_RUN_END;
 
     sInfo->sin_family = AF_INET;
     sInfo->sin_port = htons(80);
-    sInfo->sin_addr = *((struct in_addr *)(pHost->h_addr));
+    sInfo->sin_addr = *((struct in_addr *)(host->h_addr));
 
     return  FUN_RUN_OK;
 }
@@ -102,9 +102,8 @@ int sp_net_sock_connect(SOCKIF *sockInfo)
 
 
 /*-----sp_net_sock_read-----*/
-int sp_net_sock_read(
-    int nSock, char *savBuf, int bufLimit, 
-    int readTimes, int nSec, long microSec)
+int sp_net_sock_read(int nSock, char *savBuf, 
+    int bufLimit, int readTimes, int nSec, long microSec)
 {
     char   *check_point;
     int     cont_offset, str_size, zero_times = 8;
@@ -170,12 +169,12 @@ int sp_net_sock_init(WEBIN *web_stu)
 int sp_net_html_download(WEBIN *web_stu)
 {
     WEB     webinfo_save = web_stu->w_ubuf;
-    int     redire_flags, count, ret_value;
+    int     redire_flags, ret_value;
 
     redire_flags = REDIRECT_UNFINISH;
     ret_value = FRET_N;
 
-    for (count = 0; count < MAX_REDIRECT_TIMES; count++) {
+    for (int count = 0; count < MAX_REDIRECT_TIMES; count++) {
         if (sp_net_sock_init(web_stu) != FRET_P)
             return  FRET_N;
 
@@ -219,16 +218,14 @@ int sp_http_interact(WEBIN *web_stu)
     }
 
     WEB    *web_info = &web_stu->w_ubuf;
-    short   strSize = sprintf(
-                      web_stu->w_conbuf, HTTP_GFILE_STR, web_info->web_path,
-                      web_info->web_file, web_info->web_host, rPac);
+    short   strSize = sprintf(web_stu->w_conbuf, HTTP_GFILE_STR, 
+                web_info->web_path, web_info->web_file, web_info->web_host, rPac);
    
     if (write(web_stu->w_sock, web_stu->w_conbuf, strSize) != strSize) 
         return  FUN_RUN_END;
 
-    web_stu->w_size = select_read(
-                      web_stu->w_sock, web_stu->w_conbuf,
-                      web_stu->w_conbufsize, TAKE_A_SEC, 0);
+    web_stu->w_size = select_read(web_stu->w_sock, web_stu->w_conbuf,
+                        web_stu->w_conbufsize, TAKE_A_SEC, 0);
 
     if (web_stu->w_size < FRET_VAL)
         return  FUN_RUN_END;
@@ -371,16 +368,14 @@ int sp_url_seperate(char *url, int url_len, WEB *web_info)
     if ((slash_point = strchrb(url_pointer, url_len, '/'))) {
         /* url likes 'xxx.com/', I think it no file name at this url */
         if ((file_name_offset = slash_point - url_pointer) != host_len)
-            sprintf(
-            web_info->web_file, "%.*s", 
-            url_len - file_name_offset - 1, &url_pointer[file_name_offset + 1]);
+            sprintf(web_info->web_file, "%.*s", url_len - file_name_offset - 1, 
+                &url_pointer[file_name_offset + 1]);
     }
     
     (slash_point && file_name_offset > 0) ?
-    sprintf(
-    web_info->web_path, "%.*s", 
-    file_name_offset - host_len + 1, &url_pointer[host_len]) :
-    sprintf(web_info->web_path, "/");
+        sprintf(web_info->web_path, "%.*s", 
+        file_name_offset - host_len + 1, &url_pointer[host_len]) :
+        sprintf(web_info->web_path, "/");
 
     web_info->web_nlayer = sp_url_path_count_nlayer(web_info->web_path);
 
