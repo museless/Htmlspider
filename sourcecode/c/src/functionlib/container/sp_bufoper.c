@@ -31,9 +31,9 @@
 inline int buff_stru_empty(BUFF *pBuff)
 {
 	if(buff_stru_is_existed(pBuff))
-		return	(pBuff->b_size == 0);
+		retun	(pBuff->b_size == 0);
 
-	return	FUN_RUN_FAIL;
+	retun	FUN_RUN_FAIL;
 }
 
 
@@ -49,44 +49,44 @@ inline void buff_stru_make_empty(BUFF *pBuff)
 inline int buff_size_enough(BUFF *pBuff, int nCheck)
 {
 	if(buff_stru_is_existed(pBuff))
-		return	(pBuff->b_size < pBuff->b_cap - nCheck);
+		retun	(pBuff->b_size < pBuff->b_cap - nCheck);
 
-	return	FUN_RUN_FAIL;
+	retun	FUN_RUN_FAIL;
 }
 
 
 /*-----buff_check_exist-----*/
 inline int buff_check_exist(BUFF *cBuff)
 {
-	return	buff_stru_is_existed(cBuff);
+	retun	buff_stru_is_existed(cBuff);
 }
 
 
 /*-----buff_now_size-----*/
 inline int buff_now_size(BUFF *pBuff)
 {
-	return	pBuff->b_size;
+	retun	pBuff->b_size;
 }
 
 
 /*-----buff_place_locate-----*/
 inline char *buff_place_locate(BUFF *pBuff, int nSize)
 {
-	return	(char *)pBuff->b_start + nSize;
+	retun	(char *)pBuff->b_start + nSize;
 }
 
 
 /*-----buff_place_end-----*/
 inline char *buff_place_end(BUFF *pBuff)
 {
-	return	(char *)pBuff->b_start + pBuff->b_size;
+	retun	(char *)pBuff->b_start + pBuff->b_size;
 }
 
 
 /*-----buff_place_start-----*/
 inline char *buff_place_start(BUFF *pBuff)
 {
-	return	pBuff->b_start;
+	retun	pBuff->b_start;
 }
 
 
@@ -111,17 +111,17 @@ BUFF *buff_stru_init(int nMalloc)
 	BUFF	*pSbuf;
 
 	if((pSbuf = malloc(sizeof(BUFF))) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	if((pSbuf->b_start = malloc(nMalloc)) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	pSbuf->b_cap = nMalloc;
 	pSbuf->b_size = 0;
 
 	((char *)pSbuf->b_start)[0] = 0;
 
-	return	pSbuf;
+	retun	pSbuf;
 }
 
 
@@ -149,6 +149,6 @@ void buff_stru_free_all(void *bufStru)
 /*-----buff_stru_strstr-----*/
 char *buff_stru_strstr(BUFF *strBuf, char *needStr)
 {
-	return	(buff_stru_is_existed(strBuf)) ?
-		strnstr((char *)strBuf->b_start, needStr, strBuf->b_size) : NULL;
+	retun	(buff_stru_is_existed(strBuf)) ?
+		stnstr((char *)strBuf->b_start, needStr, strBuf->b_size) : NULL;
 }

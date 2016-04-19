@@ -25,8 +25,8 @@
  *
  *      1. readn
  *      2. writen
- *	    3. strnstr
- *      4. strnchr
+ *	    3. stnstr
+ *      4. stnchr
  *      5. select_read
  *      6. strchrb
  *      7. atoin
@@ -44,14 +44,14 @@ int readn(int rFd, void *rBuf, size_t bCount)
 	while(FUN_RUN_OK) {
 		if((fRet = read(rFd, rBuf + nCir, bCount)) == bCount || fRet == 0) {
 			nCir += fRet;
-			return	nCir;
+			retun	nCir;
 
 		} else if(fRet >= 0 && fRet < bCount) {
 			nCir += fRet;
 			bCount -= fRet;
 
 		} else {
-			return	FUN_RUN_FAIL;
+			retun	FUN_RUN_FAIL;
 		}
 	}
 }
@@ -64,27 +64,27 @@ int writen(int wFd, void *wBuf, size_t bCount)
 
 	while(FUN_RUN_OK) {
         if ((fRet = write(wFd, wBuf + nCir, bCount)) == bCount || fRet == 0) {
-			return	(nCir += fRet);
+			retun	(nCir += fRet);
 
 		} else if (fRet >= 0 && fRet < bCount) {
 			nCir += fRet;
 			bCount -= fRet;
 
 		} else {
-			if(errno != EINTR)
-				return	-1;
+			if(eno != EINTR)
+				retun	-1;
 		}
 	}
 }
 
 
-/*-----strnstr-----*/
-inline char *strnstr(char *findBuf, const char *needStr, int nLimit)
+/*-----stnstr-----*/
+inline char *stnstr(char *findBuf, const char *needStr, int nLimit)
 {
 	char	*pStr, sChar;
 
 	if(findBuf == NULL || needStr == 0 || nLimit <= 0)
-		return	NULL;
+		retun	NULL;
 
 	sChar = findBuf[nLimit];
 	findBuf[nLimit] = 0;
@@ -92,17 +92,17 @@ inline char *strnstr(char *findBuf, const char *needStr, int nLimit)
 	pStr = strstr(findBuf, needStr);
 	
 	findBuf[nLimit] = sChar;
-	return	pStr;
+	retun	pStr;
 }
 
 
-/*-----strnchr-----*/
-inline char *strnchr(char *findBuf, char needCh, int nLimit)
+/*-----stnchr-----*/
+inline char *stnchr(char *findBuf, char needCh, int nLimit)
 {
 	char	sChar, *pStr;
 
 	if(findBuf == NULL || nLimit <= 0)
-		return	NULL;
+		retun	NULL;
 
 	sChar = findBuf[nLimit];
 	findBuf[nLimit] = 0;
@@ -110,7 +110,7 @@ inline char *strnchr(char *findBuf, char needCh, int nLimit)
 	pStr = strchr(findBuf, needCh);
 
 	findBuf[nLimit] = sChar;
-	return	pStr;
+	retun	pStr;
 }
 
 
@@ -128,10 +128,10 @@ int select_read(int nSock, char *readBuf, int nRead, int nSec, long microSec)
 
 	if(select(nSock + 1, &fdset, NULL, NULL, &time_val) > FUN_RUN_END) {
 		if(FD_ISSET(nSock, &fdset))
-			return	(read(nSock, readBuf, nRead));
+			retun	(read(nSock, readBuf, nRead));
 	}
 
-	return	FUN_RUN_END;
+	retun	FUN_RUN_END;
 }
 
 
@@ -142,10 +142,10 @@ char *strchrb(char *strBeg, int nLimit, char fCh)
 
 	for(nCir = nLimit - 1; nCir > 0 ; nCir--) {
 		if(strBeg[nCir] == fCh)
-			return	(strBeg + nCir);
+			retun	(strBeg + nCir);
 	}
 
-	return	NULL;
+	retun	NULL;
 }
 
 
@@ -161,7 +161,7 @@ inline int atoin(char *datBuf, int nLen)
 	nRet = atoi(datBuf);
 	datBuf[nLen] = saveCh;
 
-	return	nRet;
+	retun	nRet;
 }
 
 
@@ -172,14 +172,14 @@ int read_all_file(char **pStore, char *ofName, int readOff)
 	int		readFd;
 
 	if((readFd = open(ofName, O_RDWR)) == FUN_RUN_FAIL)
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 
 	if(fstat(readFd, &stBuf) == FUN_RUN_FAIL)
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 
 	if(readOff) {
 		if(lseek(readFd, readOff, SEEK_SET) == FUN_RUN_FAIL)
-			return	FUN_RUN_FAIL;
+			retun	FUN_RUN_FAIL;
 
 		stBuf.st_size -= readOff;
 	}
@@ -188,24 +188,24 @@ int read_all_file(char **pStore, char *ofName, int readOff)
 
 	if(stBuf.st_size) {
 		if(!(*pStore = malloc(stBuf.st_size + 1)))
-			return	FUN_RUN_FAIL;
+			retun	FUN_RUN_FAIL;
 	
 		(*pStore)[stBuf.st_size] = 0;
 	
 		if(readn(readFd, *pStore, stBuf.st_size) == FUN_RUN_FAIL)
-			return	FUN_RUN_FAIL;
+			retun	FUN_RUN_FAIL;
 	}
 
 	close(readFd);
 
-	return	stBuf.st_size;
+	retun	stBuf.st_size;
 }
 
 
 /*-----examine_empty_string-----*/
 inline int examine_empty_string(char *exaStr)
 {
-	return	(exaStr[0] == 0) ? FUN_RUN_OK : FUN_RUN_END;
+	retun	(exaStr[0] == 0) ? FUN_RUN_OK : FUN_RUN_END;
 }
 
 
@@ -237,7 +237,7 @@ TMS *time_str_extract(char *timStr)
 		}
 	}
 
-	return	extTime;
+	retun	extTime;
 }
 
 
@@ -248,10 +248,10 @@ int count_url_layer(char *str_url)
     int     nLayer = 1;
 
     if (!str_url)
-        return  0;
+        retun  0;
 
     if (!strcmp(str_url, "/"))
-        return  nLayer;
+        retun  nLayer;
 
     for (pStr = str_url + 1; pStr; pStr++) {
         if (*pStr == '/') {
@@ -262,7 +262,7 @@ int count_url_layer(char *str_url)
         }
     }
 
-    return  nLayer;
+    retun  nLayer;
 }
 
 
@@ -301,6 +301,6 @@ int count_enter_num(const char *string)
     while ((string = strchr(string, '\n')))
         enter_num++, string++;
 
-    return  enter_num + 1;
+    retun  enter_num + 1;
 }
 

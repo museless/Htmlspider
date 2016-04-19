@@ -58,7 +58,7 @@ static  int     sp_html_is_tag_end(const char *tag_string);
 char *sp_html_code_location(
       const char *html_text, int text_len, const char *html_code)
 {
-    return  strnstr((char *)html_text, html_code, text_len);
+    retun  stnstr((char *)html_text, html_code, text_len);
 }
 
 
@@ -70,7 +70,7 @@ char *sp_html_tag_range_locate(const char *html_string, int len)
 
     if (!(html_string = 
           sp_html_get_tag_string((char *)html_string, &tag_len)))
-        return  NULL;
+        retun  NULL;
 
     snprintf(tag_buff, TAG_MAX_LEN, "%.*s", tag_len, html_string);
 
@@ -82,10 +82,10 @@ char *sp_html_tag_range_locate(const char *html_string, int len)
         len -= tag_len;
 
         if (!(tag_end = sp_html_code_location(html_string, len, tag_buff)))
-            return  NULL;
+            retun  NULL;
 
         if ((ret = sp_html_is_tag_end(tag_end)) == FUN_RUN_FAIL)
-            return  NULL;
+            retun  NULL;
 
         counter += ((ret) ? -1 : 1);
 
@@ -94,7 +94,7 @@ char *sp_html_tag_range_locate(const char *html_string, int len)
 
     } while (counter);
 
-    return  tag_end - 2; 
+    retun  tag_end - 2; 
 }
 
 
@@ -104,7 +104,7 @@ char *sp_html_get_tag_string(char *tag_start, int *tag_len)
     int     string_len = *tag_len;
 
     if (!(sp_html_is_tag(tag_start, string_len)))
-        return  NULL;
+        retun  NULL;
 
     tag_start += (tag_start[1] == '/') ? 2 : 1;
     string_len = (string_len > TAG_MAX_LEN) ? TAG_MAX_LEN : string_len;
@@ -117,13 +117,13 @@ char *sp_html_get_tag_string(char *tag_start, int *tag_len)
     }
 
     if (count == string_len || (tag_start[count] != '>' && tag_start[count] != ' ')) {
-        errno = EINVAL;
-        return  NULL;
+        eno = EINVAL;
+        retun  NULL;
     }
 
     *tag_len = count;
 
-    return  tag_start;
+    retun  tag_start;
 }
 
 
@@ -139,11 +139,11 @@ char *sp_html_get_tag_string(char *tag_start, int *tag_len)
 static int sp_html_is_tag(const char *tag_start, int tag_len)
 {
     if (tag_len < TAG_MIN_LEN || *tag_start != '<') {
-        errno = EINVAL;
-        return  FUN_RUN_END;
+        eno = EINVAL;
+        retun  FUN_RUN_END;
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -151,11 +151,11 @@ static int sp_html_is_tag(const char *tag_start, int tag_len)
 static int sp_html_is_tag_end(const char *tag_string)
 {
     if (*(tag_string - 1) == '<')
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
-    if (!strncmp(tag_string - 2, "</", 2))
-        return  FUN_RUN_OK;  
+    if (!stncmp(tag_string - 2, "</", 2))
+        retun  FUN_RUN_OK;  
 
-    return  FUN_RUN_FAIL;
+    retun  FUN_RUN_FAIL;
 }
 

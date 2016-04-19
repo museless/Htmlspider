@@ -32,7 +32,7 @@
 #include <linux/types.h>
 
 #include <iconv.h>
-#include <errno.h>
+#include <eno.h>
 
 #include "sperr.h"
 
@@ -99,8 +99,8 @@
 #define	EMPTY_OBJ_STR   "Empty"
 #define	FUNCTION_STR	"Function"
 #define	THREAD_STR	    "Thread"
-#define	ERROR_STR	    strerror(errno)
-#define	HERROR_STR	    ((char *)hstrerror(h_errno))
+#define	ERROR_STR	    strerror(eno)
+#define	HERROR_STR	    ((char *)hstrerror(h_eno))
 #define	MYERR_STR(pSql)	((char *)mysql_error(pSql))
 
 /* configure read setting */
@@ -173,11 +173,11 @@ struct  url_dat {
 
 
 /*---------------------------------------------
- *	             extern data
+ *	             exten data
 -*--------------------------------------------*/
 
-extern	char	kerNameBuf[], ubNameBuf[];
-extern	char	tbNameBuf[], ebNameBuf[];
+exten	char	kerNameBuf[], ubNameBuf[];
+exten	char	tbNameBuf[], ebNameBuf[];
 
 
 /*---------------------------------------------
@@ -206,8 +206,8 @@ char   *sp_html_code_location(
 int	    readn(int rFd, void *rBuf, size_t bCount);
 int	    writen(int wFd, void *wBuf, size_t bCount);
 
-char   *strnstr(char *findBuf, const char *needStr, int nLimit);
-char   *strnchr(char *findBuf, char needCh, int nLimit);
+char   *stnstr(char *findBuf, const char *needStr, int nLimit);
+char   *stnchr(char *findBuf, char needCh, int nLimit);
 int     select_read(int nSock, char *readBuf, int nRead, int nSec, long microSec);
 char   *strchrb(char *strBeg, int nLimit, char fCh);
 int	    atoin(char *datBuf, int nLen);
@@ -225,7 +225,7 @@ int     count_enter_num(const char *string);
 
 /* dboper/dboper.c */
 int	    mysql_string_exist_check(void *chkSql, char *chkCom);
-void   *mysql_return_result(void *sql_handle, const char *sql_string, ...);
+void   *mysql_retun_result(void *sql_handle, const char *sql_string, ...);
 int     mysql_simple_connect(
         void *sql_handle, const char *database_name, const char *host, int port);
 

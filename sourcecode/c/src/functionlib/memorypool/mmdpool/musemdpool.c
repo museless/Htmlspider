@@ -67,7 +67,7 @@ DMPH *mmdp_create(int borderSize)
 	DMPH	*pMph;
 
 	if(!(pMph = malloc(sizeof(DMPH))))
-		return	NULL;
+		retun	NULL;
 
 	mmdp_handler_set_empty(pMph);
 
@@ -76,7 +76,7 @@ DMPH *mmdp_create(int borderSize)
 	mato_init(&pMph->mh_biglock, 1);
 	mato_init(&pMph->mh_deflock, 1);
 
-	return	pMph;
+	retun	pMph;
 }
 
 
@@ -86,7 +86,7 @@ void *mmdp_malloc(DMPH *mHand, msize_t maSize)
 	mpt_t	*pMem;
 
 	if(maSize > mHand->mh_sizebor)
-		return	mmdp_big_malloc(mHand, maSize);
+		retun	mmdp_big_malloc(mHand, maSize);
 
 	while(!mato_dec_and_test(&mHand->mh_deflock))
 		mato_inc(&mHand->mh_deflock);
@@ -95,7 +95,7 @@ void *mmdp_malloc(DMPH *mHand, msize_t maSize)
 
 	mato_inc(&mHand->mh_deflock);
 
-	return	pMem;
+	retun	pMem;
 }
 
 
@@ -120,7 +120,7 @@ void mmdp_free(DMPH *pHandler, mpt_t *pFree)
 		free(pBig->mbb_start);
 		free(pBig);
 
-		return;
+		retun;
 	}
 
 	if((pBlock = mmdp_default_block_search(pHandler->mh_stru, pFree))) {
@@ -189,7 +189,7 @@ void mmdp_reset_default(DMPH *pReset)
 /*-----mmdp_show_size-----*/
 int mmdp_show_size(DMPH *pMp)
 {
-	return	pMp->mh_sizebor;
+	retun	pMp->mh_sizebor;
 }
 
 
@@ -207,10 +207,10 @@ static mpt_t *mmdp_big_malloc(DMPH *hPoint, msize_t maSize)
 	DMPBB	*bigStru;
 
 	if((bigStru = malloc(sizeof(DMPBB))) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	if((bigStru->mbb_start = malloc(maSize)) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	bigStru->mbb_next = NULL;
 
@@ -229,7 +229,7 @@ static mpt_t *mmdp_big_malloc(DMPH *hPoint, msize_t maSize)
 
 	mato_inc(&hPoint->mh_biglock);
 
-	return	bigStru->mbb_start;
+	retun	bigStru->mbb_start;
 }
 
 
@@ -241,10 +241,10 @@ static mpt_t *mmdp_default_malloc(DMPH *hStru, msize_t nMalloc)
 
 	if(!(pBody = mmdp_default_size_search(hStru->mh_stru, nMalloc))) {
 		if(!(pBody = malloc(sizeof(DMPB))))
-			return	NULL;
+			retun	NULL;
 
 		if(!(pBody->mb_start = pBody->mb_end = malloc(hStru->mh_sizebor)))
-			return	NULL;
+			retun	NULL;
 
 		pBody->mb_left = pBody->mb_size = hStru->mh_sizebor;
 		pBody->mb_taker = 0;
@@ -259,7 +259,7 @@ static mpt_t *mmdp_default_malloc(DMPH *hStru, msize_t nMalloc)
 	pBody->mb_left -= nMalloc;
 	pBody->mb_taker++;
 
-	return	pRet;
+	retun	pRet;
 }
 
 
@@ -277,12 +277,12 @@ static DMPBB *mmdp_big_search(DMPBB *hStru, mpt_t *pFind)
 {
 	while(hStru) {
 		if(hStru->mbb_start == pFind)
-			return	hStru;
+			retun	hStru;
 
 		hStru = hStru->mbb_next;
 	}
 
-	return	NULL;
+	retun	NULL;
 }
 
 
@@ -291,12 +291,12 @@ static DMPB *mmdp_default_size_search(DMPB *byStru, msize_t nSize)
 {
 	while(byStru) {
 		if(byStru->mb_left >= nSize)
-			return	byStru;
+			retun	byStru;
 
 		byStru = byStru->mb_next;
 	}
 
-	return	NULL;
+	retun	NULL;
 }
 
 
@@ -305,10 +305,10 @@ static DMPB *mmdp_default_block_search(DMPB *begBlock, mpt_t *pLoct)
 {
 	for(; begBlock; begBlock = begBlock->mb_next) {
 		if(pLoct >= begBlock->mb_start && pLoct <= mmdp_block_end_adrr(begBlock))
-			return	begBlock;
+			retun	begBlock;
 	}
 
-	return	NULL;
+	retun	NULL;
 }
 
 

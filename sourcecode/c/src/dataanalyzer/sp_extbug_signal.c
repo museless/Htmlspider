@@ -67,7 +67,7 @@ int exbug_signal_init(void)
 
     if (sigaction(SIGINT, &sigStru, NULL) == FUN_RUN_FAIL) {
         perror("Extbug---> exbug_signal_init - sigaction - SIGINT");
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
     /* for signal segv */
@@ -76,10 +76,10 @@ int exbug_signal_init(void)
 
     if (sigaction(SIGSEGV, &sigStru, NULL) == FUN_RUN_FAIL) {
         perror("otbug_init_signal - sigaction - SIGSEGV");
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 

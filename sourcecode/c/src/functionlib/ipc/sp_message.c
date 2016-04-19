@@ -55,10 +55,10 @@ int sp_msg_read(int msgFd, PMSG *msgStru)
 
     if ((nRet = readn(msgFd, (char *)msgStru, MSG_LEN)) == FUN_RUN_FAIL) {
 		elog_write("sp_msg_read - select_read", FUNCTION_STR, ERROR_STR);
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 	}
 
-	return	nRet;
+	retun	nRet;
 }
 
 
@@ -76,10 +76,10 @@ int sp_msg_select_read(int nSock, PMSG *mStru, int nSec)
 
 	if (select(nSock + 1, &fdBuf, NULL, NULL, &timStru) > FUN_RUN_END) {
 		if (FD_ISSET(nSock, &fdBuf))
-			return	(read(nSock, mStru, MSG_LEN));
+			retun	(read(nSock, mStru, MSG_LEN));
 	}
 
-	return	FUN_RUN_END;
+	retun	FUN_RUN_END;
 }
 
 
@@ -88,10 +88,10 @@ int sp_msg_write(int msgFd, PMSG *pMessage)
 {
 	if (write(msgFd, pMessage, MSG_LEN) == FUN_RUN_FAIL) {
 		perror("sp_msg_write - write");
-		return	FUN_RUN_FAIL;
+		retun	FUN_RUN_FAIL;
 	}
 
-	return	FUN_RUN_OK;
+	retun	FUN_RUN_OK;
 }
 
 
@@ -99,35 +99,35 @@ int sp_msg_write(int msgFd, PMSG *pMessage)
 int sp_msg_exam_recver(PMSG *msgStru, int nPart, char *ownName)
 {
 	if (sp_msg_is_part_exist(nPart))
-		return	(msgStru->pm_recver == nPart) ? FUN_RUN_OK : FUN_RUN_END;
+		retun	(msgStru->pm_recver == nPart) ? FUN_RUN_OK : FUN_RUN_END;
 
 	char	strBuf[MIDDLE_BUF];
 
 	sprintf(strBuf, "%s - %d", ownName, nPart);
     elog_write("sp_msg_exam_recver - part_exist", "unexisted part with", strBuf);
 
-	return	FUN_RUN_FAIL;
+	retun	FUN_RUN_FAIL;
 }
 
 
 /*-----sp_msg_exam_command-----*/
 int sp_msg_exam_command(PMSG *mStru, int nComm)
 {
-	return	(sp_msg_is_require_com(mStru->pm_comm, nComm));
+	retun	(sp_msg_is_require_com(mStru->pm_comm, nComm));
 }
 
 
 /*-----sp_msg_recver-----*/
 inline int sp_msg_recver(PMSG *pMsg)
 {
-	return	pMsg->pm_recver;
+	retun	pMsg->pm_recver;
 }
 
 
 /*-----sp_msg_command-----*/
 inline int sp_msg_command(PMSG *pMsg)
 {
-	return	pMsg->pm_comm;
+	retun	pMsg->pm_comm;
 }
 
 
@@ -135,7 +135,7 @@ inline int sp_msg_command(PMSG *pMsg)
 void sp_msg_take_comm(PMSG *pGet, PMSG *pTake)
 {
 	pGet->pm_comm |= pTake->pm_comm;
-	return;
+	retun;
 }
 
 
@@ -145,7 +145,7 @@ void sp_msg_fill_stru(PMSG *pMsg, int nRecver, int nComm)
 	pMsg->pm_recver = nRecver;
 	pMsg->pm_comm |= nComm;
 
-	return;
+	retun;
 }
 
 
@@ -153,7 +153,7 @@ void sp_msg_fill_stru(PMSG *pMsg, int nRecver, int nComm)
 void sp_msg_unfill_comm(PMSG *pMsg)
 {
 	pMsg->pm_comm = NO_MSG;
-	return;
+	retun;
 }
 
 
@@ -175,7 +175,7 @@ MSGSET *sp_msg_frame_init(
 	MSGSET	*msgSet;
 
 	if ((msgSet = malloc(sizeof(MSGSET))) == NULL)
-		return	NULL;
+		retun	NULL;
 
 	msgSet->ms_name = mName;
 	msgSet->ms_num = mNum;
@@ -186,7 +186,7 @@ MSGSET *sp_msg_frame_init(
 	msgSet->ms_kpwork = fKwork;
 	msgSet->ms_send = fSend;
 
-	return	msgSet;
+	retun	msgSet;
 }
 
 
@@ -221,7 +221,7 @@ int sp_msg_frame_run(MSGSET *msgSet, void *kpPara)
 	if (msgSet->ms_send)
 		msRet = msgSet->ms_send(msgSet->ms_fd);
 
-	return	msRet;
+	retun	msRet;
 }
 
 
@@ -235,7 +235,7 @@ void sp_msg_frame_destroy(MSGSET *msgSet)
 
 inline int sp_msg_frame_fd(MSGSET *msgSet)
 {
-	return	(msgSet) ? msgSet->ms_fd : FUN_RUN_FAIL;
+	retun	(msgSet) ? msgSet->ms_fd : FUN_RUN_FAIL;
 }
 
 

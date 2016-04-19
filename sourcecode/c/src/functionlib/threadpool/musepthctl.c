@@ -85,12 +85,12 @@ PTHPOOL *mpc_create(int pthread_num)
     int     count_num;
 
     if (pthread_num < 1) {
-        errno = EINVAL;
-        return  NULL;
+        eno = EINVAL;
+        retun  NULL;
     }
 
     if (!(pool_pointer = malloc(sizeof(PTHPOOL))))
-        return  NULL;
+        retun  NULL;
 
     memset(pool_pointer, 0, sizeof(PTHPOOL));
 
@@ -98,7 +98,7 @@ PTHPOOL *mpc_create(int pthread_num)
 
     if (!(pool_pointer->pl_list = malloc(pool_pointer->pl_cnt * sizeof(PTHENT)))) {
         mpc_destroy(pool_pointer);
-        return  NULL;
+        retun  NULL;
     }
 
     /* create pthread: in pool */
@@ -107,17 +107,17 @@ PTHPOOL *mpc_create(int pthread_num)
     for (count_num = 0; count_num < pool_pointer->pl_cnt; count_num++, thread_entity++) {
         if (!mpc_thread_create(thread_entity)) {
             mpc_destroy(pool_pointer);
-            return  NULL;
+            retun  NULL;
         }
     }
 
     /* wake and set the watcher pthread */
     if (!mpc_thread_wake(pool_pointer, (pthrun)mpc_thread_watcher, (void *)pool_pointer)) {
         mpc_destroy(pool_pointer);
-        return  NULL;
+        retun  NULL;
     }
 
-    return  pool_pointer;
+    retun  pool_pointer;
 }
 
 
@@ -127,7 +127,7 @@ int mpc_thread_wake(PTHPOOL *threadPool, pthrun runFun, void *pPara)
     PTHENT *pthread_entity;
 
     if (!(pthread_entity = mpc_search_empty(threadPool)))
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
 
     pthread_entity->pe_run = runFun;
     pthread_entity->pe_data = pPara;
@@ -136,7 +136,7 @@ int mpc_thread_wake(PTHPOOL *threadPool, pthrun runFun, void *pPara)
     pthread_cond_signal(&pthread_entity->pe_cond);
     pthread_mutex_unlock(&pthread_entity->pe_mutex);
 
-    return  PTH_RUN_OK;
+    retun  PTH_RUN_OK;
 }
 
 
@@ -168,7 +168,7 @@ void mpc_destroy(PTHPOOL *thread_pool)
     int     thread_status;
 
     if (!thread_pool)
-        return;
+        retun;
 
     if (thread_pool->pl_list) {
         th_entity = thread_pool->pl_list;
@@ -321,14 +321,14 @@ static PTHENT *mpc_search_empty(PTHPOOL *thread_pool)
                 if (thread_status == EBUSY)
                     continue;
 
-                return  NULL;
+                retun  NULL;
             }
 
-            return  thread_entity;
+            retun  thread_entity;
         }
     }
 
-    return  NULL;
+    retun  NULL;
 }
 
 
@@ -345,28 +345,28 @@ static int mpc_thread_create(PTHENT *thread_entity)
         mpc_thread_perror(
         "mpc_thread_create - pthread_mutex_init", thread_status);
 
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
     }
 
     if ((thread_status = pthread_cond_init(&thread_entity->pe_cond, NULL))) {
         mpc_thread_perror(
         "mpc_thread_create - pthread_cond_init", thread_status);
 
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
     }
 
     if ((thread_status = pthread_create(
          &thread_entity->pe_tid, NULL, 
          mpc_thread_pool_run, (void *)thread_entity))) {
         mpc_thread_perror("mpc_thread_create - pthread_create", thread_status);
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
     }
 
     if ((thread_status = pthread_mutex_lock(&thread_entity->pe_mutex))) {
         mpc_thread_perror(
         "mpc_thread_create - pthread_mutex_lock", thread_status);
 
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
     }
 
     while (thread_entity->pe_flags != PTH_IS_READY) {
@@ -374,17 +374,17 @@ static int mpc_thread_create(PTHENT *thread_entity)
                 &thread_entity->pe_cond, &thread_entity->pe_mutex))) {
             mpc_thread_perror(
                 "mpc_thread_create - pthread_cond_wait", thread_status);
-            return  PTH_RUN_END;
+            retun  PTH_RUN_END;
         }
     }
 
     if ((thread_status = pthread_mutex_unlock(&thread_entity->pe_mutex))) {
         mpc_thread_perror(
         "mpc_thread_create - pthread_mutex_unlock", thread_status);
-        return  PTH_RUN_END;
+        retun  PTH_RUN_END;
     }
 
-    return  PTH_RUN_OK;
+    retun  PTH_RUN_OK;
 }
 
 
@@ -404,7 +404,7 @@ static int mpc_thread_watcher(PTHPOOL *thread_pool)
     while (PTH_RUN_PERMANENT)
         sleep(TAKE_A_LLSLP);        /* Just go to sleep, do not waste cpu */
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 

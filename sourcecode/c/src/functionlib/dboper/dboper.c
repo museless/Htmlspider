@@ -43,7 +43,7 @@ static  int     mysql_execl_query(
  *        Part Four: Mysql operate
  *
  *        1. mysql_string_exist_check
- *        2. mysql_return_result
+ *        2. mysql_retun_result
  *        3. mysql_simple_connect
  *        4. mysql_creat_table
  *
@@ -56,13 +56,13 @@ int mysql_simple_connect(
     mysql_library_init(nrOpt, sqlOpt, NULL);
 
     if (!mysql_init(sql_handle))
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     if (!mysql_real_connect(
         sql_handle, host, DBUSRNAME, DBUSRKEY, database_name, port, NULL, 0))
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -73,30 +73,30 @@ int mysql_string_exist_check(void *chkSql, char *chkCom)
     int     fRet;
         
     if(mysql_query((MYSQL *)chkSql, chkCom) != FUN_RUN_END)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     if((sqlRes = mysql_store_result((MYSQL *)chkSql)) == NULL)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     fRet = mysql_num_rows(sqlRes);
 
     mysql_free_result(sqlRes);
 
-    return  (fRet) ? 1 : 0;
+    retun  (fRet) ? 1 : 0;
 }
 
 
-/*-----mysql_return_result-----*/
-void *mysql_return_result(void *sql_handle, const char *sql_string, ...)
+/*-----mysql_retun_result-----*/
+void *mysql_retun_result(void *sql_handle, const char *sql_string, ...)
 {
     va_list ap_list;
 
     va_start(ap_list, sql_string);
 
     if (mysql_execl_query(sql_handle, sql_string, ap_list))
-        return  NULL;
+        retun  NULL;
 
-    return  mysql_store_result(sql_handle);
+    retun  mysql_store_result(sql_handle);
 }
 
 
@@ -108,9 +108,9 @@ int mysql_creat_table(void *sql_handle, const char *creat_string, ...)
     va_start(ap_list, creat_string);
 
     if (mysql_execl_query(sql_handle, creat_string, ap_list))
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -126,7 +126,7 @@ int mysql_execl_query(void *sql_handle, const char *sql, va_list ap_list)
 {
     char    sql_sentence[SQL_MCOM_LEN];
 
-    return  mysql_real_query(
+    retun  mysql_real_query(
             sql_handle, sql_sentence, 
             vsnprintf(sql_sentence, SQL_MCOM_LEN, sql, ap_list));
 }
@@ -142,20 +142,20 @@ int mysql_execl_query(void *sql_handle, const char *sql, va_list ap_list)
 /*-----mysql_error_log-----*/
 int mysql_error_log(void *sql_handle, char *db_name, char *error_string)
 {
-    uInt    sql_errno = mysql_errno(sql_handle);
+    uInt    sql_eno = mysql_eno(sql_handle);
 
     elog_write(error_string, FUNCTION_STR, MYERR_STR(sql_handle));
 
-    if (sql_errno == CR_SERVER_LOST || sql_errno == CR_SERVER_GONE_ERROR) {
+    if (sql_eno == CR_SERVER_LOST || sql_eno == CR_SERVER_GONE_ERROR) {
         elog_write(error_string, FUNCTION_STR, "mysql reconnect start...");
 
         if (mysql_real_connect(
             sql_handle, NULL, DBUSRNAME, DBUSRKEY, db_name, 0, NULL, 0))
-            return  FUN_RUN_OK;
+            retun  FUN_RUN_OK;
     }
 
     elog_write(error_string, FUNCTION_STR, "mysql reconnect failed");
 
-    return  FUN_RUN_FAIL;
+    retun  FUN_RUN_FAIL;
 }
 

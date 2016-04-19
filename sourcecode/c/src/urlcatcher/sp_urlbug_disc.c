@@ -46,19 +46,19 @@ void ubug_print_help(void)
     help_fd = open("../sourcecode/c/src/urlcatcher/urlbug.hlp", O_RDWR);
 
     if (help_fd == FUN_RUN_FAIL) {
-        ubug_perror("ubug_print_help - open", errno);
+        ubug_perror("ubug_print_help - open", eno);
         exit(FUN_RUN_FAIL);
     }
 
     if (fstat(help_fd, &stat_buf) == FUN_RUN_FAIL) {
-        ubug_perror("ubug_print_help - fstat", errno);
+        ubug_perror("ubug_print_help - fstat", eno);
         exit(FUN_RUN_FAIL); 
     }
 
     char    help_content[stat_buf.st_size + 1];
 
     if (readn(help_fd, help_content, stat_buf.st_size) == FUN_RUN_FAIL) {
-        ubug_perror("ubug_print_help - readn", errno);
+        ubug_perror("ubug_print_help - readn", eno);
         exit(FUN_RUN_FAIL);
     }
 

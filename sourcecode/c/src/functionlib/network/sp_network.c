@@ -67,14 +67,19 @@ int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)
 {
     struct  hostent *pHost;
 
+<<<<<<< HEAD
     if (!(pHost = gethostbyname(hostName)))
         return  FUN_RUN_END;
+=======
+    if (!(host = gethostbyname(host_name)))
+        retun  FUN_RUN_END;
+>>>>>>> 6f5be9f1d7f01ed32fd56174612f1852168e1f59
 
     sInfo->sin_family = AF_INET;
     sInfo->sin_port = htons(80);
     sInfo->sin_addr = *((struct in_addr *)(pHost->h_addr));
 
-    return  FUN_RUN_OK;
+    retun  FUN_RUN_OK;
 }
 
 
@@ -84,20 +89,20 @@ int sp_net_sock_connect(SOCKIF *sockInfo)
     int     sock;
 
     if ((sock = socket(AF_INET, SOCK_STREAM, 0)) == FUN_RUN_FAIL)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     if (sp_net_sock_settimer(sock, 
            TAKE_A_NOTHING, 0, SO_SNDTIMEO) == FUN_RUN_FAIL) {
         close(sock);
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
     if (connect(sock, (SOCKAD *)sockInfo, sizeof(SOCKIF)) == FUN_RUN_FAIL) {
         close(sock);
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
     }
 
-    return  sock;
+    retun  sock;
 }
 
 
@@ -125,7 +130,7 @@ int sp_net_sock_read(
         check_point = savBuf + (cont_offset - (str_size > ENDHTML_CHK_OFFSET) ? 
                       ENDHTML_CHK_OFFSET : str_size);
 
-        if (strnstr(check_point, MATCH_ENDHTML, ENDHTML_CHK_OFFSET))
+        if (stnstr(check_point, MATCH_ENDHTML, ENDHTML_CHK_OFFSET))
             break;
 
         if (cont_offset + RECE_DATA > bufLimit)
@@ -134,7 +139,7 @@ int sp_net_sock_read(
 
     savBuf[cont_offset] = 0;
 
-    return  cont_offset;
+    retun  cont_offset;
 }
 
 
@@ -144,12 +149,12 @@ int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
     TMVAL  time_val;
 
     if (nFlags != SO_RCVTIMEO && nFlags != SO_SNDTIMEO)
-        return  FUN_RUN_FAIL;
+        retun  FUN_RUN_FAIL;
 
     time_val.tv_sec = nSec;
     time_val.tv_usec = uSec;
 
-    return  setsockopt(socket, SOL_SOCKET, nFlags, &time_val, sizeof(time_val));
+    retun  setsockopt(socket, SOL_SOCKET, nFlags, &time_val, sizeof(time_val));
 }
 
 
@@ -157,12 +162,12 @@ int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)
 int sp_net_sock_init(WEBIN *web_stu)
 {
     if (!sp_net_set_sockif(web_stu->w_ubuf.web_host, &web_stu->w_sockif))
-        return  FRET_N;
+        retun  FRET_N;
 	
     if (!(web_stu->w_sock = sp_net_sock_connect(&web_stu->w_sockif)))
-        return  FRET_N;
+        retun  FRET_N;
     
-    return  FRET_P;
+    retun  FRET_P;
 }
 
 
@@ -177,7 +182,7 @@ int sp_net_html_download(WEBIN *web_stu)
 
     for (count = 0; count < MAX_REDIRECT_TIMES; count++) {
         if (sp_net_sock_init(web_stu) != FRET_P)
-            return  FRET_N;
+            retun  FRET_N;
 
         if ((ret_value = sp_http_handle_request(web_stu)) == FRET_UNIQUE) {
             if (redire_flags == REDIRECT_DONE) {
@@ -193,7 +198,7 @@ int sp_net_html_download(WEBIN *web_stu)
         break;
     }
 
-    return  ret_value;
+    retun  ret_value;
 }
 
 
@@ -214,8 +219,8 @@ int sp_net_html_download(WEBIN *web_stu)
 int sp_http_interact(WEBIN *web_stu)
 {
     if (web_stu->w_conbufsize < MIN_HTTP_RESPONE_LEN) {
-        errno = EINVAL;
-        return  FUN_RUN_END;
+        eno = EINVAL;
+        retun  FUN_RUN_END;
     }
 
     WEB    *web_info = &web_stu->w_ubuf;
@@ -224,18 +229,18 @@ int sp_http_interact(WEBIN *web_stu)
                       web_info->web_file, web_info->web_host, rPac);
    
     if (write(web_stu->w_sock, web_stu->w_conbuf, strSize) != strSize) 
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     web_stu->w_size = select_read(
                       web_stu->w_sock, web_stu->w_conbuf,
                       web_stu->w_conbufsize, TAKE_A_SEC, 0);
 
     if (web_stu->w_size < FRET_VAL)
-        return  FUN_RUN_END;
+        retun  FUN_RUN_END;
 
     web_stu->w_conbuf[web_stu->w_size] = 0;
 
-    return  atoi(web_stu->w_conbuf + 9);
+    retun  atoi(web_stu->w_conbuf + 9);
 }
 
 
@@ -244,19 +249,19 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 {
     char   *location, *locate_end;
 
-    if ((location = strnstr(data_buff, http_header, *data_size))) {
+    if ((location = stnstr(data_buff, http_header, *data_size))) {
         locate_end = 
-            strnstr(location, "\r\n", *data_size - (location - data_buff));
+            stnstr(location, "\r\n", *data_size - (location - data_buff));
 
         if (!locate_end)
-            return  NULL;
+            retun  NULL;
 
         *data_size = locate_end - location;
 
-        return  location;
+        retun  location;
     }
 
-    return  NULL;
+    retun  NULL;
 }
 
 
@@ -271,24 +276,24 @@ char *sp_http_compare_latest(
         header = sp_http_header_locate(MATCH_DATE, http_buff, &string_size);
 
         if (!header) {
-            errno = ENODATA;
-            return  NULL;
+            eno = ENODATA;
+            retun  NULL;
         }
     }
 
-	if (!strncmp(header + string_size, last_time, string_size))
-		return	NULL;
+	if (!stncmp(header + string_size, last_time, string_size))
+		retun	NULL;
 
     *buff_len = string_size;
 
-    return  header;
+    retun  header;
 }
 
 
 /*-----sp_http_handle_request-----*/
 int sp_http_handle_request(WEBIN *web_stu)
 {
-    return  sp_http_handle_retcode(
+    retun  sp_http_handle_retcode(
                 web_stu->w_conbuf, web_stu->w_size, 
                 sp_http_interact(web_stu), web_stu);
 }
@@ -299,9 +304,9 @@ int sp_http_handle_retcode(
     char *http_buff, int buff_size, int http_ret_code, WEBIN *web_info)
 {
     if (http_ret_code == RESP_PERM_MOVE || http_ret_code == RESP_TEMP_MOVE)
-        return  sp_http_handle_30x(http_buff, buff_size, web_info);
+        retun  sp_http_handle_30x(http_buff, buff_size, web_info);
 
-    return  (http_ret_code != RESP_CONNECT_OK) ? FRET_N : FRET_P;
+    retun  (http_ret_code != RESP_CONNECT_OK) ? FRET_N : FRET_P;
 }
 
 
@@ -312,15 +317,15 @@ int sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info)
     char   *new_url = sp_http_header_locate(MATCH_LOCA, http_buff, &url_len);
 
     if (!new_url)
-        return  FRET_N;
+        retun  FRET_N;
 
     new_url += MLOCA_LEN;
     url_len -= MLOCA_LEN;
 
     if (sp_url_seperate(new_url, url_len, &web_info->w_ubuf) != FRET_P)
-        return  FRET_N;
+        retun  FRET_N;
 
-    return  FRET_UNIQUE;
+    retun  FRET_UNIQUE;
 }
 
 
@@ -330,10 +335,10 @@ static int sp_http_redict_check(WEB *dst, WEB *src)
     if (!strcmp(src->web_path, dst->web_path) && 
         !strcmp(src->web_file, dst->web_file)) {
         sprintf(dst->web_host, src->web_host);
-        return  REDIRECT_DONE;
+        retun  REDIRECT_DONE;
     }
 
-    return  REDIRECT_UNFINISH;
+    retun  REDIRECT_UNFINISH;
 }
 
 
@@ -352,9 +357,9 @@ int sp_url_seperate(char *url, int url_len, WEB *web_info)
 
     memset(web_info, 0, sizeof(WEB));
 
-	if (!strncmp(url, MATCH_HTP, MHTP_LEN)) {
-        if (!(url_pointer = strnstr(url, "//", url_len)))
-            return  FRET_Z;
+	if (!stncmp(url, MATCH_HTP, MHTP_LEN)) {
+        if (!(url_pointer = stnstr(url, "//", url_len)))
+            retun  FRET_Z;
 
         url_pointer += 2;
         url_len -= (url_pointer - url);
@@ -362,7 +367,7 @@ int sp_url_seperate(char *url, int url_len, WEB *web_info)
 
 	web_info->web_port = HTTP_PORT;
 
-    char   *slash_point = strnchr(url_pointer, '/', url_len);
+    char   *slash_point = stnchr(url_pointer, '/', url_len);
     int     host_len = (slash_point) ? slash_point - url_pointer : url_len; 
     int     file_name_offset = 0;
 
@@ -384,7 +389,7 @@ int sp_url_seperate(char *url, int url_len, WEB *web_info)
 
     web_info->web_nlayer = sp_url_path_count_nlayer(web_info->web_path);
 
-    return  FRET_P;
+    retun  FRET_P;
 }
 
 
@@ -394,10 +399,10 @@ int sp_url_path_count_nlayer(char *url)
     int     layer_num = 1;
 
     if (!url)
-        return  0;
+        retun  0;
 
     if (!strcmp(url, "/"))
-        return  layer_num;
+        retun  layer_num;
 
     char    *url_pointer;
 
@@ -410,7 +415,7 @@ int sp_url_path_count_nlayer(char *url)
         }
     }
 
-    return  layer_num;
+    retun  layer_num;
 }
 
 
@@ -439,6 +444,6 @@ long sp_net_speed_ping(const char *ping_host, int num_pack)
         count++;
     }
 
-    return  (num_pack) ? (total_time / num_pack) : FUN_RUN_FAIL;
+    retun  (num_pack) ? (total_time / num_pack) : FUN_RUN_FAIL;
 }
 

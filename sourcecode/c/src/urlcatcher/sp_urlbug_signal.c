@@ -60,7 +60,7 @@ void ubug_init_signal(void)
     sigStru.sa_flags = 0;
 
     if(sigaction(SIGINT, &sigStru, NULL) == FUN_RUN_FAIL) {
-        ubug_perror("ubug_init_signal - sigaction - SIGINT", errno);
+        ubug_perror("ubug_init_signal - sigaction - SIGINT", eno);
         exit(FUN_RUN_FAIL);
     }
 
@@ -69,7 +69,7 @@ void ubug_init_signal(void)
     sigStru.sa_mask = sigMask;
 
     if(sigaction(SIGSEGV, &sigStru, NULL) == FUN_RUN_FAIL) {
-        ubug_perror("ubug_init_signal - sigaction - SIGSEGV", errno);
+        ubug_perror("ubug_init_signal - sigaction - SIGSEGV", eno);
         exit(FUN_RUN_FAIL);
     }
 }

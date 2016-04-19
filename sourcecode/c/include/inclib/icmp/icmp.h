@@ -54,7 +54,7 @@
            typedef
 ------------------------------*/
 
-typedef struct  internet_ctl_msg_protocal   ICMP;
+typedef struct  intenet_ctl_msg_protocal   ICMP;
 typedef struct  icmp_type_echo              ICMPECHO;
 
 
@@ -62,7 +62,7 @@ typedef struct  icmp_type_echo              ICMPECHO;
             struct
 ------------------------------*/
 
-struct internet_ctl_msg_protocal {
+struct intenet_ctl_msg_protocal {
     uChar   icmp_type;
     uChar   icmp_code;
     uShort icmp_checksum;

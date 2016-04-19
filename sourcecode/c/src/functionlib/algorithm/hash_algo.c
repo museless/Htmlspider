@@ -56,13 +56,13 @@ HBET *hash_bucket_init(int nBucket, mafun funMalloc, mafree funFree, void *maHan
 	int	nCnt;
 
 	if(!funMalloc || !funCreat || !funCmp)
-		return	NULL;
+		retun	NULL;
 
 	if(!(pHb = malloc(sizeof(HBET))))
-		return	NULL;
+		retun	NULL;
 
 	if(!(pHb->hb_head = funMalloc(maHand, nBucket * sizeof(BUCKET))))
-		return	NULL;
+		retun	NULL;
 
 	for(pBuck = pHb->hb_head, nCnt = 0; nCnt < nBucket; nCnt++, pBuck++) {
 		pBuck->bt_list = NULL;
@@ -80,7 +80,7 @@ HBET *hash_bucket_init(int nBucket, mafun funMalloc, mafree funFree, void *maHan
 
 	pHb->hb_nbuck = nBucket;
 
-	return	pHb;
+	retun	pHb;
 }
 
 
@@ -91,13 +91,13 @@ void *hash_bucket_insert(HBET *hbStru, void *pInsert, int datLen, void *datBuf)
 	BUCKET	*pBucket;
 
 	if(!hash_bucket_existed(hbStru))
-		return	NULL;
+		retun	NULL;
 
 	if(!(newEle = hbStru->hb_mafun(hbStru->hb_mhand, sizeof(BELE))))
-		return	NULL;
+		retun	NULL;
 
 	if(!(newEle->be_ele = hbStru->hb_crtfun(pInsert, datLen, datBuf)))
-		return	NULL;
+		retun	NULL;
 
 	pBucket = hash_bucket_chose_bucket(hbStru, pInsert, datLen);
 
@@ -111,7 +111,7 @@ void *hash_bucket_insert(HBET *hbStru, void *pInsert, int datLen, void *datBuf)
 
 	mato_inc(&pBucket->bt_lock);
 
-	return	newEle->be_ele;
+	retun	newEle->be_ele;
 }
 
 
@@ -123,7 +123,7 @@ void *hash_bucket_find(HBET *hbFind, void *pFind, int nLen)
 	int	nCnt;
 
 	if(!hash_bucket_existed(hbFind))
-		return	NULL;
+		retun	NULL;
 
 	pBucket = hash_bucket_chose_bucket(hbFind, pFind, nLen);
 
@@ -133,20 +133,20 @@ void *hash_bucket_find(HBET *hbFind, void *pFind, int nLen)
 	for(pMov = pBucket->bt_list, nCnt = 0; nCnt < pBucket->bt_cnt; nCnt++, pMov = pMov->be_next) {
 		if(!hbFind->hb_cmpfun(pFind, pMov->be_ele, nLen)) {
 			mato_inc(&pBucket->bt_lock);
-			return	pMov->be_ele;
+			retun	pMov->be_ele;
 		}
 	}
 
 	mato_inc(&pBucket->bt_lock);
 
-	return	NULL;
+	retun	NULL;
 }
 
 
 /*-----hash_bucket_select-----*/
 static inline int hash_bucket_select(HBET *hbStru, void *extData, int dLen)
 {
-	return	((hbStru->hb_hash(extData, dLen)) % hbStru->hb_nbuck);
+	retun	((hbStru->hb_hash(extData, dLen)) % hbStru->hb_nbuck);
 }
 
 
@@ -167,5 +167,5 @@ static BUCKET *hash_bucket_chose_bucket(HBET *hbStru, void *pData, int dataLen)
 {
 	int	nKey = hash_bucket_select(hbStru, pData, dataLen);
 	
-	return	((nKey > hbStru->hb_nbuck) ? NULL : hash_bucket_locate(hbStru, nKey));
+	retun	((nKey > hbStru->hb_nbuck) ? NULL : hash_bucket_locate(hbStru, nKey));
 }

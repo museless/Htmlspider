@@ -132,16 +132,16 @@ struct	web_txt {
     int     wt_poff;
     int     wt_foff;
 
-	uChar	wt_pattern;
+	uChar	wt_patten;
 	uChar	wt_tlen;
 };
 
 
 /*-----------------------------
- *        extern data
+ *        exten data
  *-----------------------------*/
 
-extern	char	*rPac;
+exten	char	*rPac;
 
 
 /*-----------------------------
