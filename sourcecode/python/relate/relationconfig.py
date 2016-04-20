@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.03.24 09:35"
-__modification_time__ = "2016.03.24 09:35"
+__modification_time__ = "2016.04.21 00:40"
 __intro__ = "keyword relater conf"
 
 
@@ -15,7 +15,7 @@ __intro__ = "keyword relater conf"
 #----------------------------------------------
 
 # in second
-Export_time = 60
+Export_time = 300
 
 # data map template
 RelationDataTemplate = """

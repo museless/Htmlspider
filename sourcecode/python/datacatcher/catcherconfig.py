@@ -14,8 +14,8 @@ __intro__ = "catcher configuration"
 #               Catcher config
 #----------------------------------------------
 
-Chinese_minumum = 60
-Chinese_has_rate = 0.21
+Chinese_minumum = 58
+Chinese_has_rate = 0.20
 Compare_rate = 0.25
 
 
@@ -42,7 +42,6 @@ Ending_terms = [
     u"相关阅读",
     u"相关推荐",
     u"相关图集",
-    u"相关报道",
     u"更多精彩内容",
     u"网站简介",
     u"网站地图",
@@ -61,6 +60,9 @@ Ending_terms = [
     u"图片源于网络",
     u"特别提醒：",
     u"版权合作及网站合作电话",
+    u"互联网药品信息服务资格证书",
+    u"商报简介",
+    u"本文系观察者网独家稿件",
 ]
 
 Start_terms = [

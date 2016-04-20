@@ -222,9 +222,7 @@ char *ubug_reach_url_head(char *pSrc, char *pLimit)
 /*-----ubug_is_today_news-----*/
 int ubug_is_today_news(char *string, int nLimit)
 {
-    int     nCir;
-
-    for(nCir = 0; nCir < DATE_CMODE; nCir++) {
+    for(int nCir = 0; nCir < DATE_CMODE; nCir++) {
         if(strnstr(string, timComMode[nCir], nLimit))
             return  FRET_P;
     }

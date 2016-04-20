@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.25 23:30"
+__modification_time__ = "2016.04.20 23:50"
 __intro__ = "a news content catcher"
 
 
@@ -103,20 +103,21 @@ class DataCatcher:
                     return
 
             for offset in range(len(string)):
-                if string[offset] == "_" or \
-                   string[offset] == "|" or \
-                   (string[offset] == "-" and \
+                if string[offset] in ["_", "|"] or (string[offset] == "-" and \
                    string[offset + 1].isdigit() == False):
                     self.news_title = string[0: offset]
                     break
 
-        # for source 
+        if offset + 1 == len(string):
+            self.news_title = string 
+            self.news_source = "unknown source"
+            return
+
+        # for source
         self.news_source = string[offset: ]
 
         for offset in range(1, len(string) + 1):
-            if string[-offset] == "_" or \
-               string[-offset] == "|" or \
-               string[-offset] == "-":
+            if string[-offset] in ["_", "|", "-", " "]:
                 self.news_source = string[-offset + 1: ]
                 break
 
@@ -281,3 +282,4 @@ class DataCatcher:
 
         return  False
 
+                                                                                                                                                                                                                                                                                            
