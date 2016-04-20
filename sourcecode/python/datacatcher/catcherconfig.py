@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.01.21 20:10"
+__modification_time__ = "2016.04.20 14:10"
 __intro__ = "catcher configuration"
 
 
@@ -50,7 +50,6 @@ Ending_terms = [
     u"凤凰财知道",
     u"每日早间捕捉涨停股",
     u"本文来源",
-    u"本报记者",
     u".F.X.1.6.8",
     u"新浪声明：",
     u"编辑：",
