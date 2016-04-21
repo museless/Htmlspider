@@ -420,7 +420,8 @@ int ubug_pthread_apply_for_resource(WEBIN *web_info)
     web_info->w_urlbufsize = NAMBUF_LEN;
     web_info->w_size = urlRunSet.ubs_dway(web_info);
 
-    printf("web_info->w_size: %d\n", web_info->w_size);
+    printf("url: %s%s%s - size: %d\n", web_info->w_ubuf.web_host, 
+        web_info->w_ubuf.web_path, web_info->w_ubuf.web_file, web_info->w_size);
 
     return  (web_info->w_size > 0) ? FRET_P : FRET_Z;
 }
