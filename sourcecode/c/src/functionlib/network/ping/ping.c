@@ -106,8 +106,7 @@ int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
     TMVAL   send_time, recv_time;
     int     recv_num;
 
-    if (!icmp_create(
-         buffer, DG_ICMP_MAXLEN,
+    if (!icmp_create(buffer, DG_ICMP_MAXLEN,
          TYPE_ECHO, CODE_ECHO, NULL, 0))
         return  FRET_N;
 
@@ -118,8 +117,7 @@ int ping_access(int sock, PINGIF *ping_info, SOCKIF *sock_info)
 
     recv_num -= DG_IP_LEN;
 
-    if (!icmp_resolve(
-         (uChar *)(buffer + DG_IP_LEN),
+    if (!icmp_resolve((uChar *)(buffer + DG_IP_LEN),
          recv_num, TYPE_ECHO_REPLY, CODE_ECHO_REPLY))
         return  FRET_N;
 
@@ -165,13 +163,11 @@ int ping_send_recv(int sock, SOCKIF *sock_info, char *buffer)
     socklen_t   sockif_len = sizeof(struct sockaddr);
     int         recv_num;
     
-    if (sendto(
-        sock, buffer, TYPE_ECHO_MIN_LEN, 0, 
+    if (sendto(sock, buffer, TYPE_ECHO_MIN_LEN, 0, 
         (const struct sockaddr *)sock_info, sockif_len) == FRET_N)
         return  FRET_N;
 
-    if ((recv_num = recvfrom(
-        sock, buffer, DG_ICMP_MAXLEN, 0, 
+    if ((recv_num = recvfrom(sock, buffer, DG_ICMP_MAXLEN, 0, 
         (struct sockaddr *)sock_info, &sockif_len)) == FRET_N)
         return  FRET_N;
     

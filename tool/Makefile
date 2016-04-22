@@ -30,14 +30,6 @@ SRCTOOL	= src/sp_tool.c \
 		  ../sourcecode/c/src/functionlib/garbagecolloter/musegc.c \
 	      ../sourcecode/c/src/functionlib/container/sp_bufoper.c
 
-SRCRM	= src/sp_remove.c
-
-SRCGA	= src/sp_gather.c ../src/functionlib/sp_global.c ../src/functionlib/malgo/sort_algo.c 
-
-SRCFORM	= src/sp_format.c ../src/functionlib/sp_global.c ../src/functionlib/sp_pfun.c
-
-SRCARR	= src/sp_word_arrange.c ../src/functionlib/sp_pfun.c
-	
 SRCTEST = src/sp_funtest.c \
 	 	  ../sourcecode/c/src/functionlib/sp_global.c \
 	      ../sourcecode/c/src/functionlib/container/sp_bufoper.c \
@@ -59,30 +51,14 @@ SRCTEST = src/sp_funtest.c \
 		  ../sourcecode/c/src/functionlib/network/icmp/icmp.c
 
 # phony
-.PHONY : tool gath form rm arrange test
+.PHONY : tool test
 
-all		: tool gath form rm arrange test
+all		: tool test
 tool	: $(EXTOOL)
-rm		: $(EXRM)
-gath	: $(EXGA)
-form	: $(EXFORM)
-arrange : $(EXARR)
 test	: $(EXTEST)
 
 $(EXTOOL) : $(SRCTOOL)
 	$(CC) -o $(EXTOOL) $(SRCTOOL) $(OTFLAGS) $(NMFLAGS) $(MSFLAGS) $(PTFLAGS)
-
-$(EXRM) : $(SRCRM)
-	$(CC) -o $(EXRM) $(SRCRM) $(OTFLAGS) $(NMFLAGS)
-
-$(EXGA) : $(SRCGA)
-	$(CC) -o $(EXGA) $(SRCGA) $(OTFLAGS) $(NMFLAGS) $(MSFLAGS) $(PTFLAGS)
-
-$(EXFORM) : $(SRCFORM)
-	$(CC) -o $(EXFORM) $(SRCFORM) $(OTFLAGS) $(NMFLAGS) $(MSFLAGS) $(PTFLAGS)
-
-$(EXARR) : $(SRCARR)
-	$(CC) -o $(EXARR) $(SRCARR) $(OTFLAGS) $(NMFLAGS) $(MSFLAGS) $(PTFLAGS)
 
 $(EXTEST) : $(SRCTEST)
 	$(CC) -o $(EXTEST) $(SRCTEST) $(OTFLAGS) $(NMFLAGS) $(MSFLAGS) $(PTFLAGS)

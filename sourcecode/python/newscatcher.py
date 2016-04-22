@@ -58,7 +58,8 @@ def url_data_get(url_receiver, url_tabname, url, url_id):
 
     try:
         url_data = urllib.urlopen(url)
-    except IOError, error_str:
+
+    except Exception, error_str:
         url_receiver.update(1, url_tabname, 2, url_id)
         return  None
 
@@ -66,9 +67,9 @@ def url_data_get(url_receiver, url_tabname, url, url_id):
         ret_code = url_data.getcode()
 
         if ret_code != 200:
-            print("Url: %s - ret: %d" % (url, ret_code))
+            print("url: %s - return: %d" % (url, ret_code))
             url_receiver.update(1, url_tabname, 2, url_id)
-            url_data = None 
+            url_data = None
 
     return  url_data
 

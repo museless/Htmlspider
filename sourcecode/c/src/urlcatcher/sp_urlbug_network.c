@@ -72,7 +72,7 @@ void ubug_init_pinginfo(void)
         mc_conf_print_err("ping_packet");
 
     ubugPingInfo.p_time.tv_sec = 0;
-    ubugPingInfo.p_time.tv_usec = 80000;
+    ubugPingInfo.p_time.tv_usec = 100000;
 }
 
 

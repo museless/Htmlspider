@@ -832,10 +832,10 @@ sp_msg_take_comm	src/functionlib/ipc/sp_message.c	/^void sp_msg_take_comm(PMSG *
 sp_msg_unfill_comm	src/functionlib/ipc/sp_message.c	/^void sp_msg_unfill_comm(PMSG *pMsg)$/;"	f
 sp_msg_write	src/functionlib/ipc/sp_message.c	/^int sp_msg_write(int msgFd, PMSG *pMessage)$/;"	f
 sp_net_html_download	src/functionlib/network/sp_network.c	/^int sp_net_html_download(WEBIN *web_stu)$/;"	f
-sp_net_set_sockif	src/functionlib/network/sp_network.c	/^int sp_net_set_sockif(const char *hostName, SOCKIF *sInfo)$/;"	f
+sp_net_set_sockif	src/functionlib/network/sp_network.c	/^int sp_net_set_sockif(const char *host_name, SOCKIF *sInfo)$/;"	f
 sp_net_sock_connect	src/functionlib/network/sp_network.c	/^int sp_net_sock_connect(SOCKIF *sockInfo)$/;"	f
 sp_net_sock_init	src/functionlib/network/sp_network.c	/^int sp_net_sock_init(WEBIN *web_stu)$/;"	f
-sp_net_sock_read	src/functionlib/network/sp_network.c	/^int sp_net_sock_read($/;"	f
+sp_net_sock_read	src/functionlib/network/sp_network.c	/^int sp_net_sock_read(int nSock, char *savBuf, $/;"	f
 sp_net_sock_settimer	src/functionlib/network/sp_network.c	/^int sp_net_sock_settimer(int socket, int nSec, int uSec, int nFlags)$/;"	f
 sp_net_speed_ping	src/functionlib/network/sp_network.c	/^long sp_net_speed_ping(const char *ping_host, int num_pack)$/;"	f
 sp_normal_error	src/functionlib/sp_frame.c	/^static void sp_normal_error(char *error_string)$/;"	f	file:

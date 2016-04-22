@@ -441,7 +441,7 @@ void ubug_main_entrance(void)
     WEBIN   *webPoint;
 
     do {
-        /* ubug_ping(); */
+        ubug_ping();
 
         for (urlCatchNum = 0, webPoint = urlSaveList;
                 webPoint != NULL; webPoint = webPoint->w_next) {
