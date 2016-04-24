@@ -34,7 +34,7 @@ URL_INDEX = 1
 
 def catcher_initialize():
     url_receiver = DataControl("Url");
-    news_uploader = DataControl("News", max_allow_packet = 32 * 1024)
+    news_uploader = DataControl("News", max_allow_packet = 48 * 1024)
 
     return  url_receiver, news_uploader
 
@@ -127,8 +127,7 @@ def html_extract(data_catcher, url, html, charset):
 def upload_news(data_catcher, news_uploader, url_id, url, charset):
     title, source = data_catcher.title_and_data_source(charset)
 
-    news_uploader.pre_insert(
-        str(url_id), time.strftime("%H:%M"), \
+    news_uploader.pre_insert(str(url_id), time.strftime("%H:%M"), \
         source, news_uploader.escaping(title), url, \
         news_uploader.escaping(data_catcher.news_content(charset)))
 

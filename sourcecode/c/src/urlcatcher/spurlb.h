@@ -14,7 +14,7 @@
 #define RUN_ONCE                0x0
 #define RUN_PERN                0x1
 
-#define UBUG_NREAD              0x80
+#define UBUG_DEFREAD            0x80
 
 #define UBUG_PTHREAD_MIN        0x1
 #define UBUG_PTHREAD_MAX        0x4
@@ -45,7 +45,7 @@ void    ubug_set_tabname_default(void);
 void    ubug_set_tabname_by_date(void);
 
 /* sp_urlbug_network.c */
-void    ubug_init_pinginfo(void);
+void    ubug_init_network(void);
 void    ubug_ping(void);
 
 int     ubug_html_download(WEBIN *web_stu);

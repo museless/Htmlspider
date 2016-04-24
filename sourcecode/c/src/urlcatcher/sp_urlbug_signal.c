@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-04-04 21:50:00
+ *     modification time: 2016-04-22 22:10:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -59,7 +59,7 @@ void ubug_init_signal(void)
     sigStru.sa_handler = ubug_signal_handler;
     sigStru.sa_flags = 0;
 
-    if(sigaction(SIGINT, &sigStru, NULL) == FUN_RUN_FAIL) {
+    if(sigaction(SIGINT, &sigStru, NULL) == FRET_N) {
         ubug_perror("ubug_init_signal - sigaction - SIGINT", errno);
         exit(FUN_RUN_FAIL);
     }
@@ -68,7 +68,7 @@ void ubug_init_signal(void)
     sigdelset(&sigMask, SIGINT);
     sigStru.sa_mask = sigMask;
 
-    if(sigaction(SIGSEGV, &sigStru, NULL) == FUN_RUN_FAIL) {
+    if(sigaction(SIGSEGV, &sigStru, NULL) == FRET_N) {
         ubug_perror("ubug_init_signal - sigaction - SIGSEGV", errno);
         exit(FUN_RUN_FAIL);
     }

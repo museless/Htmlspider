@@ -421,9 +421,8 @@ long sp_net_speed_ping(const char *ping_host, int num_pack)
 {
     PINGIF  ping_info;
     long    total_time;
-    int     count;
 
-    for (count = total_time = 0; count < num_pack; ) {
+    for (int count = total_time = 0; count < num_pack; ) {
         if (ping(&ping_info, ping_host) != FRET_P) {
             perror("Ping---> ping error");
             num_pack--;

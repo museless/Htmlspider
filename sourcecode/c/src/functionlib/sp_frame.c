@@ -56,7 +56,7 @@ int sp_normal_init(
 	if (mgc_add(*garCol, NULL_POINT, (gcfun)mc_conf_unload) == MGC_FAILED)
         sp_normal_error("sp_normal_init - mgc_add - mc_conf_unload");
 
-	if (msgFd) {
+	if (msgFd != 0) {
 		if (!(*msgSet = minitFun(msgFd))) {
             sp_normal_error("sp_normal_init - msg_init");
 			return	FUN_RUN_END;

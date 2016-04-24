@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-04-04 22:00:00
+ *     modification time: 2016-04-22 22:25:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -51,7 +51,7 @@ static  int     ubug_init_dbuf(BUFF **pBuff);
 static  void    ubug_init_weblist(void);
 static  int     ubug_init_urllist(char *urlStr, WEB *webStu);
 static  WEBIN  *ubug_list_entity_set(MSLROW data_row);
-static  void    ubug_set_ubset(const char *way_option);
+static  void    ubug_set_ubset(void);
 
 /* Part Six */
 static  void    ubug_create_pthread(WEBIN *web_info);
@@ -103,14 +103,14 @@ int main(int argc, char **argv)
         ubug_init_signal();
         ubug_init_database();
         ubug_init_weblist();
-        ubug_init_pinginfo();
+        ubug_init_network();
 
         ubug_main_entrance();
     }
 
     mgc_all_clean(urlGarCol);
 
-    exit(FUN_RUN_END);
+    exit(FRET_Z);
 }
 
 
@@ -120,7 +120,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
     int     config_flags = 0;
     char    ch;
 
-    while ((ch = getopt(nPara, pComm, "c:d:h")) != FUN_RUN_FAIL) {
+    while ((ch = getopt(nPara, pComm, "c:h")) != FRET_N) {
         switch (ch) {
             case 'c':   
                 mc_load_config("urlbug", optarg);
@@ -130,27 +130,20 @@ static void ubug_command_analyst(int nPara, char **pComm)
             case 'h':
                 ubug_print_help();
                 exit(FUN_RUN_OK);    
-        
-            case 'd':
-                ubug_set_ubset(optarg);
-                break;
-            
-            case 'f':
-                procCommuFd = atoi(optarg);
-                break;
 
             default:
-                printf(
-                "Urlbug---> wrong command: %c\n \
-                \rUrlbug--->please try \"-h\"\n\n", ch);
-                exit(FUN_RUN_END);
+                printf("Urlbug---> wrong command: %c\n \
+                    \rUrlbug--->please try \"-h\"\n\n", ch);
+                exit(FRET_Z);
         }
     }
 
-    if (urlRunSet.ubs_fent == NULL || !config_flags) {
-        printf("Urlbug---> must set [-d] and [-c]\n");
+    if (config_flags != 1) {
+        printf("Urlbug---> must set [-c]\n");
         exit(FUN_RUN_FAIL);    
     }
+
+    ubug_set_ubset();
 }
 
 
@@ -170,23 +163,21 @@ static void ubug_command_analyst(int nPara, char **pComm)
 /*-----mainly_init-----*/
 static int mainly_init(void)
 {
-    if (!sp_normal_init(
-         "Urlbug", &urlGarCol, &urlMsgSet,
-         ubug_msg_init, "urlbug_err_log", procCommuFd))
-        return  FUN_RUN_END;
+    if (!sp_normal_init("Urlbug", &urlGarCol, &urlMsgSet,
+            ubug_msg_init, "urlbug_err_log", 0))
+        return  FRET_Z;
 
     mato_init(&writeStoreLock, 1);
 
-    if (mc_conf_read(
-        "urlbug_max_ulen", CONF_NUM,
-        &urlMaxLen, sizeof(int)) == FUN_RUN_FAIL) {
+    if (mc_conf_read("urlbug_max_ulen", CONF_NUM,
+            &urlMaxLen, sizeof(int)) == FUN_RUN_FAIL) {
         mc_conf_print_err("urlbug_max_ulen");
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if (urlMaxLen < MIN_URL_LEN || urlMaxLen > MAX_URL_LEN) {
         printf("Urlbug---> url max size is underlimit: %d\n", urlMaxLen);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     return  FUN_RUN_OK;
@@ -196,30 +187,29 @@ static int mainly_init(void)
 /*-----ubug_init_source_pool-----*/
 static int ubug_init_source_pool(void)
 {
-    int pthread_num;
+    int     pthread_num;
 
     /* urlbug pthread num read */
-    if (mc_conf_read(
-        "urlbug_pthread_num",
-        CONF_NUM, &pthread_num, sizeof(int)) == FUN_RUN_FAIL) {
+    if (mc_conf_read("urlbug_pthread_num",
+            CONF_NUM, &pthread_num, sizeof(int)) == FUN_RUN_FAIL) {
         mc_conf_print_err("urlbug_pthread_num");
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if (pthread_num > UBUG_PTHREAD_MAX || pthread_num < UBUG_PTHREAD_MIN) {
         printf("Urlbug---> pthread num is underlimit: %d\n", pthread_num);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     /* muse thread pool init */
     if (!(ubugThreadPool = mpc_create(pthread_num))) {
         ubug_perror("ubug_init_source_pool - mpc_create", errno);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if ((contStorePool = wmpool_create(pthread_num, WMP_PAGESIZE)) == NULL) {
         ubug_perror("wmpool_create - contStorePool", errno);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if (mgc_add(urlGarCol, contStorePool, wmpool_destroy) == MGC_FAILED)
@@ -227,13 +217,13 @@ static int ubug_init_source_pool(void)
 
     if ((urlStorePool = wmpool_create(pthread_num, NAMBUF_LEN)) == NULL) {
         ubug_perror("wmpool_create - urlStorePool", errno);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if (mgc_add(urlGarCol, urlStorePool, wmpool_destroy) == MGC_FAILED)
         ubug_perror("ubug_init_source_pool - mgc_add - urlStorePool", errno);
 
-    return  FUN_RUN_OK;
+    return  FRET_P;
 }
 
 
@@ -242,7 +232,7 @@ static int ubug_init_dbuf(BUFF **pBuff)
 {
     if (((*pBuff) = buff_stru_init(SQL_GCOM_LEN)) == NULL) {
         ubug_perror("ubug_init_dbuf - buff_stru_init", errno);
-        return  FUN_RUN_END;
+        return  FRET_Z;
     }
 
     if (mgc_add(urlGarCol, (*pBuff), buff_stru_free_all) == MGC_FAILED)
@@ -257,9 +247,8 @@ void ubug_init_weblist(void)
 {
     char    url_store_table_name[MIDDLE_BUF];
 
-    if (mc_conf_read(
-        "urls_store_table_name", CONF_STR,
-        url_store_table_name, MIDDLE_BUF) == FUN_RUN_FAIL) {
+    if (mc_conf_read("urls_store_table_name", CONF_STR,
+            url_store_table_name, MIDDLE_BUF) == FUN_RUN_FAIL) {
         mc_conf_print_err("urls_store_table_name");
         ubug_sig_error();
     }
@@ -269,8 +258,8 @@ void ubug_init_weblist(void)
                             GET_DIRECTORY, url_store_table_name);
 
     if (!data_result) {
-        if (mysql_error_log(&urlDataBase, 
-                urlTabName, "ubug_init_weblist - mysql_return_result") != FRET_P)
+        if (mysql_error_log(&urlDataBase, urlTabName, 
+                "ubug_init_weblist - mysql_return_result") != FRET_P)
             ubug_sig_error();
     }
 
@@ -330,8 +319,7 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
 static int ubug_init_urllist(char *urlStr, WEB *webStu)
 {
     if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_P) {
-        /*printf(
-        "Host: %s - Path: %s - File: %s - Layer num: %d\n", 
+        /*printf("Host: %s - Path: %s - File: %s - Layer num: %d\n", 
         webStu->web_host, webStu->web_path, 
         webStu->web_file, webStu->web_nlayer);*/
 
@@ -340,26 +328,18 @@ static int ubug_init_urllist(char *urlStr, WEB *webStu)
 
     printf("Urlbug---> ubug_init_urllist - strange url: %s\n", urlStr);
 
-    return  FUN_RUN_END;
+    return  FRET_Z;
 }
 
 
 /*-----ubug_set_ubset-----*/
-static void ubug_set_ubset(const char *way_option)
+void ubug_set_ubset(void)
 {
-    ubug_init_ubset(
-        NULL, ubug_text_abstract_cont, ubug_tran_db,
+    ubug_init_ubset(NULL, ubug_text_abstract_cont, ubug_tran_db,
         ubug_tran_db_whole, ubug_html_download, RUN_PERN);
 
-    if (!strcmp(way_option, "normal")) {
-        ubug_init_ubset_way(
-        ubug_catch_default_rule, 
+    ubug_init_ubset_way(ubug_catch_default_rule, 
         ubug_locate_default_rule, ubug_set_tabname_by_date);
-
-    } else {
-        printf("Urlbug---> -d requires an argument");
-        exit(FUN_RUN_FAIL);
-    }
 
     urlRunSet.ubs_creat();
 }

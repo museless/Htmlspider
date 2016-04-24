@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-04-19 09:35:00
+ *     modification time: 2016-04-24 08:05:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -36,13 +36,12 @@
  *          Part One: Local data
 -*---------------------------------------------*/
 
+static int  PerReadTimes; 
+
 
 /*---------------------------------------------
  *         Part Two: Local function
 -*---------------------------------------------*/
-
-/* Part Four */
-static  void    ubug_ping_default_init(SPPING *ping_info);
 
 /* Part Five */
 static  int     ubug_handle_httpreq(WEBIN *web_info);
@@ -52,36 +51,15 @@ static  void    ubug_update_latest_time(WEBIN *web_stu);
 /*---------------------------------------------
  *          Part Four: Ping network
  *
- *          1. ubug_init_pinginfo
- *          2. ubug_ping
- *          3. ubug_ping_default_init
+ *          1. ubug_ping
  *
 -*---------------------------------------------*/
-
-/*-----ubug_init_pinginfo-----*/
-void ubug_init_pinginfo(void)
-{
-    if (mc_conf_read(
-        "ping_host", CONF_STR, 
-        ubugPingInfo.p_host, SMALL_BUF) == FUN_RUN_FAIL)
-        mc_conf_print_err("ping_host");
-
-    if (mc_conf_read(
-        "ping_packet", CONF_NUM,
-        &ubugPingInfo.p_packnum, sizeof(int)) == FUN_RUN_FAIL)
-        mc_conf_print_err("ping_packet");
-
-    ubugPingInfo.p_time.tv_sec = 0;
-    ubugPingInfo.p_time.tv_usec = 100000;
-}
-
 
 /*-----ubug_ping-----*/
 void ubug_ping(void)
 {
     long    recv;
 
-    ubug_ping_default_init(&ubugPingInfo);
     recv = sp_net_speed_ping(ubugPingInfo.p_host, ubugPingInfo.p_packnum);
 
     if (recv < (ubugPingInfo.p_packnum >> 1)) {
@@ -93,31 +71,47 @@ void ubug_ping(void)
     }
 
     ubugPingInfo.p_time.tv_sec = recv / MICSEC_PER_SEC;
-    ubugPingInfo.p_time.tv_usec = (recv % MICSEC_PER_SEC) * 3.0;
+    ubugPingInfo.p_time.tv_usec = (recv % MICSEC_PER_SEC) * 4.0;
 
-    printf("Urlbug---> current network speed: %lu ms\n",
-        ubugPingInfo.p_time.tv_usec);
-}
-
-
-/*-----ubug_ping_default_init-----*/
-void ubug_ping_default_init(SPPING *ping_info)
-{
-    if (ping_info->p_host[0] == 0 || ping_info->p_packnum == 0) {
-        sprintf(ping_info->p_host, DEFAULT_PING_HOST);
-        ping_info->p_packnum = DEFAULT_PING_PNUM;
-    }
+    printf("Urlbug---> network speed: %lums\n", recv);
 }
 
 
 /*---------------------------------------------
  *          Part Five: Network event
  *
- *          1. ubug_html_download
- *          2. ubug_handle_httpreq
- *          3. ubug_update_latest_time
+ *          1. ubug_init_network
+ *          2. ubug_html_download
+ *          3. ubug_handle_httpreq
+ *          4. ubug_update_latest_time
  *
 -*---------------------------------------------*/
+
+/*-----ubug_init_network-----*/
+void ubug_init_network(void)
+{
+    if (mc_conf_read("ping_host", CONF_STR, 
+            ubugPingInfo.p_host, SMALL_BUF) == FUN_RUN_FAIL) {
+        mc_conf_print_err("ping_host");
+        sprintf(ubugPingInfo.p_host, DEFAULT_PING_HOST);
+    }
+
+    if (mc_conf_read("ping_packet", CONF_NUM,
+            &ubugPingInfo.p_packnum, sizeof(int)) == FUN_RUN_FAIL) {
+        mc_conf_print_err("ping_packet");
+        ubugPingInfo.p_packnum = DEFAULT_PING_PNUM;
+    }
+
+    ubugPingInfo.p_time.tv_sec = 0;
+    ubugPingInfo.p_time.tv_usec = 100000;
+
+    if (mc_conf_read("per_read_times", CONF_NUM, 
+            &PerReadTimes, sizeof(int)) == FRET_N) {
+        mc_conf_print_err("per_read_times");
+        PerReadTimes = UBUG_DEFREAD;
+    }
+}
+
 
 /*-----ubug_html_download-----*/
 int ubug_html_download(WEBIN *web_stu)
@@ -138,7 +132,7 @@ int ubug_html_download(WEBIN *web_stu)
 
     byte_read = sp_net_sock_read(web_stu->w_sock, 
         web_stu->w_conbuf + cont_offset, WMP_PAGESIZE - cont_offset, 
-        UBUG_NREAD, ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
+        PerReadTimes, ubugPingInfo.p_time.tv_sec, ubugPingInfo.p_time.tv_usec);
 
     cont_offset += (byte_read == FRET_N) ? 0 : byte_read;
 

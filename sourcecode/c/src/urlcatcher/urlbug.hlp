@@ -6,7 +6,6 @@ usage:
 options:
     -c <configuration paths>    configuration's path
     -d <ways name>              every website has its catch and locate ways
-    -t                          time - useless now
     -h                          helping
 
 list of ways name:    

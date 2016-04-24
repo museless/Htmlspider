@@ -199,8 +199,8 @@ void	sp_stop_str(void);
 /* sp_html.c */
 char   *sp_html_tag_range_locate(const char *html_string, int len);
 char   *sp_html_get_tag_string(char *tag_start, int *tag_len);
-char   *sp_html_code_location(
-        const char *html_text, int text_len, const char *html_code);
+char   *sp_html_code_location(const char *html_text, 
+            int text_len, const char *html_code);
 
 /* sp_pfun.c */
 int	    readn(int rFd, void *rBuf, size_t bCount);
@@ -215,7 +215,7 @@ int	    read_all_file(char **pStore, char *ofName, int readOff);
 int	    examine_empty_string(char *exaStr);
 
 TMS	   *time_str_extract(char *timStr);
-int     count_url_layer(char *str_url);
+int     count_url_layer(const char *str_url);
 
 void    url_layer_extract(UDATA *pData, char *urlStr, int uLen);
 int     count_enter_num(const char *string);
