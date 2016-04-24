@@ -1,3 +1,6 @@
 *.html
 *.html
 sourcecode/python/See
+*.pyc
+/log
+/bin
