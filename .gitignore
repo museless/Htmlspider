@@ -4,3 +4,4 @@ sourcecode/python/See
 *.pyc
 /log
 /bin
+*.log

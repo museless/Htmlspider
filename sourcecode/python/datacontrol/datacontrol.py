@@ -52,10 +52,9 @@ class DataControl:
 
     def __init__(self, database_name, charseting = "utf8", max_allow_packet = 0):
         self.controler = \
-            MySQLdb.connect(
-            user = UserName, passwd = UserPassword, 
-            db = database_name, charset = charseting, 
-            unix_socket="/tmp/mysql.sock")
+            MySQLdb.connect(user = UserName, passwd = UserPassword,
+                db = database_name, charset = charseting, 
+                unix_socket="/tmp/mysql.sock")
             
         self.cursor = self.controler.cursor()
 
@@ -69,7 +68,9 @@ class DataControl:
     #------------------------------------------
 
     def __del__(self):
+        self.insert_lock.acquire()
         self.final_insert()
+        self.insert_lock.release()
 
     #------------------------------------------
     #        get mysql limited variables
@@ -109,7 +110,7 @@ class DataControl:
 
     def create(self, operate_id, table_name):
         if CreateSql.has_key(operate_id) == False:
-            return  None
+            return  False 
 
         if CreateSql[operate_id][self.LIKE_INDEX] != "":
             create = "create table if not exists %s like %s" % (
@@ -119,9 +120,10 @@ class DataControl:
             create = "create table if not exists %s(%s)" % (
                      table_name, CreateSql[operate_id][self.CREATE_FIELD_INDEX])
         else:
-            return  None
+            return  False
     
         self.__execute(create)
+        return  True
 
     #------------------------------------------
     #       joint to the insert sql head 
@@ -148,13 +150,13 @@ class DataControl:
         if self.insert_head == "" or self.insert_field == "":
             return  None
 
-        self.insert_lock.acquire()
-
         data = self.insert_field % parameters
         length = len(data) * 3
 
+        self.insert_lock.acquire()
+
         if self.insert_total_len + length > self.max_allow_packet - 256:
-            self.final_insert(False)
+            self.final_insert()
             self.insert_total_len = 0
 
         self.insert_buff.append(data)
@@ -165,21 +167,12 @@ class DataControl:
     #        final insert to the mysql 
     #------------------------------------------
  
-    def final_insert(self, need_lock = True):
-        if need_lock:
-            self.insert_lock.acquire()           
-
-        if self.insert_buff == [] or \
-           self.insert_head == "" or self.insert_field == "":
+    def final_insert(self):
+        if self.insert_buff == [] or "" or self.insert_field == "":
             return  None
 
-        self.__execute(
-        u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
-
+        self.__execute(u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
         self.insert_buff = []
-
-        if need_lock:
-            self.insert_lock.release()
 
     #------------------------------------------
     #        joint to the update string 
@@ -189,15 +182,29 @@ class DataControl:
         if UpdateSql.has_key(operate_id) == False:
             return  None
 
-        update_string = \
-        "update %s set %s " % \
-        (table_name, UpdateSql[operate_id][self.UPDATE_SET_INDEX])
+        update_string = "update %s set %s " % \
+            (table_name, UpdateSql[operate_id][self.UPDATE_SET_INDEX])
 
         if UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX] != "":
             update_string += \
             "where %s" % UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX]
 
         self.__execute(update_string % parameters)
+
+    #------------------------------------------
+    #            delete the data
+    #------------------------------------------
+
+    def delete(self, operate_id, table_name, *parameters):
+        if DeleteSql.has_key(operate_id) == False or 
+           not isinstance(DeleteSql[operate_id], (str, unicode)) or
+           DeleteSql[operate_id] == "":
+            return  False
+
+        delete_string = "delete from %s where %s" % \
+            (table_name, UpdateSql[operate_id])
+
+        self.__execute(delete_string % parameters)
 
     #------------------------------------------
     #    execute the sql command by string

@@ -15,6 +15,7 @@ ALGOINC = -I include/inclib/musealgo
 # elf #
 EXURLB	= ../../bin/urlcatcher
 EXEXTB 	= ../../bin/dataanalyzer
+EXTEST  = ../../bin/test
 
 # obj #
 OURLB	= src/urlcatcher/sp_urlbug.c src/urlcatcher/sp_urlbug_db.c \
@@ -55,15 +56,39 @@ OEXTB	= src/dataanalyzer/sp_extbug.c src/dataanalyzer/sp_extbug_db.c \
 		  src/functionlib/threadpool/musepthctl.c \
 		  src/functionlib/memorypool/mmdpool/musemdpool.c
 
+OTEST   = src/test/sp_funtest.c \
+	 	  src/functionlib/sp_global.c \
+	      src/functionlib/container/sp_bufoper.c \
+		  src/functionlib/sp_misc.c \
+		  src/functionlib/sp_pfun.c \
+		  src/functionlib/ipc/sp_message.c \
+		  src/functionlib/log/sp_elog.c \
+		  src/functionlib/network/sp_network.c \
+		  src/functionlib/sp_html.c \
+		  src/functionlib/sp_frame.c \
+		  src/functionlib/memorypool/chunkmpool/mpool_web.c \
+		  src/functionlib/dboper/dboper.c \
+		  src/functionlib/mconfctl/museconfctl.c \
+		  src/functionlib/memorybarrier/museato.c \
+		  src/functionlib/garbagecolloter/musegc.c \
+		  src/functionlib/ipc/muse_sem.c \
+		  src/functionlib/threadpool/musepthctl.c \
+		  src/functionlib/network/ping/ping.c \
+		  src/functionlib/network/icmp/icmp.c
 # phony
-.PHONY : urlcatcher dataanalyzer
+.PHONY : urlcatcher dataanalyzer tester
 
+all:			urlcatcher dataanalyzer tester
 urlcatcher:		$(EXURLB)
 dataanalyzer:	$(EXEXTB)
+tester:			$(EXTEST)
 
 $(EXURLB) : $(OURLB)
 	$(CC) -o $(EXURLB) $(OURLB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(UBUGINC) $(IPCINC) $(PGFLAGS) $(STD99)
 
 $(EXEXTB) : $(OEXTB)
 	$(CC) -o $(EXEXTB) $(OEXTB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(EBUGINC) $(IPCINC) $(STD99)
+
+$(EXTEST) : $(OTEST)
+	$(CC) -o $(EXTEST) $(OTEST) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(IPCINC) $(PGFLAGS) $(STD99)
 

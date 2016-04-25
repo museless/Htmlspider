@@ -49,3 +49,7 @@ UpdateSql = {
     2: [u"Keyflags = %d", "Ind = \"%s\""],
 }
 
+# delete condition
+DeleteSql = {
+    0:  "word = %s",
+}
