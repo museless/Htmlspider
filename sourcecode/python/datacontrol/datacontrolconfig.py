@@ -37,6 +37,7 @@ SelectSql = {
 
 # field, insert format
 InsertSql = {
+    0: ["", "\"%s\", \"%d\", \"%d\""],
     1: [u"Ind, Time, Source, Title, Url, Content",\
         "\"%s\", \"%s\", \"%s\", \"%s\", \"%s\", \"%s\""]
 }
@@ -51,5 +52,5 @@ UpdateSql = {
 
 # delete condition
 DeleteSql = {
-    0:  "word = %s",
+    0:  "Word = \"%s\"",
 }

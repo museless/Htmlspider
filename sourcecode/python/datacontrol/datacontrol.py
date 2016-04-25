@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.03.19 17:25"
+__modification_time__ = "2016.04.24 21:25"
 __intro__ = "it was a mysql client"
 
 
@@ -133,14 +133,21 @@ class DataControl:
         if InsertSql.has_key(operate_id) == False:
             return  None
 
-        self.insert_head = \
-        "insert ignore %s(%s) values" % \
-        (table_name, InsertSql[operate_id][self.INSERT_FIELD_INDEX])
+        if not isinstance(InsertSql[operate_id], list) or \
+                len(InsertSql[operate_id]) < 2:
+            return  None
 
-        self.insert_field = \
-        u"(%s)" % InsertSql[operate_id][self.INSERT_FORMAT_INDEX]
+        field_str = InsertSql[operate_id][self.INSERT_FIELD_INDEX]
+
+        self.insert_head = "insert ignore %s" % table_name
+        self.insert_head += (field_str == "") and " values" or \
+            "(%s) values" % field_str 
+
+        self.insert_field = u"(%s)" % \
+            InsertSql[operate_id][self.INSERT_FORMAT_INDEX]
 
         self.insert_total_len = 0
+        self.insert_buff = []
 
     #------------------------------------------
     #          insert to insert list 
@@ -202,7 +209,7 @@ class DataControl:
             return  False
 
         delete_string = "delete from %s where %s" % \
-            (table_name, UpdateSql[operate_id])
+            (table_name, DeleteSql[operate_id])
 
         self.__execute(delete_string % parameters)
 
