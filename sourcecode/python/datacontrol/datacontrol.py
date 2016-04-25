@@ -196,8 +196,8 @@ class DataControl:
     #------------------------------------------
 
     def delete(self, operate_id, table_name, *parameters):
-        if DeleteSql.has_key(operate_id) == False or 
-           not isinstance(DeleteSql[operate_id], (str, unicode)) or
+        if DeleteSql.has_key(operate_id) == False or \
+           not isinstance(DeleteSql[operate_id], (str, unicode)) or \
            DeleteSql[operate_id] == "":
             return  False
 
