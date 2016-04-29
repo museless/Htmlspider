@@ -53,10 +53,10 @@ class KeywordRelater:
         self.__start_timestamp = int(time.time())
 
     #------------------------------------------
-    #               Destructor
+    #                shutdown
     #------------------------------------------
 
-    def __del__(self):
+    def shut(self):
         unfinish_data_path = "%s/unfinish.py" % self.data_path
 
         file_desc = open(unfinish_data_path, "w")
@@ -122,5 +122,5 @@ class KeywordRelater:
         time_str = time.strftime("%Y%m%d%H%M%S")
         
         file_desc.write(RelationDataTemplate % \
-            (str(self.__relation_map).decode("string_escape"),
-             self.__write_timestamp, time_str))
+            (self.__write_timestamp, time_str, \
+            str(self.__relation_map).decode("string_escape")))

@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.04.20 23:50"
+__modification_time__ = "2016.04.29 09:50"
 __intro__ = "a news content catcher"
 
 
@@ -47,6 +47,7 @@ class DataCatcher:
 
     # member data
     charset = "utf-8"
+    ChineseCmp = chr(127)
 
     #------------------------------------------
     #              Constructor
@@ -102,8 +103,8 @@ class DataCatcher:
                 if strange_title in string:
                     return
 
-            for offset in range(len(string)):
-                if string[offset] in ["_", "|"] or (string[offset] == "-" and \
+            for offset, char in enumerate(string):
+                if char in ["_", "|"] or (char == "-" and \
                    string[offset + 1].isdigit() == False):
                     self.news_title = string[0: offset]
                     break
@@ -130,34 +131,28 @@ class DataCatcher:
         chinese_words, tag_len = 0, 0
         select, child_data = {}, []
 
-        if tag_object == None:
-            return  None
-
         for child in tag_object.contents:
             if isinstance(child, element.NavigableString):
                 chinese_words += self.__count_chinese_word(child)
                 tag_len += len(child)
                 continue
 
-            self.__relate_tag_count(child.name, tag_count_list)
-
             if self.__is_forbid_tag(child):
                 continue
+
+            self.__relate_tag_count(child.name, tag_count_list)
 
             child_data = self.__text_tree_build(child)
             chinese_words += child_data[self.WORD_COUNT_INDEX]
             tag_len += child_data[self.TAG_LEN_INDEX]
 
-            if child_data[self.PASS_FLAGS_INDEX] and \
-               (child_data[self.WORD_COUNT_INDEX] > Chinese_minumum and \
-               (child_data[self.TAG_COUNT_INDEX][self.P_NUMBER_INDEX] or \
-               child_data[self.TAG_COUNT_INDEX][self.BR_NUMBER_INDEX])):
+            if self.__can_select_it(child_data): 
                 select[child] = child_data 
 
         self.__rate_compare(chinese_words, select)
 
-        return  [chinese_words, tag_len, \
-                 tag_count_list, self.__tag_can_pass(chinese_words, tag_len)]
+        return  [chinese_words, tag_len, tag_count_list, \
+                    self.__tag_can_pass(chinese_words, tag_len)]
 
     #------------------------------------------
     #           check forbidden tag
@@ -177,8 +172,8 @@ class DataCatcher:
     def __count_chinese_word(self, string):
         utf8_word_number = 0
 
-        for index in range(len(string)):
-            if string[index] > chr(127):
+        for char in unicode(string):
+            if char > self.ChineseCmp:
                 utf8_word_number += 1
 
         return  utf8_word_number
@@ -188,19 +183,23 @@ class DataCatcher:
     #------------------------------------------
 
     def __relate_tag_count(self, child_name, tag_count_list):
-        br_add, p_add = 0, 0
-
         if child_name == 'p':
-            p_add = 1
+            self.br_number += 1
+            tag_count_list[self.P_NUMBER_INDEX] += 1 
 
         elif child_name == 'br':
-            br_add = 1
+            self.p_number += 1
+            tag_count_list[self.BR_NUMBER_INDEX] += 1
 
-        self.br_number += br_add
-        self.p_number += p_add
+    #------------------------------------------
+    #         can select this child
+    #------------------------------------------
 
-        tag_count_list[self.P_NUMBER_INDEX] += p_add
-        tag_count_list[self.BR_NUMBER_INDEX] += br_add
+    def __can_select_it(self, child_data):
+        return  child_data[self.PASS_FLAGS_INDEX] and \
+                (child_data[self.WORD_COUNT_INDEX] > Chinese_minumum and \
+                sum(child_data[self.TAG_COUNT_INDEX])) > 0 and \
+                    True or False
 
     #------------------------------------------
     #        compare the compare rate
@@ -249,11 +248,11 @@ class DataCatcher:
             return  "Invaild content" 
 
         for string in self.content_tag.stripped_strings:
-            if self.__has_start_string(string):
+            if self.__has_string(string, Start_terms):
                 self.final_content = ""
                 continue
             
-            if self.__has_ending_string(string):
+            if self.__has_string(string, Ending_terms):
                 break
 
             self.final_content += string
@@ -261,25 +260,13 @@ class DataCatcher:
         return  self.final_content
 
     #------------------------------------------
-    #         has start string or not
+    #      has start or end string or not
     #------------------------------------------
 
-    def __has_start_string(self, check_string):
-        for start_string in Start_terms:
+    def __has_string(self, check_string, terms):
+        for start_string in terms:
             if start_string in check_string:
                 return  True
 
         return  False
 
-    #------------------------------------------
-    #        has ending string or not
-    #------------------------------------------
-
-    def __has_ending_string(self, check_string):
-        for end_string in Ending_terms:
-            if end_string in check_string:
-                return  True
-
-        return  False
-
-                                                                                                                                                                                                                                                                                            
