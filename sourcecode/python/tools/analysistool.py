@@ -5,9 +5,9 @@
 #----------------------------------------------
 
 __author__ = "Muse"
-__creation_time__ = "2016.04.24 23:20"
-__modification_time__ = "2016.04.24 23:20"
-__intro__ = "Dataanalysis's tool"
+__creation_time__ = "2016.05.03 22:10"
+__modification_time__ = "2016.05.03 22:10"
+__intro__ = "Help to analysis the output data."
 
 
 #----------------------------------------------
@@ -15,56 +15,36 @@ __intro__ = "Dataanalysis's tool"
 #----------------------------------------------
 
 import sys
-
-sys.path.append("../")
-
-import imp
-
-from datacontrol import DataControl
+import modules
 
 
 #----------------------------------------------
-#               load module
+#                get ranking 
 #----------------------------------------------
 
-def load_module(path):
-    with open(path, "r") as file_desc:
-        source = file_desc.read()
-        module = sys.modules.setdefault(path, imp.new_module(path))
+def keyword_rank(module, ways):
+    number = int(sys.argv[3])
+    rever = (ways == "min") and True or False
+    terms = {keys: data["appears"] \
+             for keys, data in module.RelationMap.iteritems()}
 
-        code = compile(source, path, "exec")
-        module.__file__ = path
-        module.__package__ = ""
+    rand_list = sorted(terms, 
+        lambda kone, ktwo: terms[ktwo] - terms[kone], reverse = rever)
 
-        exec(source, module.__dict__)
+    for index, keys in enumerate(rand_list):
+        print("%d. %s %d" % (index + 1, keys, terms[keys]))
 
-        return  module
-
-    return  None
-
-#----------------------------------------------
-#           delete word from mysql
-#----------------------------------------------
-
-def delete_word(sql_handle, modules):
-    for terms in modules.CharDelete:
-        print(terms)
+        if index + 1 == number:
+            break
+        
 
 #----------------------------------------------
-#              add word to mysql
-#----------------------------------------------
-
-def add_word(sql_handle, modules):
-    pass
-
-
-#----------------------------------------------
-#                   Data
+#                Function map
 #----------------------------------------------
 
 FunctionMap = {
-    "add": add_word,
-    "del": delete_word,
+    "max" : keyword_rank,
+    "min" : keyword_rank,
 }
 
 
@@ -73,12 +53,16 @@ FunctionMap = {
 #----------------------------------------------
 
 if __name__ == "__main__":
-    operate = sys.argv[1]
-    file_path = sys.argv[2]
+    file_path = sys.argv[1]
+    operate = sys.argv[2]
 
-    modules = load_module(file_path)
-    sql_handle = None
+    if operate not in FunctionMap:
+        print("Analysis tools:")
+        print("Usage: [file] [max | min] [num] | [relate [word]]")
+        exit()
+
+    modules = modules.load_module(file_path)
 
     if modules:
-        delete_word(sql_handle, modules)
+        FunctionMap[operate](modules, operate)
 

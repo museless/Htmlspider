@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.03.16 00:50"
-__modification_time__ = "2016.04.29 11:50"
+__modification_time__ = "2016.05.03 22:00"
 __intro__ = "Keyword relator"
 
 
@@ -38,6 +38,7 @@ def relator_initialize():
 
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
+    time_str = "20160418"
 
     return  "K" + time_str
 
@@ -76,7 +77,7 @@ def relator_work(relator, keyword_supporter, keyword_table, keylist_num = 32):
             handle_keyword_list(relator, keyword_data)
             keyword_supporter.update(2, keyword_table, 1, keyword_data.Index)
 
-        time.sleep(16)
+        time.sleep(8)
 
 
 #==============================================

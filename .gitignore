@@ -2,7 +2,7 @@
 *.htm
 *.shtml
 sourcecode/python/See
-*.pyc
+sourcecode/python/*.pyc
 /log
 /bin
 *.log
