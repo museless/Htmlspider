@@ -83,7 +83,7 @@ class KeywordRelater:
     #------------------------------------------
 
     def relating(self, target, relate):
-        if self.__relation_map.has_key(target) == False:
+        if target not in self.__relation_map:
             self.__relation_map[target] = {}
 
         if self.__relation_map[target].has_key(relate) == False:
@@ -96,6 +96,19 @@ class KeywordRelater:
         self.__write_timestamp = int(time.time())
 
         self.__relation_map_save()
+
+    #------------------------------------------
+    #           count appear times
+    #------------------------------------------
+
+    def count(self, target):
+        if target not in self.__relation_map:
+            self.__relation_map[target] = {}
+
+        if "appears" not in self.__relation_map[target]:
+            self.__relation_map[target]["appears"] = 0
+
+        self.__relation_map[target]["appears"] += 1
 
     #------------------------------------------
     #          save the relation map

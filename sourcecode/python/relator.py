@@ -52,6 +52,8 @@ def handle_keyword_list(relator, keyword_data):
 
     for target_word in words:
         if target_word != "":
+            relator.count(target_word)
+
             for relate_word in words:
                 if relate_word != target_word and relate_word != "":
                     relator.relating(target_word, relate_word)
