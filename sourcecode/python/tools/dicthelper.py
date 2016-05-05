@@ -19,27 +19,37 @@ import sys
 sys.path.append("../")
 
 import imp
+import helperconf
 
 from datacontrol import DataControl
 from modules import load_module
+from collections import namedtuple
 
 
 #----------------------------------------------
-#                Global data
+#       rearrange the outside dictionary
 #----------------------------------------------
 
-OperateTable = "t_word_noun"
+def arrange(sql_handle, modules):
+    chars_file = helperconf.Terms
+    max_len = helperconf.TermsMaxLen + 1
+    keyword = namedtuple("Keyword", ["Terms", "Length", "Flags"])
 
+    for length in range(2, max_len):
+        sql_handle.select(3, helperconf.OperateTable, -1, length) 
+        results = sql_handle.cursor.fetchall()
+
+        for data_row in results:
+            per_row = keyword(*data_row)     
+            print(str(per_row).decode("string_escape"))
 
 #----------------------------------------------
 #           delete word from mysql
 #----------------------------------------------
 
 def delete(sql_handle, modules):
-    global  OperateTable
-
     for terms in modules.CharDelete:
-        sql_handle.delete(0, OperateTable, terms)
+        sql_handle.delete(0, helperconf.OperateTable, terms)
 
 
 #----------------------------------------------
@@ -47,9 +57,7 @@ def delete(sql_handle, modules):
 #----------------------------------------------
 
 def update(sql_handle, modules):
-    global  OperateTable
-
-    sql_handle.insert_ready(0, OperateTable) 
+    sql_handle.insert_ready(0, helperconf.OperateTable) 
 
     for terms in modules.CharLeft:
         sql_handle.pre_insert(terms, len(terms), 0)
@@ -64,6 +72,7 @@ def update(sql_handle, modules):
 FunctionMap = {
     "update": update,
     "delete": delete,
+    "arrange" : arrange
 }
 
 
@@ -73,15 +82,17 @@ FunctionMap = {
 
 if __name__ == "__main__":
     operate = sys.argv[1]
-    file_path = sys.argv[2]
 
     if not FunctionMap.has_key(operate):
         print("Dictionary tools:")
-        print("Usage: [update | delete] [file]")
+        print("Usage: [[update | delete] [file]] [arrange]")
         exit()
 
-    modules = load_module(file_path)
+    modules = None
 
-    if modules:
-        FunctionMap[operate](DataControl("Dictionary", "latin1"), modules)
+    if operate in ["update", "delete"]:
+        file_path = sys.argv[2]
+        modules = load_module(file_path)
+
+    FunctionMap[operate](DataControl("Dictionary", "latin1"), modules)
 

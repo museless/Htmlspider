@@ -38,7 +38,6 @@ def relator_initialize():
 
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
-    time_str = "20160418"
 
     return  "K" + time_str
 

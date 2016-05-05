@@ -33,6 +33,7 @@ SelectSql = {
     1: ["*", "State = 0"],
 
     2: ["*", "Keyflags = 0"],
+    3: ["*", "Len = %d"],
 }
 
 # field, insert format

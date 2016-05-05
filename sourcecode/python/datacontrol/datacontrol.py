@@ -89,7 +89,7 @@ class DataControl:
     #        joint to the select string 
     #------------------------------------------
 
-    def select(self, operate_id, table_name, limit = -1):
+    def select(self, operate_id, table_name, limit = -1, *parameters):
         if SelectSql.has_key(operate_id) == False:
             return  None
 
@@ -98,6 +98,9 @@ class DataControl:
 
         if SelectSql[operate_id][self.CONDITION_INDEX] != "":
             select += "where %s " % SelectSql[operate_id][self.CONDITION_INDEX]
+        
+            if len(parameters) != 0:
+                select = select % parameters 
 
         if limit != -1:
             select += "limit %d" % limit

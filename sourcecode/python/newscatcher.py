@@ -166,9 +166,8 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
 #          datacatcher mainly job 
 #----------------------------------------------
 
-def catcher_work(
-    url_receiver, news_uploader, url_tabname, 
-    news_tabname, url_limit = 4, thread_limit = 4):
+def catcher_work(url_receiver, news_uploader, 
+        url_tabname, news_tabname, url_limit = 4):
 
     news_uploader.create(1, news_tabname) 
     news_uploader.insert_ready(1, news_tabname)
@@ -184,7 +183,7 @@ def catcher_work(
 
             thread_entity.start()
 
-        time.sleep(2)
+        time.sleep(16)
 
 #==============================================
 #                   Main
