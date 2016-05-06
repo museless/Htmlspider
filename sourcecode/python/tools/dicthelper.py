@@ -30,39 +30,54 @@ from collections import namedtuple
 #       rearrange the outside dictionary
 #----------------------------------------------
 
-def arrange_per(results, chars_head, length):
-    keyword = namedtuple("Keyword", ["Terms", "Length", "Flags"])
-    term_save, index_save, total_word, per_total = [], [], 0, 0
+def arrange_per(sql_handle, chars_head, length):
+    terms_save, index_save, total_word, per_total = [], [], 0, 0
 
     for keys in chars_head:
-        for per in results:
-            per_data = keyword(*per)
+        keys = keys.decode("utf8")
+        sql_handle.select(3, helperconf.OperateTable, -1, keys, length) 
+        results = sql_handle.cursor.fetchall()
 
-            if per_data.Terms.startswith(keys.decode("utf8")):
-                terms_save.append(per_data.Terms)
+        for per in results:
+            terms = per[0].encode("latin1")
+
+            if keys.encode("utf8") == terms[: 3]:
+                terms_save.append(terms)
                 per_total += 1
                 total_word += 1
 
-            if per_total != 0:
-                index_save.append("%s\t%d\t" % \
-                    (keys, per_total * length * 3, per_total))
+        if per_total != 0:
+            index_save.append("%s\t%d\t%d" % \
+                (keys, total_word * length * 3, per_total))
 
-                per_total = 0
+            per_total = 0
 
-    return  term_save, index_save, total_word
+    return  terms_save, index_save, total_word
+
 
 def arrange(sql_handle, modules):
     chars_head = load_module(helperconf.Terms).TermsHead
     max_len = helperconf.TermsMaxLen + 1
+    noun_name = "%s%s" % (helperconf.TermsSavePath, helperconf.FTermsName)
+    index_name = "%s%s" % (helperconf.TermsSavePath, helperconf.FIndexName)
+    findex_file = open("%s%s" % (helperconf.TermsSavePath, helperconf.MainIndex), "w")
+    ttt = 0
 
     for length in range(2, max_len):
-        sql_handle.select(3, helperconf.OperateTable, -1, length) 
-        results = sql_handle.cursor.fetchall()
+        terms, index_save, total = arrange_per(sql_handle, chars_head, length)
+        ttt += total
 
-        terms, index, total = arrange_per(results, chars_head, length)
+        noun = open(noun_name + str(length), "w")
+        noun.write(("".join(terms)))
 
-        print(str(index).decode("string_escape"))
-        break
+        index = open(index_name + str(length), "w")
+        index.write(("\n".join(index_save)).encode("utf8"))
+
+        findex_file.write("%d\n" % total)
+        noun.close()
+        index.close()
+
+    print(ttt)
 
 #----------------------------------------------
 #           delete word from mysql
