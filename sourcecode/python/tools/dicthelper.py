@@ -30,18 +30,39 @@ from collections import namedtuple
 #       rearrange the outside dictionary
 #----------------------------------------------
 
-def arrange(sql_handle, modules):
-    chars_file = helperconf.Terms
-    max_len = helperconf.TermsMaxLen + 1
+def arrange_per(results, chars_head, length):
     keyword = namedtuple("Keyword", ["Terms", "Length", "Flags"])
+    term_save, index_save, total_word, per_total = [], [], 0, 0
+
+    for keys in chars_head:
+        for per in results:
+            per_data = keyword(*per)
+
+            if per_data.Terms.startswith(keys.decode("utf8")):
+                terms_save.append(per_data.Terms)
+                per_total += 1
+                total_word += 1
+
+            if per_total != 0:
+                index_save.append("%s\t%d\t" % \
+                    (keys, per_total * length * 3, per_total))
+
+                per_total = 0
+
+    return  term_save, index_save, total_word
+
+def arrange(sql_handle, modules):
+    chars_head = load_module(helperconf.Terms).TermsHead
+    max_len = helperconf.TermsMaxLen + 1
 
     for length in range(2, max_len):
         sql_handle.select(3, helperconf.OperateTable, -1, length) 
         results = sql_handle.cursor.fetchall()
 
-        for data_row in results:
-            per_row = keyword(*data_row)     
-            print(str(per_row).decode("string_escape"))
+        terms, index, total = arrange_per(results, chars_head, length)
+
+        print(str(index).decode("string_escape"))
+        break
 
 #----------------------------------------------
 #           delete word from mysql

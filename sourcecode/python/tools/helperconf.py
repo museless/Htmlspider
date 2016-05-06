@@ -20,7 +20,7 @@ OperateTable = "t_word_noun"
 # rearrange
 TermsMaxLen = 16
 TermsSavePath = "../../../text/dictionary/noun/"
-Terms = "../../../text/dictionary/character"
+Terms = "../../../text/dictionary/character.py"
 
 FTermsName = "noun"
 FIndexName = "Index"

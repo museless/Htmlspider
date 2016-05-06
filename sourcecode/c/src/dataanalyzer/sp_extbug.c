@@ -141,7 +141,7 @@ void exbug_option_analyst(int nPara, char **paraList)
     
     if (!conf_flags) {
         printf("Extbug---> must set [-c]\n");
-		exit(FUN_RUN_FAIL);    
+        exit(FUN_RUN_FAIL);    
     }
     
     if (!time_flags)
@@ -158,10 +158,8 @@ void exbug_access(void)
     if (exbug_database_init() == FRET_Z || exbug_mempool_init() == FRET_Z)
         return;
 
-    if (exbug_dictionary_load(
-       "extbug_noun_findex_path", "extbug_noun_path", "noun", 
-       &charTermList, &charHeadSave) == FUN_RUN_OK) {
-
+    if (exbug_dictionary_load("extbug_noun_findex_path", "extbug_noun_path",
+            "noun", &charTermList, &charHeadSave) == FUN_RUN_OK) {
         if (exbRunSet.emod_init && exbRunSet.emod_init() == FUN_RUN_OK) {
             exbug_work_prepare();
             exbRunSet.emod_entry();
@@ -186,10 +184,9 @@ void exbug_access(void)
 /*-----mainly_init-----*/
 static int mainly_init(void)
 {
-    exbug_runset_init(
-    exbug_keyword_job, exbug_work_setting, 
-    NULL, NULL, NULL, exbug_create_keyword_table, 
-    exbug_extract_keyword, exbug_update_terms, MASK_EXT);
+    exbug_runset_init(exbug_keyword_job, exbug_work_setting, 
+        NULL, NULL, NULL, exbug_create_keyword_table, 
+        exbug_extract_keyword, exbug_update_terms, MASK_EXT);
 
     if (!sp_normal_init(
         "Extbug", &exbGarCol, (MSGSET **)&extbugMsgSet, 
@@ -231,13 +228,11 @@ void exbug_tblname_set(char *time_string)
 {
     TMS    *extTime = time_str_extract(time_string);
 
-    sprintf(
-    tblNewsName, "N%d%02d%02d", 
-    extTime->tm_year, extTime->tm_mon, extTime->tm_mday);
+    sprintf(tblNewsName, "N%d%02d%02d", 
+        extTime->tm_year, extTime->tm_mon, extTime->tm_mday);
 
-    sprintf(
-    tblKeysName, "K%d%02d%02d",
-    extTime->tm_year, extTime->tm_mon, extTime->tm_mday);
+    sprintf(tblKeysName, "K%d%02d%02d",
+        extTime->tm_year, extTime->tm_mon, extTime->tm_mday);
 }
 
 
