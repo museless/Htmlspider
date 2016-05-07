@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.04.24 23:20"
-__modification_time__ = "2016.05.03 22:05"
+__modification_time__ = "2016.05.08 20:30"
 __intro__ = "Dictionary's adjust tool"
 
 
@@ -27,6 +27,17 @@ from collections import namedtuple
 
 
 #----------------------------------------------
+#                 find word
+#----------------------------------------------
+
+def find_word(sql_handle, module): 
+    word = (sys.argv[2]).decode("utf8")
+    sql_handle.select(4, helperconf.OperateTable, -1, word)
+    results = sql_handle.cursor.fetchall()
+
+    print((results) and str(results).decode("string_escape") or "Hasn't")
+
+#----------------------------------------------
 #       rearrange the outside dictionary
 #----------------------------------------------
 
@@ -35,7 +46,7 @@ def arrange_per(sql_handle, chars_head, length):
 
     for keys in chars_head:
         keys = keys.decode("utf8")
-        sql_handle.select(3, helperconf.OperateTable, -1, keys, length) 
+        sql_handle.select(3, helperconf.OperateTable, -1, keys, length)
         results = sql_handle.cursor.fetchall()
 
         for per in results:
@@ -61,11 +72,9 @@ def arrange(sql_handle, modules):
     noun_name = "%s%s" % (helperconf.TermsSavePath, helperconf.FTermsName)
     index_name = "%s%s" % (helperconf.TermsSavePath, helperconf.FIndexName)
     findex_file = open("%s%s" % (helperconf.TermsSavePath, helperconf.MainIndex), "w")
-    ttt = 0
 
     for length in range(2, max_len):
         terms, index_save, total = arrange_per(sql_handle, chars_head, length)
-        ttt += total
 
         noun = open(noun_name + str(length), "w")
         noun.write(("".join(terms)))
@@ -76,8 +85,6 @@ def arrange(sql_handle, modules):
         findex_file.write("%d\n" % total)
         noun.close()
         index.close()
-
-    print(ttt)
 
 #----------------------------------------------
 #           delete word from mysql
@@ -108,7 +115,8 @@ def update(sql_handle, modules):
 FunctionMap = {
     "update": update,
     "delete": delete,
-    "arrange" : arrange
+    "arrange" : arrange,
+    "find" : find_word,
 }
 
 

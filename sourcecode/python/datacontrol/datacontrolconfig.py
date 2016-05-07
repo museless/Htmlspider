@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.04.25 00:50"
+__modification_time__ = "2016.05.07 20:30"
 __intro__ = "It just a mysql client"
 
 
@@ -34,6 +34,7 @@ SelectSql = {
 
     2: ["*", "Keyflags = 0"],
     3: ["*", "Word like \"%s%%\" and Len = %d"],
+    4: ["*", "Word = \"%s\""],
 }
 
 # field, insert format

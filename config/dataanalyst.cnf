@@ -6,7 +6,7 @@ extbug_err_locate	= ../log/dataanalyzer_error.log
 
 # pthread num #
 # should smaller than 16 #
-extbug_pthread_num	= 1
+extbug_pthread_num	= 2
 
 # update num #
 # should smaller than 255 #
