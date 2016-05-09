@@ -6,3 +6,4 @@ sourcecode/python/*.pyc
 /log
 /bin
 *.log
+bin/newscatcher
