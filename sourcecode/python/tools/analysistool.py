@@ -17,6 +17,7 @@ __intro__ = "Help to analysis the output data."
 import sys
 import modules
 import xlsxcter
+import analysisconf
 
 
 #----------------------------------------------
@@ -39,27 +40,17 @@ def __sort_relate(data_map, keys):
 #             tracing one word
 #----------------------------------------------
 
-def keyword_trace(data_map, ways):
-    word = sys.argv[3]
-    max_rank = 20
+def _trace(data_map, word, io_write):
+    max_rank, has_appear_list = 20, [word]
 
-    if word not in data_map:
-        print("%s not existed" % word)
-        return
-
-    has_appear_list = [word]
-
-    for times in range(0, 20):
+    for times in range(0, 10):
         slave = __sort_relate(data_map, word)
 
         for index in range(0, max_rank):
             if slave[index] not in has_appear_list:
                 break
 
-        if index == max_rank:
-            break
-
-        string = "%s/%s" % (word, slave[index])
+        string = "%s / %s" % (word, slave[index])
 
         occupy_rate = data_map[word][slave[index]][0] / \
             float(data_map[word]["appears"])
@@ -67,7 +58,33 @@ def keyword_trace(data_map, ways):
         word = slave[index]
         has_appear_list.append(word)
 
-        print("\t%s(%f)" % (string, occupy_rate))
+        io_write("\t%s (%f)" % (string, occupy_rate))
+
+
+def keyword_trace(data_map, ways):
+    word = sys.argv[3]
+
+    if word not in data_map:
+        print("%s not existed" % word)
+        return
+
+    _trace(data_map, word, print)
+
+#----------------------------------------------
+#              save some stock
+#----------------------------------------------
+
+def save_some_stock(data_map, sort_list, limit = 1000):
+    stocks = load_module(analysisconf.StockNameSave)
+    data_write = open("Stock", "w")
+
+    for index, terms in enumerate(sort_list):
+        if index == limit:
+            break
+
+        if terms in stocks.StockName:
+            _trace(data_map, word, data_write.write)
+            data_write("\n\n")
 
 #----------------------------------------------
 #                get ranking 
@@ -94,6 +111,7 @@ def keyword_rank(data_map, ways):
             break
         
     saver.save("Data")
+    save_some_stock(data_map, rand_list)
 
 #----------------------------------------------
 #                Function map
