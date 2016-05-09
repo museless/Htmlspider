@@ -229,14 +229,14 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
         cNext->dc_off = atoi(iMov);
 
         if ((iMov = strchr(iMov, '\t')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - one", errno);
+            exbug_perror("exbug_index_load - strchr - miss tab", errno);
             return  FUN_RUN_END;
         }
 
         cNext->dc_cnt = atoi(++iMov);
 
         if ((iMov = strchr(iMov, '\n')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - two", errno);
+            exbug_perror("exbug_index_load - strchr - miss enter", errno);
             return  FUN_RUN_END;
         }
     }

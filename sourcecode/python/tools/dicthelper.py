@@ -80,7 +80,7 @@ def arrange(sql_handle, modules):
         noun.write(("".join(terms)))
 
         index = open(index_name + str(length), "w")
-        index.write(("\n".join(index_save)).encode("utf8"))
+        index.write("%s\n" % ("\n".join(index_save)).encode("utf8"))
 
         findex_file.write("%d\n" % total)
         noun.close()
