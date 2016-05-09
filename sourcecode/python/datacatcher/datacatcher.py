@@ -117,9 +117,9 @@ class DataCatcher:
         # for source
         self.news_source = string[offset: ]
 
-        for offset in range(1, len(string) + 1):
-            if string[-offset] in ["_", "|", "-", " "]:
-                self.news_source = string[-offset + 1: ]
+        for index, char in enumerate(reversed(string)):
+            if char in ["_", "|", "-", " "]:
+                self.news_source = string[index + 1: ]
                 break
 
     #------------------------------------------
