@@ -175,8 +175,10 @@ int sp_net_html_download(WEBIN *web_stu)
     ret_value = FRET_N;
 
     for (int count = 0; count < MAX_REDIRECT_TIMES; count++) {
-        if (sp_net_sock_init(web_stu) != FRET_P)
-            return  FRET_N;
+        if (sp_net_sock_init(web_stu) != FRET_P) {
+            ret_value = FRET_N;
+            break;
+        }
 
         if ((ret_value = sp_http_handle_request(web_stu)) == FRET_UNIQUE) {
             if (redire_flags == REDIRECT_DONE) {
@@ -191,6 +193,8 @@ int sp_net_html_download(WEBIN *web_stu)
 
         break;
     }
+
+    web_stu->w_ubuf = webinfo_save;
 
     return  ret_value;
 }
