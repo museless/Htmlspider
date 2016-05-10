@@ -35,7 +35,8 @@ SelectSql = {
     2: ["*", "Keyflags = 0"],
     3: ["*", "Word like \"%s%%\" and Len = %d"],
     4: ["*", "Word = \"%s\""],
-    5: ["Ind", "Keyword like \"%%%s%%\""],
+    5: ["Ind, Keyword", "Keyword like \"%%%s%%\""],
+    6: ["Title, Url, Content", "Ind = \"%s\""],
 }
 
 # field, insert format
