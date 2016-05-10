@@ -119,7 +119,7 @@ class DataCatcher:
 
         for index, char in enumerate(reversed(string)):
             if char in ["_", "|", "-", " "]:
-                self.news_source = string[index + 1: ]
+                self.news_source = string[-index: ]
                 break
 
     #------------------------------------------

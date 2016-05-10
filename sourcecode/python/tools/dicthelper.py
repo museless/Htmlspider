@@ -42,7 +42,7 @@ def find_word(sql_handle, module):
 #----------------------------------------------
 
 def arrange_per(sql_handle, chars_head, length):
-    terms_save, index_save, total_word, per_total = [], [], 0, 0
+    terms_save, index_save, total_word, per_total, offset = [], [], 0, 0, 0
 
     for keys in chars_head:
         keys = keys.decode("utf8")
@@ -58,10 +58,8 @@ def arrange_per(sql_handle, chars_head, length):
                 total_word += 1
 
         if per_total != 0:
-            index_save.append("%s\t%d\t%d" % \
-                (keys, total_word * length * 3, per_total))
-
-            per_total = 0
+            index_save.append("%s\t%d\t%d" % (keys, offset, per_total))
+            per_total, offset = 0, total_word * length * 3
 
     return  terms_save, index_save, total_word
 

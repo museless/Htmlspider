@@ -58,7 +58,7 @@ def _trace(data_map, word, io_write):
         word = slave[index]
         has_appear_list.append(word)
 
-        io_write("\t%s (%f)" % (string, occupy_rate))
+        io_write("\t%s (%f)\n" % (string, occupy_rate))
 
 
 def keyword_trace(data_map, ways):
@@ -68,7 +68,7 @@ def keyword_trace(data_map, ways):
         print("%s not existed" % word)
         return
 
-    _trace(data_map, word, print)
+    _trace(data_map, word, sys.stdout.write)
 
 #----------------------------------------------
 #              save some stock
