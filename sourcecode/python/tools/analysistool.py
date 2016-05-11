@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.05.03 22:10"
-__modification_time__ = "2016.05.08 20:50"
+__modification_time__ = "2016.05.11 08:00"
 __intro__ = "Help to analysis the output data."
 
 
@@ -18,6 +18,8 @@ import sys
 import modules
 import xlsxcter
 import analysisconf
+
+from modules import load_module
 
 
 #----------------------------------------------
@@ -42,6 +44,8 @@ def __sort_relate(data_map, keys):
 
 def _trace(data_map, word, io_write):
     max_rank, has_appear_list = 20, [word]
+
+    io_write("股票: %s\n" % word)
 
     for times in range(0, 10):
         slave = __sort_relate(data_map, word)
@@ -82,9 +86,9 @@ def save_some_stock(data_map, sort_list, limit = 1000):
         if index == limit:
             break
 
-        if terms in stocks.StockName:
-            _trace(data_map, word, data_write.write)
-            data_write("\n\n")
+        if terms.decode("utf8") in stocks.StockName:
+            _trace(data_map, terms, data_write.write)
+            data_write.write("\n\n")
 
 #----------------------------------------------
 #                get ranking 
