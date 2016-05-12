@@ -57,12 +57,13 @@ def _trace(data_map, word, io_write):
         string = "%s / %s" % (word, slave[index])
 
         occupy_rate = data_map[word][slave[index]][0] / \
-            float(data_map[word]["appears"])
+            float(data_map[word]["appears"][0])
 
         word = slave[index]
         has_appear_list.append(word)
 
-        io_write("\t%s (%f)\n" % (string, occupy_rate))
+        io_write("\t%s (%f) %s\n" % \
+            (string, occupy_rate, data_map[word]["appears"][1]))
 
 
 def keyword_trace(data_map, ways):
@@ -104,14 +105,14 @@ def keyword_rank(data_map, ways):
     last_map = last_module.RelationMap
 
     rever = (ways == "min") and True or False
-    terms = {keys: data["appears"] for keys, data in data_map.iteritems()}
-    lasts = {keys: data["appears"] for keys, data in last_map.iteritems()}
+    terms = {keys: data["appears"][0] for keys, data in data_map.iteritems()}
+    lasts = {keys: data["appears"][0] for keys, data in last_map.iteritems()}
 
     last_sorted = sort_terms(lasts, False)
     rand_list = sort_terms(terms, rever)
 
     saver.write(["排名", "关键字", "出现次数",
-        "昨日排名对比", "最大关联关键词", "关联值"])
+        "昨日排名对比", "最大关联关键词", "关联值", "最新消息"])
 
     for index, keys in enumerate(rand_list):
         relate = __sort_relate(data_map, keys)
@@ -119,8 +120,10 @@ def keyword_rank(data_map, ways):
         diff = (keys not in last_sorted) and \
             "新词" or last_sorted.index(keys) - index
 
+        the_key = data_map[keys]
+
         saver.write([index + 1, keys, terms[keys],
-            diff, relate[0], data_map[keys][relate[0]][0]])
+            diff, relate[0], the_key[relate[0]][0], the_key["appears"][1]])
 
         if index + 1 == number:
             break

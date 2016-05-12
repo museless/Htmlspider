@@ -38,7 +38,7 @@ class KeywordRelater:
 
     # relate block index
     TIMES = 0
-    LATEST = 1
+    SOURCE = 1
 
     #------------------------------------------
     #              Constructor
@@ -86,7 +86,7 @@ class KeywordRelater:
         if target not in self.__relation_map:
             self.__relation_map[target] = {}
 
-        if self.__relation_map[target].has_key(relate) == False:
+        if relate not in self.__relation_map[target]:
             self.__relation_map[target][relate] = [0]
 
         relate_block = self.__relation_map[target][relate]
@@ -101,14 +101,17 @@ class KeywordRelater:
     #           count appear times
     #------------------------------------------
 
-    def count(self, target):
+    def count(self, target, source):
         if target not in self.__relation_map:
             self.__relation_map[target] = {}
 
         if "appears" not in self.__relation_map[target]:
-            self.__relation_map[target]["appears"] = 0
+            self.__relation_map[target]["appears"] = [0, ""]
 
-        self.__relation_map[target]["appears"] += 1
+        appears = self.__relation_map[target]["appears"]
+
+        appears[self.TIMES] += 1
+        appears[self.SOURCE] = source.encode("utf8")
 
     #------------------------------------------
     #          save the relation map
