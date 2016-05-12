@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.05.04 22:00"
-__modification_time__ = "2016.05.04 22:00"
+__modification_time__ = "2016.05.12 01:50"
 __intro__ = "write xlsx"
 
 
@@ -37,7 +37,7 @@ class Exwriter:
 
     def write(self, data_list):
         for index, data in enumerate(data_list):
-            self.sheet.write(self.row, index, str(data))
+           self.sheet.write(self.row, index, str(data))
 
         self.row += 1
 
@@ -46,6 +46,6 @@ class Exwriter:
     #------------------------------------------
 
     def save(self, file_name):
-        file_name += ".xlsx"
+        file_name += ".xls"
 
         self.book.save(file_name)

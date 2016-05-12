@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.05.03 22:10"
-__modification_time__ = "2016.05.11 08:00"
+__modification_time__ = "2016.05.12 01:30"
 __intro__ = "Help to analysis the output data."
 
 
@@ -94,22 +94,33 @@ def save_some_stock(data_map, sort_list, limit = 1000):
 #                get ranking 
 #----------------------------------------------
 
+def sort_terms(terms, way):
+    return  sorted(terms, lambda fi, se: terms[se] - terms[fi], reverse = way)
+
 def keyword_rank(data_map, ways):
     saver = xlsxcter.Exwriter()
     number = int(sys.argv[3])
+    last_module = load_module(sys.argv[4])
+    last_map = last_module.RelationMap
+
     rever = (ways == "min") and True or False
     terms = {keys: data["appears"] for keys, data in data_map.iteritems()}
+    lasts = {keys: data["appears"] for keys, data in last_map.iteritems()}
 
-    rand_list = sorted(terms, 
-        lambda kone, ktwo: terms[ktwo] - terms[kone], reverse = rever)
+    last_sorted = sort_terms(lasts, False)
+    rand_list = sort_terms(terms, rever)
 
-    saver.write(["排名", "关键字", "出现次数", "最大关联关键词", "关联值"])
+    saver.write(["排名", "关键字", "出现次数",
+        "昨日排名对比", "最大关联关键词", "关联值"])
 
     for index, keys in enumerate(rand_list):
         relate = __sort_relate(data_map, keys)
 
+        diff = (keys in last_sorted) and \
+            last_sorted.index(keys) - index or "新词"
+
         saver.write([index + 1, keys, terms[keys],
-            relate[0], data_map[keys][relate[0]][0]])
+            diff, relate[0], data_map[keys][relate[0]][0]])
 
         if index + 1 == number:
             break
