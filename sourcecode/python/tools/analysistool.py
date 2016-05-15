@@ -59,12 +59,12 @@ def _trace(data_map, word, io_write):
         occupy_rate = data_map[word][slave[index]][0] / \
             float(data_map[word]["appears"][0])
 
+        io_write("\t%s (%f)\n\t%s 最新消息: %s\n\n" % \
+            (string, occupy_rate, slave[index], 
+             data_map[slave[index]]["appears"][1]))
+
         word = slave[index]
         has_appear_list.append(word)
-
-        io_write("\t%s (%f) %s\n" % \
-            (string, occupy_rate, data_map[word]["appears"][1]))
-
 
 def keyword_trace(data_map, ways):
     word = sys.argv[3]
@@ -112,7 +112,7 @@ def keyword_rank(data_map, ways):
     rand_list = sort_terms(terms, rever)
 
     saver.write(["排名", "关键字", "出现次数",
-        "昨日排名对比", "最大关联关键词", "关联值", "最新消息"])
+        "最新消息", "昨日排名对比", "最大关联关键词", "关联值"])
 
     for index, keys in enumerate(rand_list):
         relate = __sort_relate(data_map, keys)
@@ -123,7 +123,7 @@ def keyword_rank(data_map, ways):
         the_key = data_map[keys]
 
         saver.write([index + 1, keys, terms[keys],
-            diff, relate[0], the_key[relate[0]][0], the_key["appears"][1]])
+            the_key["appears"][1], diff, relate[0], the_key[relate[0]][0]])
 
         if index + 1 == number:
             break
