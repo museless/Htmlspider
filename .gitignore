@@ -7,3 +7,6 @@ sourcecode/python/*.pyc
 /bin
 *.log
 bin/newscatcher
+*.sh
+text/relation/unfinish.py
+*.sh
