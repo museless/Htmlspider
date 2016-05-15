@@ -9,6 +9,7 @@
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include <unistd.h>
 
@@ -36,6 +37,7 @@
 
 #include "sperr.h"
 
+#include "confparser.h"
 #include "mato.h"
 #include "mgc.h"
 
@@ -102,10 +104,6 @@
 #define	ERROR_STR	    strerror(errno)
 #define	HERROR_STR	    ((char *)hstrerror(h_errno))
 #define	MYERR_STR(pSql)	((char *)mysql_error(pSql))
-
-/* configure read setting */
-#define CONF_STR        0x1
-#define CONF_NUM        0x2
 
 /* sleep time: sec */
 #define	TAKE_A_NO       0x0
@@ -184,13 +182,6 @@ extern	char	tbNameBuf[], ebNameBuf[];
  *	            global function
 -*---------------------------------------------*/
 
-/* museconfctl.c */
-int     mc_conf_load(const char *pUser, const char *confPath);
-void	mc_conf_unload(void);
-int	    mc_conf_read(char *findStr, int dType, void *dBuf, int dLen);
-void	mc_conf_print_err(char *pFind);
-
-void    mc_load_config(const char *user, const char *config_path);
 
 /* sp_misc.c */
 void	sp_stop(void);
