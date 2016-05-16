@@ -90,26 +90,16 @@ void ubug_ping(void)
 /*-----ubug_init_network-----*/
 void ubug_init_network(void)
 {
-    if (mc_conf_read("ping_host", CONF_STR, 
-            ubugPingInfo.p_host, SMALL_BUF) == FUN_RUN_FAIL) {
-        mc_conf_print_err("ping_host");
-        sprintf(ubugPingInfo.p_host, DEFAULT_PING_HOST);
-    }
+    PerConfData read[] = {
+        {"ping_host", CONF_STR, ubugPingInfo.p_host, SMALL_BUF, "www.baidu.com"},
+        {"ping_packet", CONF_NUM, &ubugPingInfo.p_packnum, sizeof(int), "80"},
+        {"per_read_times", CONF_NUM, &PerReadTimes, sizeof(int), "128"},
+    };
 
-    if (mc_conf_read("ping_packet", CONF_NUM,
-            &ubugPingInfo.p_packnum, sizeof(int)) == FUN_RUN_FAIL) {
-        mc_conf_print_err("ping_packet");
-        ubugPingInfo.p_packnum = DEFAULT_PING_PNUM;
-    }
+    mc_conf_read_list(read, sizeof(read) / sizeof(read[0]));
 
     ubugPingInfo.p_time.tv_sec = 0;
     ubugPingInfo.p_time.tv_usec = 100000;
-
-    if (mc_conf_read("per_read_times", CONF_NUM, 
-            &PerReadTimes, sizeof(int)) == FRET_N) {
-        mc_conf_print_err("per_read_times");
-        PerReadTimes = UBUG_DEFREAD;
-    }
 }
 
 

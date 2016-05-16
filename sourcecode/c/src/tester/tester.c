@@ -44,10 +44,10 @@ static int          test;
 static char         saver[33];
 
 static PerConfData  data[] = {
-    {"str", CONF_STR, str_buff, 64},
-    {"number", CONF_NUM, &number, 4},
-    {"data", CONF_NUM, &test, 1},
-    {"fucker", CONF_STR, saver, 32},
+    {"str", CONF_STR, str_buff, 64, "abc"},
+    {"number", CONF_NUM, &number, 4, "1000"},
+    {"data", CONF_NUM, &test, 1, "1"},
+    {"fucker", CONF_STR, saver, 32, "are you"},
 };
 
 
@@ -66,7 +66,7 @@ static PerConfData  data[] = {
 /*-----main-----*/
 int main(int argc, char **argv)
 {
-    mc_load_config("Tester", "/mnt/hgfs/Muse/CsSpider/sourcecode/c/src/tester/test.conf");
+    mc_load_config("Tester", "../sourcecode/c/src/tester/test.conf");
 
     mc_conf_read_list(data, sizeof(data) / sizeof(data[0]));
 

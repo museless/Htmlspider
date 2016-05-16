@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-03-07 16:07:45
+ *     modification time: 2016-05-16 18:45:45
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -47,10 +47,8 @@ void ubug_init_database(void)
 {
     char    database_name[SQL_DBNAME_LEN];
 
-    if (mc_conf_read(
-        "urls_database_name", CONF_STR,
-        database_name, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
-
+    if (mc_conf_read("urls_database_name", CONF_STR,
+            database_name, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
         elog_write("urlbug", "config setting wrong",  "urls_database_name");
         ubug_sig_error();
     }

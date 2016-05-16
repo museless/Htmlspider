@@ -166,8 +166,13 @@ void mc_conf_read_list(PerConfData *list, int len)
             mc_conf_print_err(per->find_str);
 
             if (per->data_max_len > 0) {
-                memset(per->data_buff, 0, per->data_max_len);
-                printf("set default to zero\n\n");
+                if (per->data_type == CONF_NUM)
+                    *(int *)per->data_buff = atoi(per->default_str);
+
+                else if (per->data_type == CONF_STR)
+                    snprintf(per->data_buff, len, per->default_str);
+
+                printf("set default to \"%s\"\n\n", per->default_str);
             }
         }
     }

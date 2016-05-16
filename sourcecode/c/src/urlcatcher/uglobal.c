@@ -30,31 +30,3 @@ FBSTR	forbitStrList[] = {{"ad", 2}, {"blog", 4}, {"video", 5}, {"bbs", 3},
 int	    procCommuFd, urlMaxLen, urlCatchNum;
 MATOS	writeStoreLock;
 
-
-/*------------------------------------------
-	    Part Zero: Cleaning function
-
-        1. ubug_free_weblist
-        2. ubug_db_clean
-
---------------------------------------------*/
-
-/*-----ubug_free_weblist-----*/
-void ubug_free_weblist(void *pNull)
-{
-	WEBIN	*pList = urlSaveList;
-
-	while(urlSaveList != NULL) {
-		pList = urlSaveList->w_next;
-		free(urlSaveList);
-		urlSaveList = pList;
-	}
-}
-
-
-/*-----ubug_db_clean-----*/
-void ubug_db_clean(void *pNULL)
-{
-	mysql_close(&urlDataBase);
-	mysql_library_end();
-}

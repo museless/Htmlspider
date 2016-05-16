@@ -1,22 +1,23 @@
 /*---------------------------------------------
- *     modification time: 2016-01-17 22:10:59
+ *     modification time: 2016.05.16 18:15
  *     mender: Muse
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *     creation time: 2015-06-01 
  *     author: Muse 
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
- *       Source file content Five part
+ *       Source file content Six part
  *
  *       Part Zero:  Include
  *       Part One:   Local data
  *       Part Two:   Local function
  *       Part Three: Define
  *
- *       Part Four:  Print Help tip
+ *       Part Four:  Help tip
+ *       Part Five:  Cleaning function
  *
 -*---------------------------------------------*/
 
@@ -31,7 +32,7 @@
 
 
 /*---------------------------------------------
- *          Part Four: Print Help tip
+ *          Part Four: Help tip
  *
  *          1. ubug_print_help
  *
@@ -67,5 +68,34 @@ void ubug_print_help(void)
     printf("%s\n", help_content);
     
     close(help_fd);
+}
+
+
+/*---------------------------------------------
+ *       Part Five: Cleaning function
+ *
+ *       1. ubug_free_weblist
+ *       2. ubug_db_clean
+ *
+-*---------------------------------------------*/
+
+/*-----ubug_free_weblist-----*/
+void ubug_free_weblist(void *pNull)
+{
+    WEBIN   *pList = urlSaveList;
+
+    while(urlSaveList != NULL) {
+        pList = urlSaveList->w_next;
+        free(urlSaveList);
+        urlSaveList = pList;
+    }
+}
+
+
+/*-----ubug_db_clean-----*/
+void ubug_db_clean(void *pNULL)
+{
+    mysql_close(&urlDataBase);
+    mysql_library_end();
 }
 

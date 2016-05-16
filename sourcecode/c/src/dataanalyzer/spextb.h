@@ -7,8 +7,6 @@
 
 #define MAX_UP_TERMS    0xFF
 
-#define DEF_KBUFF_SIZE  0x800
-
 #define WORD_LEN_LIMIT  0xF
 #define UTF8_WORD_LEN   0x3
 #define TWO_U8WORD_LEN  0x6

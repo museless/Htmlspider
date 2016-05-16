@@ -33,6 +33,7 @@ struct perconfdata {
     int     data_type;
     void   *data_buff;
     int     data_max_len;
+    char   *default_str;
 };
 
 

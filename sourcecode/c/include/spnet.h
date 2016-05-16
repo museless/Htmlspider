@@ -49,10 +49,6 @@
 /* server port */
 #define HTTP_PORT               80
 
-/* ping data */
-#define DEFAULT_PING_HOST       "www.baidu.com"
-#define DEFAULT_PING_PNUM       0x8
-
 
 /*---------------------
         typedef

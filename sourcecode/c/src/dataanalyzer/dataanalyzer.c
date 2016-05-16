@@ -1,12 +1,12 @@
 /*---------------------------------------------
- *     modification time: 2016-02-17 09:25:59
+ *     modification time: 2016-05-16 19:00:00
  *     mender: Muse
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *     creation time: 2015-06-01 
  *     author: Muse 
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *      Source file content Eleven part
@@ -262,27 +262,23 @@ static int exbug_mempool_init(void)
 /*-----exbug_read_config-----*/
 int exbug_read_config(void)
 {
-    char    path_string[PATH_LEN];
+    char        path_string[PATH_LEN];
+    PerConfData read[] = {
+        {"extbug_pthread_num", CONF_NUM, &nExbugPthead, sizeof(int), "0"},
+        {"extbug_update_max", CONF_NUM, &upMaxTerms, sizeof(int), "0"},
+        {"extbug_sem_key_file", CONF_STR, path_string, PATH_LEN, ""},
+        {"keyword_buff_size", CONF_NUM, &keywordListSize, sizeof(int), "2048"},
+    };
 
-    if (mc_conf_read(
-        "extbug_pthread_num", CONF_NUM, &nExbugPthead, sizeof(int)) == FRET_N) {
-        mc_conf_print_err("extbug_pthread_num");
-        return  FRET_Z;
-    }
+    mc_conf_read_list(read, sizeof(read) / sizeof(read[0]));
 
-    if (mc_conf_read(
-        "extbug_update_max", CONF_NUM, &upMaxTerms, sizeof(int)) == FRET_N) {
-        mc_conf_print_err("extbug_update_max");
+    if (nExbugPthead == 0 || upMaxTerms == 0 || path_string[0] == 0) {
+        printf("[extbug_pthread_num] | [extbug_update_max] | "
+               "[extbug_sem_key_file] must set\n");
         return  FRET_Z;
     }
 
     upMaxTerms = ((upMaxTerms > MAX_UP_TERMS) ? MAX_UP_TERMS : upMaxTerms) + 1;
-
-    if (mc_conf_read(
-        "extbug_sem_key_file", CONF_STR, path_string, PATH_LEN) == FRET_N) {
-        mc_conf_print_err("extbug_sem_key_file");
-        return  FRET_Z;
-    }
 
     if (!(ebSemControl = msem_create(path_string, nExbugPthead, PROJ_PTH_CTL))) {
         exbug_perror("exbug_read_config - msem_create", errno);
@@ -291,12 +287,6 @@ int exbug_read_config(void)
     
     if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
         exbug_perror("exbug_read_config - mgc_add - sem", errno);
-
-    if (mc_conf_read("keyword_buff_size", CONF_NUM, 
-            &keywordListSize, sizeof(int)) == FRET_N) {
-        keywordListSize = DEF_KBUFF_SIZE;
-        printf("default keyword_buff_size: %d\n", keywordListSize);
-    }
 
     return  FRET_P;
 }

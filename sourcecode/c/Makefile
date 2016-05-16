@@ -18,11 +18,11 @@ EXEXTB 	= ../../bin/dataanalyzer
 EXTEST  = ../../bin/tester
 
 # obj #
-OURLB	= src/urlcatcher/sp_urlbug.c src/urlcatcher/sp_urlbug_db.c \
-		  src/urlcatcher/sp_urlbug_disc.c src/urlcatcher/sp_urlbug_signal.c \
-		  src/urlcatcher/sp_urlbug_clean.c src/urlcatcher/sp_urlbug_msg.c \
-		  src/urlcatcher/sp_urlbug_err.c src/urlcatcher/sp_urlbug_network.c \
-		  src/urlcatcher/sp_urlbug_rule.c \
+OURLB	= src/urlcatcher/urlcatcher.c src/urlcatcher/databasectl.c \
+		  src/urlcatcher/misc.c src/urlcatcher/signal.c \
+		  src/urlcatcher/uglobal.c src/urlcatcher/message.c \
+		  src/urlcatcher/error.c src/urlcatcher/network.c \
+		  src/urlcatcher/rule.c \
 		  src/functionlib/sp_global.c \
 		  src/functionlib/container/sp_bufoper.c \
 		  src/functionlib/sp_misc.c src/functionlib/sp_pfun.c \
@@ -38,11 +38,11 @@ OURLB	= src/urlcatcher/sp_urlbug.c src/urlcatcher/sp_urlbug_db.c \
 		  src/functionlib/network/ping/ping.c src/functionlib/network/icmp/icmp.c \
 		  src/functionlib/memorypool/chunkmpool/mpool_web.c 
 
-OEXTB	= src/dataanalyzer/sp_extbug.c src/dataanalyzer/sp_extbug_db.c \
-		  src/dataanalyzer/sp_extbug_error.c src/dataanalyzer/sp_extbug_global.c \
-		  src/dataanalyzer/sp_extbug_message.c src/dataanalyzer/sp_extbug_misc.c \
-		  src/dataanalyzer/sp_extbug_mmseg.c src/dataanalyzer/sp_extbug_signal.c \
-		  src/dataanalyzer/sp_extbug_termsctl.c \
+OEXTB	= src/dataanalyzer/dataanalyzer.c src/dataanalyzer/database.c \
+		  src/dataanalyzer/error.c src/dataanalyzer/global.c \
+		  src/dataanalyzer/message.c src/dataanalyzer/misc.c \
+		  src/dataanalyzer/mmseg.c src/dataanalyzer/signal.c \
+		  src/dataanalyzer/termsctl.c \
 		  src/functionlib/sp_global.c \
 		  src/functionlib/container/sp_bufoper.c \
 		  src/functionlib/sp_misc.c src/functionlib/sp_pfun.c \
