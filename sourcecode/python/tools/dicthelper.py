@@ -35,7 +35,7 @@ def find_word(sql_handle, module):
     sql_handle.select(4, helperconf.OperateTable, -1, word)
     results = sql_handle.cursor.fetchall()
 
-    print((results) and str(results).decode("string_escape") or "Hasn't")
+    print (results) and str(results).decode("string_escape") or "Hasn't"
 
 #----------------------------------------------
 #       rearrange the outside dictionary
@@ -127,7 +127,7 @@ if __name__ == "__main__":
 
     if not FunctionMap.has_key(operate):
         print("Dictionary tools:")
-        print("Usage: [[update | delete] [file]] [arrange]")
+        print("Usage: [[update | delete] [file]] [arrange] [[find] [word]]")
         exit()
 
     modules = None

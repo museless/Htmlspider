@@ -10,3 +10,7 @@ bin/newscatcher
 *.sh
 text/relation/unfinish.py
 *.sh
+*.sh
+*.sh
+scripts/update_words.sh
+*.pyc
