@@ -26,10 +26,8 @@ from modules import load_module
 #                sort relate
 #----------------------------------------------
 
-def __sort_relate(data_map, keys):
-    the_key = data_map[keys]
-    save = the_key["appears"]
-    the_key["appears"] = [0]
+def _sort_relate(data_map, the_key):
+    save = the_key.pop("appears")
 
     relate = sorted(the_key,
             lambda kone, ktwo: the_key[ktwo][0] - the_key[kone][0])
@@ -37,6 +35,25 @@ def __sort_relate(data_map, keys):
     the_key["appears"] = save
 
     return  relate
+
+
+#----------------------------------------------
+#               print keyword
+#----------------------------------------------
+
+def keyword_print(data_map, ways):
+    word = sys.argv[3]
+
+    if word not in data_map:
+        print("%s not existed" % word)
+        return
+
+    the_key = data_map[word]
+    slave = _sort_relate(data_map, the_key)
+
+    for terms in slave:
+        print("{} - {}".format(terms, the_key[terms][0]))
+
 
 #----------------------------------------------
 #             tracing one word
@@ -48,7 +65,8 @@ def _trace(data_map, word, io_write):
     io_write("股票: %s\n" % word)
 
     for times in range(0, 10):
-        slave = __sort_relate(data_map, word)
+        the_key = data_map[keys]
+        slave = _sort_relate(data_map, the_key)
 
         for index in range(0, max_rank):
             if slave[index] not in has_appear_list:
@@ -56,7 +74,7 @@ def _trace(data_map, word, io_write):
 
         string = "%s / %s" % (word, slave[index])
 
-        occupy_rate = data_map[word][slave[index]][0] / \
+        occupy_rate = the_key[slave[index]][0] / \
             float(data_map[word]["appears"][0])
 
         io_write("\t%s (%f)\n\t%s 最新消息: %s\n\n" % \
@@ -75,6 +93,7 @@ def keyword_trace(data_map, ways):
 
     _trace(data_map, word, sys.stdout.write)
 
+
 #----------------------------------------------
 #              save some stock
 #----------------------------------------------
@@ -90,6 +109,7 @@ def save_some_stock(data_map, sort_list, limit = 1000):
         if terms.decode("utf8") in stocks.StockName:
             _trace(data_map, terms, data_write.write)
             data_write.write("\n\n")
+
 
 #----------------------------------------------
 #                get ranking 
@@ -115,12 +135,11 @@ def keyword_rank(data_map, ways):
         "最新消息", "昨日排名对比", "最大关联关键词", "关联值"])
 
     for index, keys in enumerate(rand_list):
-        relate = __sort_relate(data_map, keys)
+        the_key = data_map[keys]
+        relate = _sort_relate(data_map, the_key)
 
         diff = (keys not in last_sorted) and \
             "新词" or last_sorted.index(keys) - index
-
-        the_key = data_map[keys]
 
         saver.write([index + 1, keys, terms[keys],
             the_key["appears"][1], diff, relate[0], the_key[relate[0]][0]])
@@ -131,6 +150,7 @@ def keyword_rank(data_map, ways):
     saver.save("Data")
     save_some_stock(data_map, rand_list)
 
+
 #----------------------------------------------
 #                Function map
 #----------------------------------------------
@@ -139,7 +159,27 @@ FunctionMap = {
     "max" : keyword_rank,
     "min" : keyword_rank,
     "trace" : keyword_trace,
+    "print" : keyword_print,
 }
+
+
+#----------------------------------------------
+#                main function
+#----------------------------------------------
+
+def main(argv = sys.argv):
+    file_path = argv[1]
+    operate = argv[2]
+
+    if operate not in FunctionMap:
+        print("Analysis tools:")
+        print("Usage: [file] [max | min] [num] | [trace [word]] [print [word]]")
+        exit()
+
+    data = load_module(file_path)
+
+    if data:
+        FunctionMap[operate](data.RelationMap, operate)
 
 
 #----------------------------------------------
@@ -147,16 +187,4 @@ FunctionMap = {
 #----------------------------------------------
 
 if __name__ == "__main__":
-    file_path = sys.argv[1]
-    operate = sys.argv[2]
-
-    if operate not in FunctionMap:
-        print("Analysis tools:")
-        print("Usage: [file] [max | min] [num] | [trace [word]]")
-        exit()
-
-    modules = modules.load_module(file_path)
-
-    if modules:
-        FunctionMap[operate](modules.RelationMap, operate)
-
+    main()
