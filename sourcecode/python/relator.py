@@ -66,7 +66,7 @@ def handle_keyword_list(relator, keyword_data, source):
 #----------------------------------------------
 
 def relator_work(relator, keyword_supporter, keyword_table, 
-        newser, news_table, keylist_num = 32):
+        newser, news_table, keylist_num = 128):
 
     Results = namedtuple("KeywordResult", ["Index", "Keyword", "Keynum", "Flags"])
 

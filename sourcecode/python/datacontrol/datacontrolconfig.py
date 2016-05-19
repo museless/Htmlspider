@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.05.07 20:30"
+__modification_time__ = "2016.05.19 21:05"
 __intro__ = "Configure"
 
 
@@ -39,7 +39,8 @@ SelectSql = {
     6: ["Title, Url, Content", "Ind = \"%s\""],
 
     # for all sorting output
-    7: ["*", ""],
+    7: ["*", "Ind = \"%s\""],
+    8: ["Ind, Time, Title", ""],
 }
 
 # field, insert format

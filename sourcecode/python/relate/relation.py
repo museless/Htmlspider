@@ -31,7 +31,7 @@ class KeywordRelater:
     #------------------------------------------
 
     # keyword relation map
-    __relation_map = {}
+    _relation_map = {}
     
     # keyword map start timestamp
     __start_timestamp = 0
@@ -74,7 +74,7 @@ class KeywordRelater:
         except: return  False
 
         if hasattr(module, "RelationMap"):
-            self.__relation_map = module.RelationMap.copy()
+            self._relation_map = module.RelationMap.copy()
             self.__start_timestamp = module.TimeStamp
 
             os.remove(unfinish_data_path)
@@ -84,35 +84,35 @@ class KeywordRelater:
     #------------------------------------------
 
     def relating(self, target, relate):
-        if target not in self.__relation_map:
-            self.__relation_map[target] = {}
+        if target not in self._relation_map:
+            self._relation_map[target] = {}
 
-        if relate not in self.__relation_map[target]:
-            self.__relation_map[target][relate] = [0]
+        if relate not in self._relation_map[target]:
+            self._relation_map[target][relate] = [0]
 
-        relate_block = self.__relation_map[target][relate]
+        relate_block = self._relation_map[target][relate]
 
         relate_block[self.TIMES] += 1
 
         self.__write_timestamp = int(time.time())
 
-        self.__relation_map_save()
+        self._relation_map_save()
 
     #------------------------------------------
     #           count appear times
     #------------------------------------------
 
     def count(self, target, source):
-        if target not in self.__relation_map:
-            self.__relation_map[target] = {}
+        if target not in self._relation_map:
+            self._relation_map[target] = {}
 
-        if "appears" not in self.__relation_map[target]:
-            self.__relation_map[target]["appears"] = [0, deque(maxlen = MaxSave)]
+        if "appears" not in self._relation_map[target]:
+            self._relation_map[target]["appears"] = [0, deque(maxlen = MaxSave)]
 
-        appears = self.__relation_map[target]["appears"]
+        appears = self._relation_map[target]["appears"]
 
         appears[self.TIMES] += 1
-        source = source.encode("utf8")
+        source = source.strip().encode("utf8")
 
         if source not in appears[self.SOURCES]:
             appears[self.SOURCES].append(source)
@@ -121,7 +121,7 @@ class KeywordRelater:
     #          save the relation map
     #------------------------------------------
 
-    def __relation_map_save(self):
+    def _relation_map_save(self):
         if self.__start_timestamp + Export_time < self.__write_timestamp:
             data_file = "%s/R%s.py" % \
                 (self.data_path, time.strftime("%Y%m%d%H%M%S"))
@@ -140,7 +140,11 @@ class KeywordRelater:
 
     def __write_map(self, file_desc):
         time_str = time.strftime("%Y%m%d%H%M%S")
-        
         file_desc.write(RelationDataTemplate % \
-            (self.__write_timestamp, time_str, \
-            str(self.__relation_map).decode("string_escape")))
+            (self.__write_timestamp, time_str))
+
+        for keys, item in self._relation_map.iteritems():
+            file_desc.write("\"%s\" : %s,\n" % (keys, str(item).decode("string_escape")))
+
+        file_desc.write("}\n")
+

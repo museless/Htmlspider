@@ -94,7 +94,7 @@ class DataControl:
             return  None
 
         select = "select %s from %s " % \
-                 (SelectSql[operate_id][self.FIELD_INDEX], table_name)
+                 (SelectSql[operate_id][self.FIELD_INDEX], tabname_and_order)
 
         if SelectSql[operate_id][self.CONDITION_INDEX] != "":
             select += "where %s " % SelectSql[operate_id][self.CONDITION_INDEX]

@@ -21,12 +21,14 @@ MaxSave = 10
 Export_time = 300
 
 # data map template
-RelationDataTemplate = """# -*- coding:utf8 -*-
+RelationDataTemplate = """
+# -*- coding:utf8 -*-
 
 from collections import deque
 
 TimeStamp = %d
 TimeString = "%s"
 
-RelationMap = %s
+RelationMap = {
+
 """

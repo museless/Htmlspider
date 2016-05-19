@@ -15,7 +15,51 @@ __intro__ = "Help to output the database data."
 #----------------------------------------------
 
 import sys
+
+sys.path.append("../")
+
 import xlsxcter
+from datacontrol import DataControl
+from collections import namedtuple
+
+
+#----------------------------------------------
+#              output the last
+#----------------------------------------------
+
+def output_last(time):
+    news_tab, keys_tab = "N%s" % time, "K%s" % time
+    saver = xlsxcter.Exwriter()
+
+    keyword = DataControl("Keyword", "latin1")
+    news = DataControl("News", "utf8")
+
+    news.select(8, "%s order by Time desc " % news_tab)
+    results = news.cursor.fetchall()
+    named = namedtuple("News", ["Index", "Time", "Title",])
+    loops = 200
+
+    saver.write(["时间", "新闻标题", "关键词"])
+
+    for data in results:
+        name_res =  named(*data)
+
+        if "Invaild" in name_res.Title:
+            continue
+
+        keyword.select(7, keys_tab, -1, name_res.Index)
+        ret_value = keyword.cursor.fetchall()
+
+        if len(ret_value) != 0:
+            saver.write([name_res.Time, 
+                name_res.Title.encode("utf8"), ret_value[0][1].encode("latin1")])
+
+            loops -= 1
+
+        if loops == 0:
+            break
+    
+    saver.save("Data")
 
 
 #----------------------------------------------

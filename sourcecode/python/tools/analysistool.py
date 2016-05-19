@@ -98,23 +98,6 @@ def keyword_trace(data_map, ways):
 
 
 #----------------------------------------------
-#              save some stock
-#----------------------------------------------
-
-def save_some_stock(data_map, sort_list, limit = 1000):
-    stocks = load_module(analysisconf.StockNameSave)
-    data_write = open("Stock.txt", "w")
-
-    for index, terms in enumerate(sort_list):
-        if index == limit:
-            break
-
-        if terms.decode("utf8") in stocks.StockName:
-            _trace(data_map, terms, data_write.write)
-            data_write.write("\n\n")
-
-
-#----------------------------------------------
 #                get ranking 
 #----------------------------------------------
 
@@ -123,8 +106,10 @@ def sort_terms(terms, way):
 
 def keyword_rank(data_map, ways):
     saver = xlsxcter.Exwriter()
+
     number = int(sys.argv[3])
     last_module = load_module(sys.argv[4])
+    stocks = load_module(analysisconf.StockNameSave)
     last_map = last_module.RelationMap
 
     rever = (ways == "min") and True or False
@@ -134,25 +119,29 @@ def keyword_rank(data_map, ways):
     last_sorted = sort_terms(lasts, False)
     rand_list = sort_terms(terms, rever)
 
-    saver.write(["排名", "关键字", "出现次数",
-        "最新消息", "昨日排名对比", "最大关联关键词", "关联值"])
+    saver.write(["排名", "股票名", "出现次数", "昨日排名对比", "关联词"])
 
     for index, keys in enumerate(rand_list):
+        if keys.decode("utf8") not in stocks.StockName:
+            continue
+
         the_key = data_map[keys]
+
         relate = _sort_relate(data_map, the_key)
+
+        if len(relate) < 1:
+            break
 
         diff = (keys not in last_sorted) and \
             "新词" or last_sorted.index(keys) - index
 
         saver.write([index + 1, keys, terms[keys],
-            the_key["appears"][1], diff, relate[0], the_key[relate[0]][0]])
+            diff, relate[0], ", ".join(relate[: 10])])
 
         if index + 1 == number:
             break
         
-    saver.save("Data")
-    save_some_stock(data_map, rand_list)
-
+    saver.save("StockSave")
 
 #----------------------------------------------
 #                Function map
