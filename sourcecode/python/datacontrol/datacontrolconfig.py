@@ -7,7 +7,7 @@
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
 __modification_time__ = "2016.05.07 20:30"
-__intro__ = "It just a mysql client"
+__intro__ = "Configure"
 
 
 #----------------------------------------------
@@ -37,6 +37,9 @@ SelectSql = {
     4: ["*", "Word = \"%s\""],
     5: ["Ind, Keyword", "Keyword like \"%%%s%%\""],
     6: ["Title, Url, Content", "Ind = \"%s\""],
+
+    # for all sorting output
+    7: ["*", ""],
 }
 
 # field, insert format

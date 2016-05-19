@@ -6,8 +6,8 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.04.24 21:25"
-__intro__ = "it was a mysql client"
+__modification_time__ = "2016.05.19 14:25"
+__intro__ = "The mysql client"
 
 
 #----------------------------------------------
@@ -89,7 +89,7 @@ class DataControl:
     #        joint to the select string 
     #------------------------------------------
 
-    def select(self, operate_id, table_name, limit = -1, *parameters):
+    def select(self, operate_id, tabname_and_order, limit = -1, *parameters):
         if SelectSql.has_key(operate_id) == False:
             return  None
 

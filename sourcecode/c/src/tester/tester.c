@@ -63,14 +63,46 @@ static PerConfData  data[] = {
  *
 -*-----------------------------------------------*/
 
+
+#define nullptr NULL
+
+
+MATOS   atomic;
+
+
+void *rounte(void *para)
+{
+    while (true) {
+        while(!mato_dec_and_test(&atomic)) {
+            mato_inc(&atomic);
+        }
+
+        printf("%lu\n", pthread_self());
+    }
+
+    return  nullptr;
+}
+
+
 /*-----main-----*/
 int main(int argc, char **argv)
 {
-    mc_load_config("Tester", "../sourcecode/c/src/tester/test.conf");
+    /* mc_load_config("Tester", "../sourcecode/c/src/tester/test.conf");
 
     mc_conf_read_list(data, sizeof(data) / sizeof(data[0]));
 
-    printf("%s - %d - %d\n", str_buff, number, test);
+    printf("%s - %d - %d\n", str_buff, number, test); */
+
+    pthread_t   thread;
+
+    mato_init(&atomic, 1); 
+
+    pthread_create(&thread, nullptr, rounte, nullptr);
+    pthread_create(&thread, nullptr, rounte, nullptr);
+    pthread_create(&thread, nullptr, rounte, nullptr);
+
+    while (true)
+        ;   /* nothing */
 
     return  -1;
 }

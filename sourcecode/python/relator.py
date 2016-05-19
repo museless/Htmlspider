@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.03.16 00:50"
-__modification_time__ = "2016.05.12 23:55"
+__modification_time__ = "2016.05.19 10:00"
 __intro__ = "Keyword relator"
 
 
@@ -37,8 +37,9 @@ def relator_initialize():
 #               get table name  
 #----------------------------------------------
 
-def table_name_get():
-    time_str = time.strftime("%Y%m%d")
+def table_name_get(time_str):
+    if not time_str:
+        time_str = time.strftime("%Y%m%d")
 
     return  "K" + time_str, "N" + time_str
 
@@ -90,8 +91,13 @@ def relator_work(relator, keyword_supporter, keyword_table,
 #==============================================
 
 def main(argv = sys.argv):
+    time_str = None
+
+    if len(argv) == 2:
+        time_str = argv[1]
+
     relator, keyword_supporter, newser = relator_initialize()
-    keyword_table, news_table = table_name_get()
+    keyword_table, news_table = table_name_get(time_str)
 
     try:
         relator_work(relator, keyword_supporter, 
@@ -108,3 +114,4 @@ def main(argv = sys.argv):
 
 if __name__ == "__main__":
     main()
+

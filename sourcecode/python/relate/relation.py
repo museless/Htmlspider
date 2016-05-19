@@ -123,7 +123,7 @@ class KeywordRelater:
 
     def __relation_map_save(self):
         if self.__start_timestamp + Export_time < self.__write_timestamp:
-            data_file = "%s/%s.py" % \
+            data_file = "%s/R%s.py" % \
                 (self.data_path, time.strftime("%Y%m%d%H%M%S"))
 
             with open(data_file, "w") as file_desc:
