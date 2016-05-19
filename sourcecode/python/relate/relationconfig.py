@@ -14,11 +14,16 @@ __intro__ = "keyword relater conf"
 #             Config parameters
 #----------------------------------------------
 
+# max len for deque
+MaxSave = 10
+
 # in second
 Export_time = 300
 
 # data map template
 RelationDataTemplate = """# -*- coding:utf8 -*-
+
+from collections import deque
 
 TimeStamp = %d
 TimeString = "%s"

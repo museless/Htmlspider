@@ -1,4 +1,4 @@
-#-*- coding: utf8 -*-
+#-*- coding:utf8 -*-
 
 #----------------------------------------------
 #                Code header
@@ -39,7 +39,6 @@ def relator_initialize():
 
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
-    time_str = "20160517"
 
     return  "K" + time_str, "N" + time_str
 
@@ -87,10 +86,10 @@ def relator_work(relator, keyword_supporter, keyword_table,
 
 
 #==============================================
-#                   Main
+#               Main function
 #==============================================
 
-if __name__ == "__main__":
+def main(argv = sys.argv):
     relator, keyword_supporter, newser = relator_initialize()
     keyword_table, news_table = table_name_get()
 
@@ -103,3 +102,9 @@ if __name__ == "__main__":
         print("Relater shutdown...")
 
 
+#==============================================
+#                   Main
+#==============================================
+
+if __name__ == "__main__":
+    main()

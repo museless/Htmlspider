@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.05.03 22:10"
-__modification_time__ = "2016.05.12 01:30"
+__modification_time__ = "2016.05.18 22:30"
 __intro__ = "Help to analysis the output data."
 
 
@@ -49,10 +49,13 @@ def keyword_print(data_map, ways):
         return
 
     the_key = data_map[word]
+    times = the_key["appears"][0]
+    print("Times: %d" % times)
+
     slave = _sort_relate(data_map, the_key)
 
     for terms in slave:
-        print("{} - {}".format(terms, the_key[terms][0]))
+        print("{} - {} {}".format(terms, the_key[terms][0], the_key[terms][0] / float(times)))
 
 
 #----------------------------------------------
@@ -164,17 +167,28 @@ FunctionMap = {
 
 
 #----------------------------------------------
+#                 print help
+#----------------------------------------------
+
+def help_and_exit():
+    print("Analysis tools:")
+    print("Usage: [file] [max | min] [num] | [trace [word]] [print [word]]")
+    exit()
+
+
+#----------------------------------------------
 #                main function
 #----------------------------------------------
 
 def main(argv = sys.argv):
+    if len(argv) < 2:
+        help_and_exit()
+
     file_path = argv[1]
     operate = argv[2]
 
     if operate not in FunctionMap:
-        print("Analysis tools:")
-        print("Usage: [file] [max | min] [num] | [trace [word]] [print [word]]")
-        exit()
+        help_and_exit()
 
     data = load_module(file_path)
 

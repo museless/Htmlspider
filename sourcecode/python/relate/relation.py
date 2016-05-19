@@ -6,7 +6,7 @@
 
 __author__ = "Muse"
 __creation_time__ = "2016.03.23 07:50"
-__modification_time__ = "2016.03.26 09:45"
+__modification_time__ = "2016.05.19 07:50"
 __intro__ = "keyword relater"
 
 
@@ -18,6 +18,7 @@ import os
 import time
 
 from relationconfig import *
+from collections import deque
 
 
 #----------------------------------------------
@@ -38,7 +39,7 @@ class KeywordRelater:
 
     # relate block index
     TIMES = 0
-    SOURCE = 1
+    SOURCES = 1
 
     #------------------------------------------
     #              Constructor
@@ -106,12 +107,15 @@ class KeywordRelater:
             self.__relation_map[target] = {}
 
         if "appears" not in self.__relation_map[target]:
-            self.__relation_map[target]["appears"] = [0, ""]
+            self.__relation_map[target]["appears"] = [0, deque(maxlen = MaxSave)]
 
         appears = self.__relation_map[target]["appears"]
 
         appears[self.TIMES] += 1
-        appears[self.SOURCE] = source.encode("utf8")
+        source = source.encode("utf8")
+
+        if source not in appears[self.SOURCES]:
+            appears[self.SOURCES].append(source)
 
     #------------------------------------------
     #          save the relation map
