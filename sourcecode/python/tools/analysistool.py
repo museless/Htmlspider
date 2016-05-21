@@ -136,7 +136,7 @@ def keyword_rank(data_map, ways):
             "新词" or last_sorted.index(keys) - index
 
         saver.write([index + 1, keys, terms[keys],
-            diff, relate[0], ", ".join(relate[: 10])])
+            diff, ", ".join(relate[: 10])])
 
         if index + 1 == number:
             break

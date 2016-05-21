@@ -51,8 +51,12 @@ def output_last(time):
         ret_value = keyword.cursor.fetchall()
 
         if len(ret_value) != 0:
+            key_list = (ret_value[0][1].rsplit(";"))[: 10]
+            key_list = ", ".join(key_list)
+
             saver.write([name_res.Time, 
-                name_res.Title.encode("utf8"), ret_value[0][1].encode("latin1")])
+                name_res.Title.encode("utf8"),
+                key_list.encode("latin1")])
 
             loops -= 1
 
