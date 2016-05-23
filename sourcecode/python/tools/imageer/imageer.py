@@ -6,7 +6,7 @@
 
 _author = "Muse"
 _create = "2016.05.22 01:50"
-_modified = "2016.05.23 20:20"
+_modified = "2016.05.23 12:58"
 
 
 #==============================================
@@ -24,10 +24,18 @@ from imageerconfig import *
 
 class Imageer:
     #==========================================
+    #                  Data 
+    #==========================================
+
+    # constant
+    TREMS_IDX = 0
+    RELATE_IDX = 1
+
+    #==========================================
     #               Constructor
     #==========================================
 
-    def __init__(self, xy, inner_size, color):
+    def __init__(self, xy, inner_size, color = "black"):
         self.xy = xy
         self.image = Image.new("RGB", xy, color)
         self.draw = ImageDraw.Draw(self.image)
@@ -38,32 +46,45 @@ class Imageer:
     #==========================================
 
     def make(self, center_str, datas, radius, size):
-        center_x, center_y = self.xy[0] / 2, self.xy[1] / 2
-        points = self._get_points(center_x, center_y, radius, len(datas))
+        self._make((self.xy[0] / 2, self.xy[1] / 2), 
+            center_str, datas, radius, size)
+
+    def _make(self, midpoint, center_str, datas, radius, size):
+        points = self._get_points(midpoint, radius, len(datas))
         font = ImageFont.truetype(FontPath + FontFile, size, encoding = "utf-8")
 
-        for index, point in enumerate(points):
-            self.draw.line((point, (center_x, center_y)))
-            self.draw.text(point, datas[index], font = font, fill = "white")
+        if len(points) != 0:
+            for index, point in enumerate(points):
+                self.draw.line((point, midpoint))
+                terms = datas[index]
 
-        center_x -= self.inner
-        center_y += self.inner
+                slave = (len(terms) == 2) and terms[self.RELATE_IDX] or []
 
-        self.draw.chord((center_x, center_x, center_y, center_y), 0, 360, fill = "black")
-        self.draw.text((230, 235), center_str, font = font, fill = "white")
+                self._make(point, terms[self.TREMS_IDX],
+                    slave, radius - 24, size - 2)
+
+        cent_x = midpoint[0] - self.inner
+        cent_y = midpoint[1] + self.inner
+
+        self.draw.arc((cent_x, cent_x, midpoint[1], cent_y), 0, 360, fill = "white")
+        fit_xy = (cent_x, cent_y)#self.get_fitxy((cent_x, cent_y), center_str)
+        self.draw.text(fit_xy, center_str, font = font, fill = "white")
 
     #==========================================
     #             save the picture
     #==========================================
 
-    def save(self, file_path):
-        self.image.save(file_path, "jpeg")
+    def save(self, file_path, file_type):
+        self.image.save(file_path, file_type)
 
     #==========================================
     #               get points
     #==========================================
 
-    def _get_points(self, x, y, radius, number):
+    def _get_points(self, coordinate, radius, number):
+        if number == 0:
+            return  []
+
         points = []
         per_angle = float(360) / number
         total_angle = 0
@@ -75,7 +96,7 @@ class Imageer:
             a = radius * sin(angle) * symbol
             b = radius * cos(angle) * symbol
     
-            points.append((x + a, y + b))
+            points.append((coordinate[0] + a, coordinate[1] + b))
             total_angle += per_angle
     
         return  points
