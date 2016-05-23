@@ -6,7 +6,7 @@
 
 _author = "Muse"
 _create = "2016.05.22 01:50"
-_modified = "2016.05.23 12:58"
+_modified = "2016.05.24 01:10"
 
 
 #==============================================
@@ -53,7 +53,7 @@ class Imageer:
         points = self._get_points(midpoint, radius, len(datas))
         font = ImageFont.truetype(FontPath + FontFile, size, encoding = "utf-8")
 
-        if len(points) != 0:
+        if points: 
             for index, point in enumerate(points):
                 self.draw.line((point, midpoint))
                 terms = datas[index]
@@ -63,12 +63,11 @@ class Imageer:
                 self._make(point, terms[self.TREMS_IDX],
                     slave, radius - 24, size - 2)
 
-        cent_x = midpoint[0] - self.inner
-        cent_y = midpoint[1] + self.inner
+        arcp = (midpoint[0] - self.inner, midpoint[1] - self.inner, midpoint[0] + self.inner, midpoint[1] + self.inner)
 
-        self.draw.arc((cent_x, cent_x, midpoint[1], cent_y), 0, 360, fill = "white")
-        fit_xy = (cent_x, cent_y)#self.get_fitxy((cent_x, cent_y), center_str)
-        self.draw.text(fit_xy, center_str, font = font, fill = "white")
+        self.draw.chord(arcp, 0, 360, fill = "black")
+        fitxy = self._get_fitxy(list(midpoint), center_str, size)
+        self.draw.text(fitxy, center_str, font = font, fill = "white")
 
     #==========================================
     #             save the picture
@@ -78,12 +77,27 @@ class Imageer:
         self.image.save(file_path, file_type)
 
     #==========================================
+    #      get fit output zone for string
+    #==========================================
+
+    def _get_fitxy(self, points, string, font_size):
+        points[1] -= font_size
+        length = 0
+
+        for char in string:
+            length += (char > u"\u0100") and font_size or font_size >> 1
+
+        points[0] -= length >> 1
+
+        return  points
+
+    #==========================================
     #               get points
     #==========================================
 
     def _get_points(self, coordinate, radius, number):
         if number == 0:
-            return  []
+            return  None 
 
         points = []
         per_angle = float(360) / number

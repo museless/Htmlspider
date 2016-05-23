@@ -66,7 +66,7 @@ static  WHEAD  *extbug_search_head(CLISTS *pList,
  *
 -*---------------------------------------------*/
 
-/*-----ext_segment_entrance-----*/
+/*-----exbug_segment_entrance-----*/
 void exbug_segment_entrance(WDCT *wcStru, const char *pNews)
 {
     const char *str_mov, *str_head;
