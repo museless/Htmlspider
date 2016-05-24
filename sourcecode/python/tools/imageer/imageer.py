@@ -6,7 +6,7 @@
 
 _author = "Muse"
 _create = "2016.05.22 01:50"
-_modified = "2016.05.24 01:10"
+_modified = "2016.05.24 12:50"
 
 
 #==============================================
@@ -35,38 +35,48 @@ class Imageer:
     #               Constructor
     #==========================================
 
-    def __init__(self, xy, inner_size, color = "black"):
+    def __init__(self, xy, radius, inner_size, color = "black"):
         self.xy = xy
         self.image = Image.new("RGB", xy, color)
         self.draw = ImageDraw.Draw(self.image)
         self.inner = inner_size
+        self.radius = radius
+        self.per_cut = int(radius * 0.3)
+        self.mid = (self.xy[0] >> 1, self.xy[1] >> 1)
 
     #==========================================
     #            make the picture
     #==========================================
 
-    def make(self, center_str, datas, radius, size):
-        self._make((self.xy[0] / 2, self.xy[1] / 2), 
-            center_str, datas, radius, size)
+    def make(self, center_str, datas, size):
+        self._make(self.mid, center_str, datas, self.radius, size)
 
-    def _make(self, midpoint, center_str, datas, radius, size):
-        points = self._get_points(midpoint, radius, len(datas))
+    def _make(self, midpi, center_str, datas, 
+            radius, size, start_angle = None, per_angle = None):
+
+        points = self._get_points(midpi, radius, 
+                    len(datas), start_angle, per_angle)
+
         font = ImageFont.truetype(FontPath + FontFile, size, encoding = "utf-8")
 
         if points: 
             for index, point in enumerate(points):
-                self.draw.line((point, midpoint))
+                self.draw.line((point, midpi))
                 terms = datas[index]
 
-                slave = (len(terms) == 2) and terms[self.RELATE_IDX] or []
+                start, per = self._get_output_angle(point)
 
                 self._make(point, terms[self.TREMS_IDX],
-                    slave, radius - 24, size - 2)
+                    (len(terms) == 2) and terms[self.RELATE_IDX] or [],
+                    radius - self.per_cut, size - 2, start, per)
 
-        arcp = (midpoint[0] - self.inner, midpoint[1] - self.inner, midpoint[0] + self.inner, midpoint[1] + self.inner)
+        arcp = (midpi[0] - self.inner, 
+                midpi[1] - self.inner, 
+                midpi[0] + self.inner, 
+                midpi[1] + self.inner)
 
         self.draw.chord(arcp, 0, 360, fill = "black")
-        fitxy = self._get_fitxy(list(midpoint), center_str, size)
+        fitxy = self._get_fitxy(list(midpi), center_str, size)
         self.draw.text(fitxy, center_str, font = font, fill = "white")
 
     #==========================================
@@ -92,16 +102,38 @@ class Imageer:
         return  points
 
     #==========================================
+    #           get output's angle
+    #==========================================
+
+    def _get_output_angle(self, point):
+        if point == self.mid:
+            return  0, 90
+
+        if point[0] <= self.mid[0] and point[1] <= self.mid[1]:
+            return  45, 15
+
+        elif point[0] <= self.mid[0] and point[1] >= self.mid[1]:
+            return  135, 15
+
+        elif point[0] >= self.mid[0] and point[1] <= self.mid[1]:
+            return  215, 15
+
+        else:
+            return  305, 15 
+
+    #==========================================
     #               get points
     #==========================================
 
-    def _get_points(self, coordinate, radius, number):
+    def _get_points(self, coordinate, radius, 
+            number, start_angle = None, angle = None):
+
         if number == 0:
             return  None 
 
         points = []
-        per_angle = float(360) / number
-        total_angle = 0
+        per_angle = angle or (float(360) / number)
+        total_angle = start_angle or 0
     
         for index in range(0, number):
             angle = radians(total_angle)
