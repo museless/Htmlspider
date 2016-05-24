@@ -31,6 +31,8 @@ class Imageer:
     TREMS_IDX = 0
     RELATE_IDX = 1
 
+    PER_ANGLE = 30
+
     #==========================================
     #               Constructor
     #==========================================
@@ -60,15 +62,16 @@ class Imageer:
         font = ImageFont.truetype(FontPath + FontFile, size, encoding = "utf-8")
 
         if points: 
-            for index, point in enumerate(points):
-                self.draw.line((point, midpi))
+            for index, point_data in enumerate(points):
+                self.draw.line((point_data[0], midpi))
+
                 terms = datas[index]
+                slave = (len(terms) == 2) and terms[self.RELATE_IDX] or []
 
-                start, per = self._get_output_angle(point)
+                start = self._get_output_angle(point_data[1], len(slave))
 
-                self._make(point, terms[self.TREMS_IDX],
-                    (len(terms) == 2) and terms[self.RELATE_IDX] or [],
-                    radius - self.per_cut, size - 2, start, per)
+                self._make(point_data[0], terms[self.TREMS_IDX],
+                    slave, radius - self.per_cut, size - 2, start, self.PER_ANGLE)
 
         arcp = (midpi[0] - self.inner, 
                 midpi[1] - self.inner, 
@@ -105,21 +108,8 @@ class Imageer:
     #           get output's angle
     #==========================================
 
-    def _get_output_angle(self, point):
-        if point == self.mid:
-            return  0, 90
-
-        if point[0] <= self.mid[0] and point[1] <= self.mid[1]:
-            return  45, 15
-
-        elif point[0] <= self.mid[0] and point[1] >= self.mid[1]:
-            return  135, 15
-
-        elif point[0] >= self.mid[0] and point[1] <= self.mid[1]:
-            return  215, 15
-
-        else:
-            return  305, 15 
+    def _get_output_angle(self, angle, count):
+        return  (count <= 1) and angle or angle - ((count - 1) * self.PER_ANGLE)
 
     #==========================================
     #               get points
@@ -142,7 +132,7 @@ class Imageer:
             a = radius * sin(angle) * symbol
             b = radius * cos(angle) * symbol
     
-            points.append((coordinate[0] + a, coordinate[1] + b))
+            points.append([(coordinate[0] + a, coordinate[1] + b), total_angle])
             total_angle += per_angle
     
         return  points
