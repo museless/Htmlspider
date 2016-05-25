@@ -31,7 +31,7 @@ class Imageer:
     TREMS_IDX = 0
     RELATE_IDX = 1
 
-    PER_ANGLE = 30
+    PER_ANGLE = 45
 
     #==========================================
     #               Constructor
@@ -109,7 +109,8 @@ class Imageer:
     #==========================================
 
     def _get_output_angle(self, angle, count):
-        return  (count <= 1) and angle or angle - ((count - 1) * self.PER_ANGLE)
+        return  (count <= 1) and angle or \
+                    angle - (((count - 1) >> 1) * self.PER_ANGLE)
 
     #==========================================
     #               get points
