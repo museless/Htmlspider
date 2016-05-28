@@ -80,7 +80,7 @@ def keyword_trace(data_map, ways):
 
 def save_some_stock(data_map, sort_list, limit = 1000):
     stocks = load_module(analysisconf.StockNameSave)
-    data_write = open("Stock", "w")
+    data_write = open("Stock.txt", "w")
 
     for index, terms in enumerate(sort_list):
         if index == limit:
@@ -116,8 +116,8 @@ def keyword_rank(data_map, ways):
     for index, keys in enumerate(rand_list):
         relate = __sort_relate(data_map, keys)
 
-        diff = (keys in last_sorted) and \
-            last_sorted.index(keys) - index or "新词"
+        diff = (keys not in last_sorted) and \
+            "新词" or last_sorted.index(keys) - index
 
         saver.write([index + 1, keys, terms[keys],
             diff, relate[0], data_map[keys][relate[0]][0]])
