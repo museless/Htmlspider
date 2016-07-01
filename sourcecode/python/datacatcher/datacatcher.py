@@ -244,18 +244,22 @@ class DataCatcher:
     #------------------------------------------
 
     def news_content(self, charset = None):
-        if self.content_tag == None:
+        if not self.content_tag:
             return  "Invaild content" 
+
+        contents = []
 
         for string in self.content_tag.stripped_strings:
             if self.__has_string(string, Start_terms):
-                self.final_content = ""
+                del contents[:]
                 continue
             
             if self.__has_string(string, Ending_terms):
                 break
 
-            self.final_content += string
+            contents.append(string)
+
+        self.final_content = "".join(contents)
 
         return  self.final_content
 
