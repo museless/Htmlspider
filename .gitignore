@@ -3,8 +3,8 @@
 *.shtml
 sourcecode/python/See
 sourcecode/python/*.pyc
-log/
-bin/
+log/*
+bin/*
 *.log
 bin/newscatcher
 *.sh
