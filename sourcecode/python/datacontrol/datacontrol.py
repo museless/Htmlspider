@@ -221,7 +221,7 @@ class DataControl:
     #------------------------------------------
 
     def __execute(self, sql_string):
-        if sql_string == "":
+        if len(sql_string) == 0:
             return  None
 
         self.exec_lock.acquire()

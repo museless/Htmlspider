@@ -4,17 +4,21 @@
 #                Code header
 #----------------------------------------------
 
-__author__ = "Muse"
-__creation_time__ = "2016.02.03 10:00"
-__modification_time__ = "2016.03.29 22:50"
-__intro__ = "news catcher"
+_author = "Muse"
+_creation = "2016.02.03 10:00"
+_modifiy = "2016.07.04 16:30"
+_intro = "news catcher, 6 ~ 8 threads may run the best"
 
 
 #----------------------------------------------
 #                  Import
 #----------------------------------------------
 
-import urllib, time, threading
+import urllib
+import time
+import threading
+import sys
+import re
 
 from datacatcher import DataCatcher
 from datacontrol import DataControl
@@ -93,19 +97,12 @@ def html_data_get(url_receiver, url_tabname, url_data, url_id):
 #----------------------------------------------
 
 def catch_html_charset(html):
-    offset = html.find("charset=")
+    result = re.search("charset=\"?([^\"]*)\"", html)
 
-    if offset == -1:
+    if not result: 
         return  False
 
-    offset += len("charset=")
-
-    if html[offset] == "\"":
-        offset += 1
-
-    end_offset = html[offset:].find("\"")
-
-    return  html[offset: offset + end_offset]
+    return  result.groups(0)[0]
 
 
 #----------------------------------------------
@@ -158,6 +155,7 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
             return
 
         html_extract(data_catcher, url, html, charset)
+
         upload_news(data_catcher, news_uploader, url_id, url, charset)
         url_receiver.update(1, url_tabname, 1, url_id)
 
@@ -167,7 +165,7 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
 #----------------------------------------------
 
 def catcher_work(url_receiver, news_uploader, 
-        url_tabname, news_tabname, url_limit = 4):
+        url_tabname, news_tabname, url_limit = 8):
 
     news_uploader.create(1, news_tabname) 
     news_uploader.insert_ready(1, news_tabname)
@@ -183,15 +181,20 @@ def catcher_work(url_receiver, news_uploader,
 
             thread_entity.start()
 
-        time.sleep(16)
+        time.sleep(2)
 
 #==============================================
 #                   Main
 #==============================================
 
-if __name__ == "__main__":
+def main(argv = sys.argv):
     url_receiver, news_uploader = catcher_initialize()
     url_table, news_table = table_name_get()
 
     catcher_work(url_receiver, news_uploader, url_table, news_table)
+
+
+if __name__ == "__main__":
+    main()
+
 
