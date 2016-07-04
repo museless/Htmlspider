@@ -74,7 +74,9 @@ OTEST   = src/tester/tester.c \
 		  src/functionlib/ipc/muse_sem.c \
 		  src/functionlib/threadpool/musepthctl.c \
 		  src/functionlib/network/ping/ping.c \
-		  src/functionlib/network/icmp/icmp.c
+		  src/functionlib/network/icmp/icmp.c \
+		  src/urlcatcher/rule.c src/urlcatcher/uglobal.c
+
 # phony
 .PHONY : urlcatcher dataanalyzer tester
 
@@ -90,5 +92,5 @@ $(EXEXTB) : $(OEXTB)
 	$(CC) -o $(EXEXTB) $(OEXTB) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(EBUGINC) $(IPCINC) $(STD99)
 
 $(EXTEST) : $(OTEST)
-	$(CC) -o $(EXTEST) $(OTEST) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(IPCINC) $(PGFLAGS) $(STD99)
+	$(CC) -o $(EXTEST) $(OTEST) $(NMFLAGS) $(PTFLAGS) $(MYFLAGS) $(IPCINC) $(UBUGINC) $(PGFLAGS) $(STD99)
 

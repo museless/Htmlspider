@@ -2,14 +2,14 @@
 #define	_SPURLB_H
 
 
-/*---------------------------
-	       include
------------------------------*/
+/*---------------------------------------------
+ *	                include
+-*---------------------------------------------*/
 
 
-/*---------------------------
-	       define
------------------------------*/
+/*---------------------------------------------
+ *	                define
+-*---------------------------------------------*/
 
 #define RUN_ONCE                0x0
 #define RUN_PERN                0x1
@@ -23,9 +23,9 @@
 #define UBUG_READ_MICROSEC      0x31000
 
 
-/*---------------------------
-	   global function
------------------------------*/
+/*---------------------------------------------
+ *	            global function
+-*---------------------------------------------*/
 
 /* sp_urlbug.c */
 char   *ubug_reach_url_head(char *pSrc, char *pLimit);
@@ -59,7 +59,6 @@ void    ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen);
 
 void    ubug_tran_db_whole(void);
 void    ubug_tran_db_force(BUFF *pBuff);
-int     ubug_tran_db_real(BUFF *pBuff);
 
 /* sp_urlbug_disc.c */
 void    ubug_print_help(void);

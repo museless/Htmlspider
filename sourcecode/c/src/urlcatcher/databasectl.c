@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-05-16 18:45:45
+ *     modification time: 2016-07-03 11:45:45
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -38,7 +38,6 @@
  *          3. ubug_tran_db
  *          4. ubug_tran_db_whole
  *          5. ubug_tran_db_force
- *          6. ubug_tran_db_real
  *
 -*---------------------------------------------*/
 
@@ -54,9 +53,7 @@ void ubug_init_database(void)
     }
 
     if (!mysql_simple_connect(&urlDataBase, database_name, NULL, 0)) {
-        elog_write(
-        "ubug_init_database - mysql_simple_connect", "urlDataBase", "Failed");
-
+        elog_write("ubug_init_database - mysql_connect", "urlDataBase", "Failed");
         ubug_sig_error();
     }
 
@@ -71,9 +68,9 @@ void ubug_init_database(void)
 void ubug_create_dbtable(void)
 {
     if (mysql_creat_table(
-        &urlDataBase, CREAT_URL_TAB, urlTabName, urlMaxLen) != FUN_RUN_OK) {
+        &urlDataBase, CREAT_URL_TAB, urlTabName, urlMaxLen) != FRET_P) {
         if (mysql_error_log(&urlDataBase, 
-                urlTabName, "ubug_create_dbtable - creatTab") != FUN_RUN_OK)
+                urlTabName, "ubug_create_dbtable - creatTab") != FRET_P)
             ubug_sig_error();
     }
 }
@@ -88,17 +85,12 @@ void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)
     if (!buff_size_enough(web_info->w_buff, SQL_PERCOM_MLEN))
         ubug_tran_db_force(web_info->w_buff);
 
-    buff_size_add(web_info->w_buff, 
-      
-    ((buff_stru_empty(web_info->w_buff)) ? 
-    
-    sprintf(
-    buff_place_start(web_info->w_buff), TRAN_URL_BEG, urlTabName, uLen, pUrl,
-    pData->ud_poff, pData->ud_foff) : 
+    buff_size_add(web_info->w_buff, ((buff_stru_empty(web_info->w_buff)) ? 
+        sprintf(buff_place_start(web_info->w_buff), 
+            TRAN_URL_BEG, urlTabName, uLen, pUrl, pData->ud_poff, pData->ud_foff) : 
 
-    sprintf(
-    buff_place_end(web_info->w_buff), TRAN_URL, uLen, pUrl,
-    pData->ud_poff, pData->ud_foff)));
+        sprintf(buff_place_end(web_info->w_buff), 
+            TRAN_URL, uLen, pUrl, pData->ud_poff, pData->ud_foff)));
 }
 
 
@@ -119,9 +111,10 @@ void ubug_tran_db_force(BUFF *pBuff)
         mato_inc(&writeStoreLock);
 
     if (!buff_stru_empty(pBuff)) {
-        if (ubug_tran_db_real(pBuff) != FUN_RUN_END) {
+        if (mysql_real_query(&urlDataBase, 
+                buff_place_start(pBuff), buff_now_size(pBuff)) != FRET_Z) {
             if (mysql_error_log(&urlDataBase, urlTabName, 
-                    "ubug_tran_db_force - mysql_query") != FUN_RUN_OK)
+                    "ubug_tran_db_force - mysql_query") != FRET_P)
                 ubug_sig_error();
         }
 
@@ -130,15 +123,3 @@ void ubug_tran_db_force(BUFF *pBuff)
 
     mato_inc(&writeStoreLock);
 }
-
-
-/*-----ubug_tran_db_real-----*/
-int ubug_tran_db_real(BUFF *pBuff)
-{
-    return
-    (!buff_stru_empty(pBuff)) ? 
-    mysql_real_query(
-    &urlDataBase, buff_place_start(pBuff), buff_now_size(pBuff)) : FUN_RUN_FAIL;
-}
-
-

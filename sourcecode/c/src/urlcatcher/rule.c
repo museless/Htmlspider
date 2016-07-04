@@ -216,7 +216,7 @@ char *ubug_reach_url_head(char *pSrc, char *pLimit)
 int ubug_is_today_news(char *string, int nLimit)
 {
     for (int nCir = 0; nCir < DATE_CMODE; nCir++) {
-        if(strnstr(string, timComMode[nCir], nLimit))
+        if (strnstr(string, timComMode[nCir], nLimit))
             return  FRET_P;
     }
 
