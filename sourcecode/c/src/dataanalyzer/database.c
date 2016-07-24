@@ -172,7 +172,7 @@ int exbug_module_database_init(void)
 
     exbug_create_keyword_table();
 
-    mato_init(&dicDbLock, 1);
+    mato_init(dicDbLock, 1);
 
     return  FUN_RUN_OK;
 }

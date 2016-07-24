@@ -78,7 +78,7 @@ int mgc_one_init(MGCO *pMgco, gcfun pCleaner, int nLimit)
 	pMgco->mgco_cleaner = pCleaner;
 	pMgco->mgco_tlimit = nLimit;
 	
-	mato_init(&pMgco->mgco_lock, 1);
+	mato_init(pMgco->mgco_lock, 1);
 
 	return	MGC_OK;
 }
@@ -100,8 +100,9 @@ void mgc_one_clean(MGCO *pMgco)
 {
 	int	nCount = 0;
 
-	while (nCount++ < pMgco->mgco_tlimit && !mato_sub_and_test(&pMgco->mgco_lock, 1)) {
-		mato_inc(&pMgco->mgco_lock);
+	while (nCount++ < pMgco->mgco_tlimit && 
+           !mato_sub_and_test(pMgco->mgco_lock, 1)) {
+		mato_inc(pMgco->mgco_lock);
 		sleep(SLEEP_A_SEC);
 	}
 
@@ -113,5 +114,5 @@ void mgc_one_clean(MGCO *pMgco)
 		pMgco->mgco_obj = NULL;
 	}
 
-	mato_inc(&pMgco->mgco_lock);
+    mato_unlock(pMgco->mgco_lock);
 }

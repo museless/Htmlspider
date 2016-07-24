@@ -93,7 +93,7 @@ static void exbug_signal_handler(int nSignal)
 
         printf("Extbug---> inside SIGINT...\n");
         
-        while(nTimes++ < nExbugPthead && !mato_sub_and_test(&pthreadCtlLock, 0))
+        while(nTimes++ < nExbugPthead && !mato_sub_and_test(pthreadCtlLock, 0))
             sleep(TAKE_A_SEC);
 
         exbug_data_sync();

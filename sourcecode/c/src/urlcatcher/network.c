@@ -165,8 +165,8 @@ void ubug_update_latest_time(WEBIN *web_stu)
         web_stu->w_ubuf.web_host, web_stu->w_ubuf.web_path,
         web_stu->w_ubuf.web_file);
 
-    while (!mato_dec_and_test(&writeStoreLock))
-        mato_inc(&writeStoreLock);
+    while (!mato_dec_and_test(writeStoreLock))
+        mato_inc(writeStoreLock);
 
     if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
         if (mysql_error_log(&urlDataBase, urlTabName, 
@@ -174,7 +174,7 @@ void ubug_update_latest_time(WEBIN *web_stu)
             ubug_sig_error();
     }
 
-    mato_inc(&writeStoreLock);
+    mato_inc(writeStoreLock);
 }
 
 

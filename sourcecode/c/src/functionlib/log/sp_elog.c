@@ -49,8 +49,8 @@ int elog_init(char *confStr)
 	logBufStru.b_cap = LOGBUF_LEN;
 	logBufStru.b_size = 0;
 
-	mato_init(&writeDataLock, 1);
-	mato_init(&syncForceLock, 1);
+	mato_init(writeDataLock, 1);
+	mato_init(syncForceLock, 1);
 
 	return	FUN_RUN_OK;
 }
@@ -70,7 +70,7 @@ int elog_write(char *errStr, char *objStr1, char *objStr2)
 	tmStru = localtime(&tType);
 
 	while(FUN_RUN_OK) {
-		if(mato_dec_and_test(&writeDataLock)) {
+		if(mato_dec_and_test(writeDataLock)) {
 			if(!buff_size_enough(
                 &logBufStru, strlen(errStr) + strlen(objStr1) +
 			    strlen(objStr2) + logBufStru.b_size + LOGBASE_LEN))
@@ -83,11 +83,11 @@ int elog_write(char *errStr, char *objStr1, char *objStr2)
             tmStru->tm_hour, tmStru->tm_min, tmStru->tm_sec,
             errStr, objStr1, objStr2));
 
-			mato_inc(&writeDataLock);
+			mato_inc(writeDataLock);
 			return	FUN_RUN_OK;
 		}
 
-		mato_inc(&writeDataLock);
+		mato_inc(writeDataLock);
 	}
 }
 
@@ -96,7 +96,7 @@ int elog_write(char *errStr, char *objStr1, char *objStr2)
 void elog_write_force(void)
 {
 	while(FUN_RUN_OK) {
-		if(mato_dec_and_test(&syncForceLock)) {
+		if(mato_dec_and_test(syncForceLock)) {
 			if(logBufStru.b_size) {
 				if(writen(errLogFd, logBufStru.b_start, logBufStru.b_size) == FUN_RUN_FAIL) {
 					perror("elog_write_force - writen");
@@ -106,11 +106,11 @@ void elog_write_force(void)
 				logBufStru.b_size = 0;
 			}
 
-			mato_inc(&syncForceLock);
+			mato_inc(syncForceLock);
 			return;
 		}
 
-		mato_inc(&syncForceLock);
+		mato_inc(syncForceLock);
 	}
 }
 
@@ -121,13 +121,13 @@ void elog_destroy(void)
 	elog_write_force();
 
 	while(FUN_RUN_OK) {
-		if(mato_dec_and_test(&writeDataLock)) {
+		if(mato_dec_and_test(writeDataLock)) {
 			close(errLogFd);
 			free(logBufStru.b_start);
 			return;
 		}
 
-		mato_inc(&writeDataLock);
+		mato_inc(writeDataLock);
 	}
 }
 

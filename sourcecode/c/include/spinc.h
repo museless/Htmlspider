@@ -38,7 +38,7 @@
 #include "sperr.h"
 
 #include "confparser.h"
-#include "mato.h"
+#include "satomic.h"
 #include "mgc.h"
 
 

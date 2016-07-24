@@ -82,8 +82,7 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
         pList = pList->ws_next;
     }
 
-    while (!mato_dec_and_test(&dicDbLock))
-        mato_inc(&dicDbLock);
+    mato_lock(dicDbLock);
 
     if (!buff_size_enough(extSaveBuf, nOff + UPKEY_OTH_MAX)) {
         if (mysql_real_query(&dbKeysHandler, 
@@ -102,15 +101,14 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
         sprintf(buff_place_end(extSaveBuf), INSERT_KW_NEXT, 
             pInd, nOff, update_string, upList->wc_ndiff)));
 
-    mato_inc(&dicDbLock);
+    mato_unlock(dicDbLock);
 }
 
 
 /*-----exbug_data_sync-----*/
 void exbug_data_sync(void)
 {
-    while (!mato_dec_and_test(&dicDbLock))
-        mato_inc(&dicDbLock);
+    mato_lock(dicDbLock);
 
     if (buff_check_exist(extSaveBuf)) {
         if (!buff_stru_empty(extSaveBuf)) {
@@ -123,7 +121,7 @@ void exbug_data_sync(void)
         }
     }
 
-    mato_inc(&dicDbLock);
+    mato_unlock(dicDbLock);
 }
 
 

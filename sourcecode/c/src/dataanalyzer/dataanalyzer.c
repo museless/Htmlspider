@@ -200,9 +200,9 @@ static int mainly_init(void)
     }
 
     /* atomic type parameter init */
-    mato_init(&pthreadCtlLock, 0);
-    mato_init(&freeCtlLock, 0);
-    mato_init(&nPaperLock, 1);
+    mato_init(pthreadCtlLock, 0);
+    mato_init(freeCtlLock, 0);
+    mato_init(nPaperLock, 1);
 
     if (exbug_read_config() == FRET_Z)
         return  FRET_Z;
@@ -356,7 +356,7 @@ void exbug_keyword_job(void)
             exbug_create_pthread(pContent);
         }
 
-        while (!mato_sub_and_test(&freeCtlLock, 0))
+        while (!mato_sub_and_test(freeCtlLock, 0))
             ;   /* nothing */
 
         mgc_one_clean(&extResCol);
@@ -372,7 +372,7 @@ void exbug_create_pthread(NCONT *pPara)
     pth_t   thread_id;
 
     exbug_rewind_exmark(pPara->nc_ind, exbRunSet.emod_maname);
-    mato_inc(&freeCtlLock);
+    mato_inc(freeCtlLock);
 
     if (pthread_create(&thread_id, NULL, exbug_pthread_entrance, (void *)pPara)) {
         elog_write("exbug_create_pthread - pthread_create", 
@@ -408,7 +408,7 @@ void *exbug_pthread_entrance(void *pPara)
 {
     WDCT    wCnt;
 
-    mato_inc(&pthreadCtlLock);
+    mato_inc(pthreadCtlLock);
 
     pthread_detach(pthread_self());
 
@@ -422,8 +422,8 @@ void *exbug_pthread_entrance(void *pPara)
             exbRunSet.emod_up(&wCnt, ((NCONT *)pPara)->nc_ind);
     }
 
-    mato_dec(&pthreadCtlLock);
-    mato_dec(&freeCtlLock);
+    mato_dec(pthreadCtlLock);
+    mato_dec(freeCtlLock);
     msem_wake(ebSemControl);
 
     return  NULL;

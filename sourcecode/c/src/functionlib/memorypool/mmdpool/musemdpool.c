@@ -73,8 +73,8 @@ DMPH *mmdp_create(int borderSize)
 
 	pMph->mh_sizebor = (borderSize < DEFAULT_BSIZE) ? DEFAULT_BSIZE : (((borderSize) >>  1) << 1);
 
-	mato_init(&pMph->mh_biglock, 1);
-	mato_init(&pMph->mh_deflock, 1);
+	mato_init(pMph->mh_biglock, 1);
+	mato_init(pMph->mh_deflock, 1);
 
 	return	pMph;
 }
@@ -88,12 +88,9 @@ void *mmdp_malloc(DMPH *mHand, msize_t maSize)
 	if(maSize > mHand->mh_sizebor)
 		return	mmdp_big_malloc(mHand, maSize);
 
-	while(!mato_dec_and_test(&mHand->mh_deflock))
-		mato_inc(&mHand->mh_deflock);
-
+    mato_lock(mHand->mh_deflock);
 	pMem = mmdp_default_malloc(mHand, maSize);
-
-	mato_inc(&mHand->mh_deflock);
+	mato_unlock(mHand->mh_deflock);
 
 	return	pMem;
 }
@@ -106,8 +103,7 @@ void mmdp_free(DMPH *pHandler, mpt_t *pFree)
 	DMPB	*pBlock;
 
 	if((pBig = mmdp_big_search(pHandler->mh_big, pFree))) {
-		while(!mato_dec_and_test(&pHandler->mh_biglock))
-			mato_inc(&pHandler->mh_biglock);
+        mato_lock(pHandler->mh_biglock);
 
 		if(pBig->mbb_fore)	pBig->mbb_fore->mbb_next = pBig->mbb_next;
 			else		pHandler->mh_big = pBig->mbb_next;
@@ -115,7 +111,7 @@ void mmdp_free(DMPH *pHandler, mpt_t *pFree)
 		if(pBig->mbb_next)	pBig->mbb_next->mbb_fore = pBig->mbb_fore;
 			else		pHandler->mh_blast = pBig->mbb_fore;
 
-		mato_inc(&pHandler->mh_biglock);
+		mato_unlock(pHandler->mh_biglock);
 
 		free(pBig->mbb_start);
 		free(pBig);
@@ -125,11 +121,9 @@ void mmdp_free(DMPH *pHandler, mpt_t *pFree)
 
 	if((pBlock = mmdp_default_block_search(pHandler->mh_stru, pFree))) {
 		if(!(--pBlock->mb_taker)) {
-			while(!mato_dec_and_test(&pHandler->mh_deflock))
-				mato_inc(&pHandler->mh_deflock);
-
+            mato_lock(pHandler->mh_deflock);
 			mmdp_reset_block(pBlock);
-			mato_inc(&pHandler->mh_deflock);
+			mato_unlock(pHandler->mh_deflock);
 		}
 	}
 }
@@ -214,8 +208,7 @@ static mpt_t *mmdp_big_malloc(DMPH *hPoint, msize_t maSize)
 
 	bigStru->mbb_next = NULL;
 
-	while(!mato_dec_and_test(&hPoint->mh_biglock))
-		mato_inc(&hPoint->mh_biglock);
+    mato_lock(hPoint->mh_biglock);
 
 	if(hPoint->mh_blast) {
 		hPoint->mh_blast->mbb_next = bigStru;
@@ -227,7 +220,7 @@ static mpt_t *mmdp_big_malloc(DMPH *hPoint, msize_t maSize)
 		bigStru->mbb_fore = NULL;
 	}
 
-	mato_inc(&hPoint->mh_biglock);
+	mato_unlock(hPoint->mh_biglock);
 
 	return	bigStru->mbb_start;
 }

@@ -167,7 +167,7 @@ static int mainly_init(void)
             ubug_msg_init, "urlbug_err_log", 0))
         return  FRET_Z;
 
-    mato_init(&writeStoreLock, 1);
+    mato_init(writeStoreLock, 1);
 
     if (mc_conf_read("urlbug_max_ulen", CONF_NUM,
             &urlMaxLen, sizeof(int)) == FUN_RUN_FAIL) {

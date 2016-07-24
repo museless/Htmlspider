@@ -30,7 +30,6 @@ OURLB	= src/urlcatcher/urlcatcher.c src/urlcatcher/databasectl.c \
 		  src/functionlib/sp_html.c src/functionlib/sp_frame.c \
 		  src/functionlib/dboper/dboper.c \
 		  src/functionlib/confparser/museconfparser.c \
-		  src/functionlib/memorybarrier/museato.c \
 		  src/functionlib/garbagecolloter/musegc.c \
 		  src/functionlib/ipc/muse_sem.c src/functionlib/ipc/sp_message.c \
 		  src/functionlib/threadpool/musepthctl.c \
@@ -50,7 +49,6 @@ OEXTB	= src/dataanalyzer/dataanalyzer.c src/dataanalyzer/database.c \
 		  src/functionlib/sp_html.c src/functionlib/sp_frame.c \
 		  src/functionlib/dboper/dboper.c \
 		  src/functionlib/confparser/museconfparser.c \
-		  src/functionlib/memorybarrier/museato.c \
 		  src/functionlib/garbagecolloter/musegc.c \
 		  src/functionlib/ipc/muse_sem.c src/functionlib/ipc/sp_message.c \
 		  src/functionlib/threadpool/musepthctl.c \
@@ -69,7 +67,6 @@ OTEST   = src/tester/tester.c \
 		  src/functionlib/memorypool/chunkmpool/mpool_web.c \
 		  src/functionlib/dboper/dboper.c \
 		  src/functionlib/confparser/museconfparser.c \
-		  src/functionlib/memorybarrier/museato.c \
 		  src/functionlib/garbagecolloter/musegc.c \
 		  src/functionlib/ipc/muse_sem.c \
 		  src/functionlib/threadpool/musepthctl.c \
