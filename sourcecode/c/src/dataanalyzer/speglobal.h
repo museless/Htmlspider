@@ -17,8 +17,6 @@ extern	MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
 
 extern	CLISTS	charTermList, charHeadSave;
 
-extern	MGCO	extResCol;
-
 extern	char	sqlSeleCom[];
 extern	char	tblNewsName[], dbNewsName[];
 extern	char	tblWordName[], dbDicName[];

@@ -1,45 +1,46 @@
-/*----------------------------------------------
-    modification time: 2015.11.19 21:20
-    mender: Muse
-------------------------------------------------*/
-/*----------------------------------------------
-    file: sp_html.c
-    author: Muse
-    creation time: 2015.11.19 17:00
-------------------------------------------------*/
+/*---------------------------------------------
+ *   modification time: 2015.11.19 21:20
+ *   mender: Muse
+-*---------------------------------------------*/
 
-/*----------------------------------------------
-           Source file contain Five part
+/*---------------------------------------------
+ *   file: sp_html.c
+ *   author: Muse
+ *   creation time: 2015.11.19 17:00
+-*---------------------------------------------*/
 
-           Part Zero:  Include
-           Part One:   Define
-           Part Two:   Local data
-           Part Three: Local function
+/*---------------------------------------------
+ *          Source file contain Five part
+ *
+ *          Part Zero:  Include
+ *          Part One:   Define
+ *          Part Two:   Local data
+ *          Part Three: Local function
+ *
+ *          Part Four:  Html extract
+ *           
+-*---------------------------------------------*/
 
-           Part Four:  Html extract
-            
-------------------------------------------------*/
-
-/*----------------------------------------------
-               Part Zero: Include
-------------------------------------------------*/
+/*---------------------------------------------
+ *             Part Zero: Include
+-*---------------------------------------------*/
 
 #include "sp.h"
 
 
-/*----------------------------------------------
-                Part One: Define
-------------------------------------------------*/
+/*---------------------------------------------
+ *              Part One: Define
+-*---------------------------------------------*/
 
 
-/*----------------------------------------------
-              Part Two: Local data
-------------------------------------------------*/
+/*---------------------------------------------
+ *            Part Two: Local data
+-*---------------------------------------------*/
 
 
-/*----------------------------------------------
-            Part Three: Local function
-------------------------------------------------*/
+/*---------------------------------------------
+ *         Part Three: Local function
+-*---------------------------------------------*/
 
 /* Part Five */
 static  int     sp_html_is_tag(const char *tag_start, int tag_len);
@@ -47,12 +48,12 @@ static  int     sp_html_is_tag_end(const char *tag_string);
 
 
 /*----------------------------------------------
-           Part Four: Html extract
-
-           1. sp_html_code_location
-           2. sp_html_tag_range_locate
-
-------------------------------------------------*/
+ *          Part Four: Html extract
+ *
+ *          1. sp_html_code_location
+ *          2. sp_html_tag_range_locate
+ *
+-*----------------------------------------------*/
 
 /*-----sp_html_code_location-----*/
 char *sp_html_code_location(
@@ -127,16 +128,16 @@ char *sp_html_get_tag_string(char *tag_start, int *tag_len)
 }
 
 
-/*----------------------------------------------
-           Part Five: Html check
-
-           1. sp_html_is_tag
-           2. sp_html_is_tag_end
-
-------------------------------------------------*/
+/*---------------------------------------------
+ *          Part Five: Html check
+ *
+ *          1. sp_html_is_tag
+ *          2. sp_html_is_tag_end
+ *
+-*---------------------------------------------*/
 
 /*-----sp_html_is_tag-----*/
-static int sp_html_is_tag(const char *tag_start, int tag_len)
+int sp_html_is_tag(const char *tag_start, int tag_len)
 {
     if (tag_len < TAG_MIN_LEN || *tag_start != '<') {
         errno = EINVAL;
@@ -148,7 +149,7 @@ static int sp_html_is_tag(const char *tag_start, int tag_len)
 
 
 /*-----sp_html_is_tag_end-----*/
-static int sp_html_is_tag_end(const char *tag_string)
+int sp_html_is_tag_end(const char *tag_string)
 {
     if (*(tag_string - 1) == '<')
         return  FUN_RUN_END;

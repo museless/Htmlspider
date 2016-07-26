@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
     exbug_option_analyst(argc, argv);
     exbug_access();
 
-    mgc_all_clean(exbGarCol);
+    mgc_all_clean(&exbGarCol);
 
     return  FUN_RUN_OK;
 }
@@ -188,16 +188,10 @@ static int mainly_init(void)
         NULL, NULL, NULL, exbug_create_keyword_table, 
         exbug_extract_keyword, exbug_update_terms, MASK_EXT);
 
-    if (!sp_normal_init(
-        "Extbug", &exbGarCol, (MSGSET **)&extbugMsgSet, 
+    if (!sp_normal_init("Extbug", &exbGarCol, 
+        (MSGSET **)&extbugMsgSet, 
         exbug_msg_init, "extbug_err_locate", exbugIpcFd))
         return  FUN_RUN_END;
-
-    /* mgc one init */
-    if (mgc_one_init(&extResCol, (gcfun)mysql_free_result, TRY_MORE) == MGC_FAILED) {
-        exbug_perror("mainly_init - mgc_one_init", errno);
-        return  FUN_RUN_END;
-    }
 
     /* atomic type parameter init */
     mato_init(pthreadCtlLock, 0);
@@ -244,7 +238,7 @@ static int exbug_mempool_init(void)
         return  FUN_RUN_END;    
     }
 
-    if (mgc_add(exbGarCol, threadMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, threadMemPool, (gcfun)mmdp_free_all))
         exbug_perror("exbug_mempool_init - mgc_add - threadMemPool", errno);
 
     if ((procMemPool = mmdp_create(PROC_MP_SIZE)) == NULL) {
@@ -252,7 +246,7 @@ static int exbug_mempool_init(void)
         return  FUN_RUN_END;    
     }
 
-    if (mgc_add(exbGarCol, procMemPool, (gcfun)mmdp_free_all) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, procMemPool, (gcfun)mmdp_free_all))
         exbug_perror("exbug_mempool_init - mgc_add - procMemPool", errno);
 
     return  FUN_RUN_OK;
@@ -285,7 +279,7 @@ int exbug_read_config(void)
         return  FRET_Z;
     }
     
-    if (mgc_add(exbGarCol, ebSemControl, (gcfun)msem_destroy) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, ebSemControl, (gcfun)msem_destroy))
         exbug_perror("exbug_read_config - mgc_add - sem", errno);
 
     return  FRET_P;
@@ -295,7 +289,7 @@ int exbug_read_config(void)
 /*-----exbug_work_prepare-----*/
 void exbug_work_prepare(void)
 {
-    if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_database_close) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_database_close))
         exbug_perror("exbug_work_prepare - mgc_add - dbclose", errno);
 }
 
@@ -313,7 +307,7 @@ int exbug_work_setting(void)
         return  FUN_RUN_FAIL;
     }
 
-    if (mgc_add(exbGarCol, extSaveBuf, buff_stru_free_all) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, extSaveBuf, buff_stru_free_all))
         elog_write("exbug_work_setting - mgc_add - extSaveBuf", 
             FUNCTION_STR, ERROR_STR);
 
@@ -343,8 +337,6 @@ void exbug_keyword_job(void)
             continue;
         }
 
-        mgc_one_add(&extResCol, newsRes);
-
         while ((news_data = mysql_fetch_row(newsRes))) {
             msem_wait(ebSemControl);
 
@@ -359,7 +351,7 @@ void exbug_keyword_job(void)
         while (!mato_sub_and_test(freeCtlLock, 0))
             ;   /* nothing */
 
-        mgc_one_clean(&extResCol);
+        mysql_free_result(newsRes);
         mmdp_reset_default(threadMemPool);
         exbug_data_sync();
     }

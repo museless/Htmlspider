@@ -43,17 +43,17 @@ static  void    sp_normal_error(char *error_string);
 
 /*-----sp_normal_init-----*/
 int sp_normal_init(
-    char *owner_name, MGCH **garCol, MSGSET **msgSet, 
+    char *owner_name, Gc *gc, MSGSET **msgSet, 
     msginit minitFun, char *errLoc, int msgFd)
 {
 	snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", owner_name);
 
-	if ((*garCol = mgc_init()) == NULL) {
+	if (!mgc_init(gc)) {
         sp_normal_error("sp_normal_init - mgc_init");
 		exit(FUN_RUN_END);
 	}
 
-	if (mgc_add(*garCol, NULL_POINT, (gcfun)mc_conf_unload) == MGC_FAILED)
+	if (!mgc_add(gc, GC_DEFOBJ, (gcfun)mc_conf_unload))
         sp_normal_error("sp_normal_init - mgc_add - mc_conf_unload");
 
 	if (msgFd != 0) {
@@ -62,7 +62,7 @@ int sp_normal_init(
 			return	FUN_RUN_END;
 		}
 	
-		if (mgc_add(*garCol, *msgSet, (gcfun)sp_msg_frame_destroy) == MGC_FAILED)
+		if (!mgc_add(gc, *msgSet, (gcfun)sp_msg_frame_destroy))
 			sp_normal_error("sp_normal_init - mgc_add - msg_init");
 	}
 
@@ -72,7 +72,7 @@ int sp_normal_init(
 		return	FUN_RUN_END;
 	}
 
-    if (mgc_add(*garCol, NULL_POINT, (gcfun)elog_destroy) == MGC_FAILED)
+    if (!mgc_add(gc, GC_DEFOBJ, (gcfun)elog_destroy))
         sp_normal_error("sp_normal_init - mgc_add - elog");
 
 	return	FUN_RUN_OK;

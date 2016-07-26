@@ -1,14 +1,15 @@
-#ifndef	_SPINC_H
-#define	_SPINC_H
 
 
 /*---------------------------------------------
  *	                include
 -*---------------------------------------------*/
 
+#pragma once
+
 #define _GNU_SOURCE
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 #include <unistd.h>
@@ -39,7 +40,7 @@
 
 #include "confparser.h"
 #include "satomic.h"
-#include "mgc.h"
+#include "objgc.h"
 
 
 /*---------------------------------------------
@@ -171,14 +172,6 @@ struct  url_dat {
 
 
 /*---------------------------------------------
- *	             extern data
--*--------------------------------------------*/
-
-extern	char	kerNameBuf[], ubNameBuf[];
-extern	char	tbNameBuf[], ebNameBuf[];
-
-
-/*---------------------------------------------
  *	            global function
 -*---------------------------------------------*/
 
@@ -252,4 +245,3 @@ int	    elog_write(char *errStr, char *objStr1, char *objStr2);
 void	elog_write_force(void);
 void	elog_destroy(void);
 
-#endif

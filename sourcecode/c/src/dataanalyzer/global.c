@@ -8,7 +8,7 @@
  *                Global data
 -*---------------------------------------------*/
 
-MGCH	*exbGarCol;
+Gc       exbGarCol;
 BUFF	*extSaveBuf;
 
 void	*extbugMsgSet;			        /* MSGSET */
@@ -18,8 +18,6 @@ void	*ebSemControl;			        /* MSEM */
 EXBSET	exbRunSet;
 MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
 CLISTS	charTermList, charHeadSave;
-
-MGCO	extResCol;
 
 char	sqlSeleCom[SQL_LICOM_LEN];
 

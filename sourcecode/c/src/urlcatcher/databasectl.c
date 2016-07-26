@@ -57,7 +57,7 @@ void ubug_init_database(void)
         ubug_sig_error();
     }
 
-    if (mgc_add(urlGarCol, NULL_POINT, ubug_db_clean) == MGC_FAILED)
+    if (!mgc_add(&urlGarCol, GC_DEFOBJ, ubug_db_clean))
         ubug_perror("ubug_init_database - mgc_add", errno);
 
     ubug_create_dbtable();

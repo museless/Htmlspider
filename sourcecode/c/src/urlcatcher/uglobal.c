@@ -9,7 +9,7 @@
 /* global data */
 WEBIN	*urlSaveList;
 WPOOL	*contStorePool, *urlStorePool;
-MGCH	*urlGarCol;
+Gc       urlGarCol;
 MSGSET	*urlMsgSet;
 
 void	*ubugThreadPool;/* PTHPOOL */

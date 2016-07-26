@@ -71,7 +71,7 @@ int exbug_database_init(void)
 
     mysql_query(&dbNewsHandler, "set names utf8");
 
-    if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_newsdb_unlink) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_newsdb_unlink))
         elog_write("exbug_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
 
     /* Mysql Dic handler init */
@@ -89,7 +89,7 @@ int exbug_database_init(void)
 
     mysql_query(&dbDicHandler, "set names utf8");
 
-    if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_dicdb_unlink) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_dicdb_unlink))
         elog_write("exbug_module_database_init - mgc_add",
             FUNCTION_STR, ERROR_STR);
 
@@ -167,7 +167,7 @@ int exbug_module_database_init(void)
         return  FUN_RUN_FAIL;
     }
 
-    if (mgc_add(exbGarCol, NULL_POINT, (gcfun)exbug_keysdb_unlink) == MGC_FAILED)
+    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_keysdb_unlink))
         elog_write("exbug_module_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
 
     exbug_create_keyword_table();
