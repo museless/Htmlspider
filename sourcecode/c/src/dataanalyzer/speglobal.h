@@ -1,30 +1,29 @@
-#ifndef	_SPEGLOBAL_H
-#define	_SPEGLOBAL_H
+#pragma once
 
-/*-------------------------
-	extern data
----------------------------*/
 
-extern	MGCH	*exbGarCol;
-extern	BUFF	*extSaveBuf;
+/*---------------------------------------------
+ *                  extern data
+-*---------------------------------------------*/
 
-extern	void	*extbugMsgSet;			/* MSGSET */
-extern	void	*threadMemPool, *procMemPool;	/* DMPH */
-extern	void	*ebSemControl;			/* MSEM */
+extern  MGCH    *exbGarCol;
+extern  BUFF    *extSaveBuf;
 
-extern	EXBSET	exbRunSet;
-extern	MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
+extern  void    *extbugMsgSet;          /* MSGSET */
+extern  void    *threadMemPool, *procMemPool;   /* DMPH */
+extern  void    *ebSemControl;          /* MSEM */
 
-extern	CLISTS	charTermList, charHeadSave;
+extern  EXBSET  exbRunSet;
+extern  MYSQL   dbNewsHandler, dbDicHandler, dbKeysHandler;
 
-extern	char	sqlSeleCom[];
-extern	char	tblNewsName[], dbNewsName[];
-extern	char	tblWordName[], dbDicName[];
-extern	char	tblKeysName[], dbKeysName[];
+extern  CLISTS  charTermList, charHeadSave;
 
-extern	MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
+extern  char    sqlSeleCom[];
+extern  char    tblNewsName[], dbNewsName[];
+extern  char    tblWordName[], dbDicName[];
+extern  char    tblKeysName[], dbKeysName[];
 
-extern	uLong	tPaperNum;
-extern	int	exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
+extern  MATOS   pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
 
-#endif
+extern  uLong   tPaperNum;
+extern  int     exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
+

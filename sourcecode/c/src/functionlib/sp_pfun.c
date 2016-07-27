@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *      Source file content Six part
+ *      Source file content Seven part
  *
  *      Part Zero:  Include
  *      Part One:   Define
@@ -8,6 +8,7 @@
  *
  *      Part Four:  Libary function packing
  *      Part Five:  Shared funciton
+ *      Part Six:   Log message
  *
 -*---------------------------------------------*/
 
@@ -301,3 +302,11 @@ int count_enter_num(const char *string)
     return  enter_num + 1;
 }
 
+
+/*---------------------------------------------
+ *         Part Six: Log message
+ *
+ *         1. set_error
+ *         2. set_
+ *
+-*---------------------------------------------*/

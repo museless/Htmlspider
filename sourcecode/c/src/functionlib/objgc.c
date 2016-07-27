@@ -115,6 +115,9 @@ bool mgc_all_clean(Gc *gc)
 /*-----_search_obj-----*/
 bool _search_obj(Gc *gc, void *obj)
 {
+    if (obj == GC_DEFOBJ)
+        return  false;
+
     Gcobj  *objs = gc->list;
 
     while (objs) {

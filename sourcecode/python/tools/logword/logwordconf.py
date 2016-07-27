@@ -4,17 +4,25 @@
 #                Code header
 #----------------------------------------------
 
-__author__ = "Muse"
-__creation_time__ = "2016.07.27 00:00"
-__modification_time__ = "2016.07.27 00:00"
-__intro__ = "Log word's config"
+__author = "Muse"
+__creation = "2016.07.27 00:00"
+__modifiy = "2016.07.27 17:00"
+__intro = "Log word's config"
 
 
 #----------------------------------------------
-#               Config data 
+#                    Macro
+#----------------------------------------------
+
+NoErrno = 0
+NeedErrno = 1
+
+#----------------------------------------------
+#                Config data 
 #----------------------------------------------
 
 Logwords = [
-    [],
-
+    [ERROR, NoErrno, "ubug_print_help - open", "%d%d"],
+    [WARN, NeedErrno, "ubug_print_help - open", "%d%d"],
+    [CRIT, NeedErrno, "ubug_print_help - open", "%d%d"],
 ]

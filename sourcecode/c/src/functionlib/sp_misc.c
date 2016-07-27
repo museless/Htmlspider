@@ -12,7 +12,7 @@
 /*-----sp_stop-----*/
 void sp_stop(void)
 {
-	while(FUN_RUN_OK)
+	while (true)
 		;	/* Dead loop */
 }
 
