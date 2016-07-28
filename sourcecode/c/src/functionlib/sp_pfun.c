@@ -304,9 +304,16 @@ int count_enter_num(const char *string)
 
 
 /*---------------------------------------------
- *         Part Six: Log message
+ *          Part Six: Log message
  *
- *         1. set_error
- *         2. set_
+ *          1. set_log
  *
 -*---------------------------------------------*/
+
+/*-----set_log-----*/
+void set_log(int32_t msgid, const char *file, const char *func, int32_t line, ...)
+{
+   
+}
+
+

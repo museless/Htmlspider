@@ -1,4 +1,13 @@
+/*---------------------------------------------
+ *     modification time: 2016.07.27 21:30
+ *     mender: Muse
+-*---------------------------------------------*/
 
+/*---------------------------------------------
+ *     file: spinc.h 
+ *     creation time: 2016.07.27 21:30
+ *     author: Muse 
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *	                include
@@ -36,7 +45,7 @@
 #include <iconv.h>
 #include <errno.h>
 
-#include "sperr.h"
+#include "error.h"
 
 #include "confparser.h"
 #include "satomic.h"

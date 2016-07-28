@@ -24,7 +24,7 @@
 /* typedef */
 typedef void    (*msctim)(void);
 typedef void    (*mskpwk)(void *);
-typedef int (*mssend)(int);
+typedef int32_t (*mssend)(int);
 
 typedef void    *(*msginit)(int);
 

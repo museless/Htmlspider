@@ -287,9 +287,8 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
 {
     WEBIN   *list_point;
 
-    if ((list_point = malloc(sizeof(WEBIN))) == NULL) {
-        elog_write(
-        "ubug_list_entity_set - malloc", FUNCTION_STR, ERROR_STR);
+    if (!(list_point = malloc(sizeof(WEBIN)))) {
+        set_error(E101);
         ubug_sig_error();
     }
 
