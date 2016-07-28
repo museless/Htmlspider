@@ -136,7 +136,7 @@ void mc_conf_unload(void)
 
 
 /*-----mc_conf_print_err-----*/
-void mc_conf_print_err(char *pFind)
+void mc_conf_print_err(const char *pFind)
 {
     printf("%s - configure read [%s] failed\n", userName, pFind);
 }

@@ -8,7 +8,6 @@
 extern  MGCH    *exbGarCol;
 extern  BUFF    *extSaveBuf;
 
-extern  void    *extbugMsgSet;          /* MSGSET */
 extern  void    *threadMemPool, *procMemPool;   /* DMPH */
 extern  void    *ebSemControl;          /* MSEM */
 

@@ -16,9 +16,7 @@
  *            Part Zero: Include
 -*---------------------------------------------*/
 
-#include "spinc.h"
-#include "spnet.h"
-#include "sphtml.h"
+#include "sp.h"
 
 
 /*---------------------------------------------

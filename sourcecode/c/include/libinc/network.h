@@ -1,19 +1,22 @@
-#ifndef	_SPNET_H
-#define	_SPNET_H
+/*---------------------------------------------
+ *     modification time: 2016.07.28 10:30
+ *     mender: Muse
+-*---------------------------------------------*/
 
+/*---------------------------------------------
+ *                  include
+-*---------------------------------------------*/
 
-/*---------------------
-        include
------------------------*/
+#pragma once
 
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <netdb.h>
 
 
-/*---------------------
-        define
------------------------*/
+/*---------------------------------------------
+ *                   define
+-*---------------------------------------------*/
 
 #define	MIN_URL_LEN             0x80
 #define MAX_URL_LEN             0x100
@@ -50,9 +53,9 @@
 #define HTTP_PORT               80
 
 
-/*---------------------
-        typedef
------------------------*/
+/*---------------------------------------------
+ *                  typedef 
+-*---------------------------------------------*/
 
 typedef struct  sp_ping_info    SPPING;
 typedef	struct	web_if		    WEBIN;
@@ -65,9 +68,9 @@ typedef	struct	sockaddr_in	    SOCKIF;
 typedef	int     (*fcset)(uChar *);
 
 
-/*---------------------
-        struct
------------------------*/
+/*---------------------------------------------
+ *                  struct  
+-*---------------------------------------------*/
 
 struct sp_ping_info {
     char    p_host[SMALL_BUF];
@@ -133,16 +136,16 @@ struct	web_txt {
 };
 
 
-/*-----------------------------
- *        extern data
- *-----------------------------*/
+/*---------------------------------------------
+ *                extern data 
+-*---------------------------------------------*/
 
 extern	char	*rPac;
 
 
-/*-----------------------------
- *       global function
- *-----------------------------*/
+/*---------------------------------------------
+ *               global function
+-*---------------------------------------------*/
 
 /* sp_network.c */
 int     sp_net_sock_init(WEBIN *web_stu);
@@ -174,6 +177,4 @@ int     sp_url_seperate(char *url, int url_len, WEB *web_info);
 int     sp_url_path_count_nlayer(char *url);
 
 long    sp_net_speed_ping(const char *ping_host, int num_pack);
-
-#endif
 

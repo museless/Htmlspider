@@ -53,7 +53,6 @@ struct ubug_setting {
 
 extern	WEBIN  *urlSaveList;
 extern	WPOOL  *contStorePool, *urlStorePool;
-extern	MSGSET *urlMsgSet;
 extern	Gc      urlGarCol;
 extern	void   *ubugThreadPool;	/* PTHPOOL (mpctl.h) */
 extern	UBSET	urlRunSet;

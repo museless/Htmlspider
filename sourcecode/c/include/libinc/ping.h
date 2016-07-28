@@ -6,9 +6,11 @@
            include
 -------------------------------*/
 
-#include "icmp.h"
 #include "spinc.h"
-#include "spnet.h"
+#include "network.h"
+
+#include "icmp.h"
+
 #include <netinet/ip.h>
 #include <arpa/inet.h>
 

@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-
 #include <unistd.h>
 
 #include <pthread.h>
@@ -45,11 +44,10 @@
 #include <iconv.h>
 #include <errno.h>
 
-#include "error.h"
-
 #include "confparser.h"
 #include "satomic.h"
 #include "objgc.h"
+#include "dbdef.h"
 
 
 /*---------------------------------------------
@@ -249,7 +247,7 @@ void	buff_stru_free_all(void *bufStru);
 char   *buff_stru_strstr(BUFF *strBuf, char *needStr);
 
 /* sp_elog.c */
-int	    elog_init(char *confStr);
+int	    elog_init(const char *confStr);
 int	    elog_write(char *errStr, char *objStr1, char *objStr2);
 void	elog_write_force(void);
 void	elog_destroy(void);

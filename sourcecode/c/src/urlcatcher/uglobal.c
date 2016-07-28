@@ -1,8 +1,4 @@
-#include "spinc.h"
-#include "spmpool.h"
-#include "spnet.h"
-#include "spdb.h"
-#include "spmsg.h"
+#include "sp.h"
 #include "spuglobal.h"
 
 
@@ -10,7 +6,6 @@
 WEBIN	*urlSaveList;
 WPOOL	*contStorePool, *urlStorePool;
 Gc       urlGarCol;
-MSGSET	*urlMsgSet;
 
 void	*ubugThreadPool;/* PTHPOOL */
 

@@ -188,9 +188,7 @@ static int mainly_init(void)
         NULL, NULL, NULL, exbug_create_keyword_table, 
         exbug_extract_keyword, exbug_update_terms, MASK_EXT);
 
-    if (!sp_normal_init("Extbug", &exbGarCol, 
-        (MSGSET **)&extbugMsgSet, 
-        exbug_msg_init, "extbug_err_locate", exbugIpcFd))
+    if (!sp_normal_init("Extbug", &exbGarCol, "extbug_err_locate"))
         return  FUN_RUN_END;
 
     /* atomic type parameter init */

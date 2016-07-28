@@ -44,7 +44,7 @@ struct perconfdata {
 int     mc_conf_load(const char *pUser, const char *confPath);
 void	mc_conf_unload(void);
 int	    mc_conf_read(char *findStr, int dType, void *dBuf, int dLen);
-void	mc_conf_print_err(char *pFind);
+void	mc_conf_print_err(const char *pFind);
 
 void    mc_load_config(const char *user, const char *config_path);
 void    mc_conf_read_list(PerConfData *list, int len);

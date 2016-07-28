@@ -26,8 +26,6 @@
 
 #include "sp.h"
 
-#include "mpctl.h"
-
 #include "spuglobal.h"
 #include "spurlb.h"
 

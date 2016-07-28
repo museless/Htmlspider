@@ -30,9 +30,6 @@
 
 #include "sp.h"
 
-#include "mipc.h"
-#include "mpctl.h"
-
 #include "spuglobal.h"
 #include "spurlb.h"
 
@@ -161,10 +158,9 @@ static void ubug_command_analyst(int nPara, char **pComm)
 -*----------------------------------------------*/
 
 /*-----mainly_init-----*/
-static int mainly_init(void)
+int mainly_init(void)
 {
-    if (!sp_normal_init("Urlbug", &urlGarCol, &urlMsgSet,
-            ubug_msg_init, "urlbug_err_log", 0))
+    if (!sp_normal_init("Urlbug", &urlGarCol, "urlbug_err_log"))
         return  FRET_Z;
 
     mato_init(writeStoreLock, 1);
@@ -185,7 +181,7 @@ static int mainly_init(void)
 
 
 /*-----ubug_init_source_pool-----*/
-static int ubug_init_source_pool(void)
+int ubug_init_source_pool(void)
 {
     int     pthread_num;
 
@@ -288,7 +284,6 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
     WEBIN   *list_point;
 
     if (!(list_point = malloc(sizeof(WEBIN)))) {
-        set_error(E101);
         ubug_sig_error();
     }
 
@@ -315,7 +310,7 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
 
 
 /*-----ubug_init_urllist-----*/
-static int ubug_init_urllist(char *urlStr, WEB *webStu)
+int ubug_init_urllist(char *urlStr, WEB *webStu)
 {
     if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_P) {
         /*printf("Host: %s - Path: %s - File: %s - Layer num: %d\n", 

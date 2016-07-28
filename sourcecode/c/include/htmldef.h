@@ -1,5 +1,4 @@
-#ifndef	_SPHTML_H
-#define	_SPHTML_H
+#pragma once
 
 /* define */
 #define TAG_MIN_LEN     0x3
@@ -68,5 +67,3 @@
 
 #define	MNOBR_LEN	    7
 #define	MATCH_NOBR	    "</nobr>"
-
-#endif

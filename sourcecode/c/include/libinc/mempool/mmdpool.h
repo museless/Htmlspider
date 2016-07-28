@@ -1,10 +1,6 @@
 #ifndef _MMDPOOL_H
 #define _MMDPOOL_H
 
-
-/* include */
-#include "mmdperr.h"
-
 /* typedef */
 typedef struct  dmp_handler DMPH;
 typedef struct  dmp_body    DMPB;

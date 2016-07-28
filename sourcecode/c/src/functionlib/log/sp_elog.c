@@ -1,7 +1,4 @@
 #include "spinc.h"
-#include "spmpool.h"
-#include "spnet.h"
-#include <time.h>
 
 
 /* locate data */
@@ -22,12 +19,12 @@ static	int	    errLogFd;
 --------------------------------------------*/
 
 /*-----elog_init-----*/
-int elog_init(char *confStr)
+int elog_init(const char *confStr)
 {
 	char	error_log_path[PATH_LEN];
 
     if (mc_conf_read(
-        confStr, CONF_STR, error_log_path, PATH_LEN) == FUN_RUN_FAIL) {
+        (char *)confStr, CONF_STR, error_log_path, PATH_LEN) == FUN_RUN_FAIL) {
 		mc_conf_print_err(confStr);
 		return	FUN_RUN_FAIL;
 	}

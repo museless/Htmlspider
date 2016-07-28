@@ -11,7 +11,6 @@
 Gc       exbGarCol;
 BUFF	*extSaveBuf;
 
-void	*extbugMsgSet;			        /* MSGSET */
 void	*threadMemPool, *procMemPool;	/* DMPH */
 void	*ebSemControl;			        /* MSEM */
 
