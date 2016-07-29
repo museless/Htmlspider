@@ -84,7 +84,7 @@ void ubug_free_weblist(void *pNull)
 {
     WEBIN   *pList = urlSaveList;
 
-    while(urlSaveList != NULL) {
+    while (urlSaveList != NULL) {
         pList = urlSaveList->w_next;
         free(urlSaveList);
         urlSaveList = pList;

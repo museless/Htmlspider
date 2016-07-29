@@ -9,7 +9,7 @@ extern  MGCH    *exbGarCol;
 extern  BUFF    *extSaveBuf;
 
 extern  void    *threadMemPool, *procMemPool;   /* DMPH */
-extern  void    *ebSemControl;          /* MSEM */
+extern  void    *ebSemControl;                  /* MSEM */
 
 extern  EXBSET  exbRunSet;
 extern  MYSQL   dbNewsHandler, dbDicHandler, dbKeysHandler;
