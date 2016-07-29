@@ -15,7 +15,27 @@ _intro = "Log word's output"
 #----------------------------------------------
 
 import logwordconf
+import time
 import sys
+
+
+#----------------------------------------------
+#                   data
+#----------------------------------------------
+
+Head = 45 * '-'
+
+
+#----------------------------------------------
+#                 open file
+#----------------------------------------------
+
+def openfile(suffix):
+    f = open("logmsgdef." + suffix, "w")
+    f.write("/*%s\n *   create time: %s\n-*%s*/\n\n" % 
+        (Head, time.strftime("%Y-%m-%d %H:%M"), Head))
+
+    return  f
 
 
 #----------------------------------------------
@@ -26,6 +46,8 @@ def make_file():
     messages = logwordconf.Logwords
     idname_list, msg_list = [], []
 
+    header, csrc = openfile("h"), openfile("c")
+
     for idx, msg in enumerate(messages):
         idname = "LM" + str(idx)
 
@@ -35,8 +57,14 @@ def make_file():
             (isinstance(msg[3], str) and len(msg[3]) > 0) 
              and "\"%s\"" % msg[3] or "NULL"))
     
-    print("Logmsg  logMessage[] = {\n%s\n}\n\n" % ("\n".join(msg_list)))
-    print("enum messageEnum = {\n%s\n\n    LMMax,\n}" % ("\n".join(idname_list)))
+    header.write("#pragma once\n\nenum messageEnum = {\n%s\n\n    LMMax,\n}" % 
+        ("\n".join(idname_list)))
+
+    csrc.write("Logmsg logMessage[] = {\n%s\n}\n\n" % ("\n".join(msg_list)))
+
+    header.close()
+    csrc.close()
+
 
 #----------------------------------------------
 #                   Main 
