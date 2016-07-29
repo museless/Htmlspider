@@ -38,27 +38,27 @@
  *          3. ubug_tran_db
  *          4. ubug_tran_db_whole
  *          5. ubug_tran_db_force
+ *          6. ubug_db_seterr
  *
 -*---------------------------------------------*/
 
 /*-----ubug_init_database-----*/
 void ubug_init_database(void)
 {
-    char    database_name[SQL_DBNAME_LEN];
+    char    dbname[SQL_DBNAME_LEN];
 
-    if (mc_conf_read("urls_database_name", CONF_STR,
-            database_name, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
-        elog_write("urlbug", "config setting wrong",  "urls_database_name");
+    if (!mc_conf_read("urls_database_name", CONF_STR, dbname, SQL_DBNAME_LEN)) {
+        setmsg(LM19, "urls_database_name");
         ubug_sig_error();
     }
 
-    if (!mysql_simple_connect(&urlDataBase, database_name, NULL, 0)) {
-        elog_write("ubug_init_database - mysql_connect", "urlDataBase", "Failed");
+    if (!mysql_simple_connect(&urlDataBase, dbname, NULL, 0)) {
+        setmsg(LM22, "urls connect failed");
         ubug_sig_error();
     }
 
     if (!mgc_add(&urlGarCol, GC_DEFOBJ, ubug_db_clean))
-        ubug_perror("ubug_init_database - mgc_add", errno);
+        setmsg(LM5, "database clean");
 
     ubug_create_dbtable();
 }
@@ -67,12 +67,9 @@ void ubug_init_database(void)
 /*-----ubug_create_dbtable-----*/
 void ubug_create_dbtable(void)
 {
-    if (mysql_creat_table(
-        &urlDataBase, CREAT_URL_TAB, urlTabName, urlMaxLen) != FRET_P) {
-        if (mysql_error_log(&urlDataBase, 
-                urlTabName, "ubug_create_dbtable - creatTab") != FRET_P)
-            ubug_sig_error();
-    }
+    if (mysql_creat_table(&urlDataBase,
+            CREAT_URL_TAB, urlTabName, urlMaxLen) != FRET_P)
+        ubug_db_seterror();
 }
 
 
@@ -111,14 +108,24 @@ void ubug_tran_db_force(BUFF *pBuff)
 
     if (!buff_stru_empty(pBuff)) {
         if (mysql_real_query(&urlDataBase, 
-                buff_place_start(pBuff), buff_now_size(pBuff)) != FRET_Z) {
-            if (mysql_error_log(&urlDataBase, urlTabName, 
-                    "ubug_tran_db_force - mysql_query") != FRET_P)
-                ubug_sig_error();
-        }
+                buff_place_start(pBuff), buff_now_size(pBuff)) != FRET_Z)
+            ubug_db_seterror();
 
         buff_stru_make_empty(pBuff);
     }
 
     mato_unlock(writeStoreLock);
 }
+
+
+/*-----ubug_db_seterror-----*/
+void ubug_db_seterror(void)
+{
+    setmsg(LM22, MYERR_STR(&urlDataBase));
+
+    if (!mysql_error_log(&urlDataBase, urlTabName)) {
+        setmsg(LM22, "restart failed");
+        ubug_sig_error();
+    }
+}
+

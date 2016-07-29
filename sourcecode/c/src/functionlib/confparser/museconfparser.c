@@ -78,22 +78,22 @@ int mc_conf_load(const char *pUser, const char *confPath)
 
 
 /*-----mc_conf_read-----*/
-int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
+bool mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
 {
     char   *pStr, *pEnd;
     int     nMul = 0;
 
     if (!(pStr = strstr(confctlBuff.b_start, findStr)))
-        return  FRET_N;
+        return  false;
 
     if ((pStr = strchr(pStr, '=')) == NULL)
-        return  FRET_N;
+        return  false;
 
     for (pStr += 1; isspace(*pStr); pStr++)
         ;   /* nothing */
 
     if ((pEnd = strchr(pStr, '\n')) == NULL)
-        return  FRET_N;
+        return  false;
 
     for (; isspace(*(pEnd - 1)); pEnd--)
             ;   /* nothing */
@@ -117,10 +117,10 @@ int mc_conf_read(char *findStr, int dType, void *dBuf, int dLen)
         ((char *)dBuf)[dLen] = 0;
 
     } else {
-        return  FRET_N;
+        return  false;
     }
 
-    return  FUN_RUN_OK;
+    return  true;
 }
 
 
@@ -161,8 +161,8 @@ void mc_conf_read_list(PerConfData *list, int len)
     for (int index = 0; index < len; index++) {
         PerConfData *per = &list[index];
 
-        if (mc_conf_read(per->find_str, 
-                per->data_type, per->data_buff, per->data_max_len) == FRET_N) {
+        if (!mc_conf_read(per->find_str, 
+                per->data_type, per->data_buff, per->data_max_len)) {
             mc_conf_print_err(per->find_str);
 
             if (per->data_max_len > 0) {
@@ -171,8 +171,6 @@ void mc_conf_read_list(PerConfData *list, int len)
 
                 else if (per->data_type == CONF_STR)
                     snprintf(per->data_buff, len, per->default_str);
-
-                printf("set default to \"%s\"\n\n", per->default_str);
             }
         }
     }

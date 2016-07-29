@@ -109,8 +109,7 @@ int ubug_html_download(WEBIN *web_stu)
     int     cont_offset, byte_read;
 
     if (sp_net_html_download(web_stu) != FRET_P) {
-        elog_write("ubug_html_download - sp_net_html_download",
-            web_stu->w_ubuf.web_host, HERROR_STR);
+        setmsg(LM2, HERROR_STR, web_stu->w_ubuf.web_host);
         close(web_stu->w_sock);
         return  FRET_Z;
     }
@@ -168,11 +167,8 @@ void ubug_update_latest_time(WEBIN *web_stu)
     while (!mato_dec_and_test(writeStoreLock))
         mato_inc(writeStoreLock);
 
-    if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END) {
-        if (mysql_error_log(&urlDataBase, urlTabName, 
-                "send_httpreq - up latest") != FRET_P)
-            ubug_sig_error();
-    }
+    if (mysql_query(&urlDataBase, sqlCom) != FUN_RUN_END)
+        ubug_db_seterror();
 
     mato_inc(writeStoreLock);
 }

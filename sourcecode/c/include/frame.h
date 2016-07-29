@@ -6,5 +6,5 @@
 -*---------------------------------------------*/
 
 /* sp_frame.c */
-int32_t sp_normal_init(const char *pOwn, Gc *gc, const char *errLoc);
+int32_t sp_normal_init(const char *owner, Gc *gc);
 

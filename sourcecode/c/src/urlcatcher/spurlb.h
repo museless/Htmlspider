@@ -1,10 +1,9 @@
-#ifndef	_SPURLB_H
-#define	_SPURLB_H
-
-
 /*---------------------------------------------
- *	                include
+ *     modification time: 2016-07-29 20:10
+ *     mender: Muse
 -*---------------------------------------------*/
+
+#pragma once
 
 
 /*---------------------------------------------
@@ -60,6 +59,8 @@ void    ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen);
 void    ubug_tran_db_whole(void);
 void    ubug_tran_db_force(BUFF *pBuff);
 
+void    ubug_db_seterror(void);
+
 /* sp_urlbug_disc.c */
 void    ubug_print_help(void);
 
@@ -76,6 +77,4 @@ void   *ubug_msg_init(int msgFd);
 
 /* sp_urlbug.err.c */
 void    ubug_sig_error(void);
-void    ubug_perror(char *errStr, int nErr);
 
-#endif

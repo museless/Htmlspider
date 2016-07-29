@@ -23,8 +23,7 @@ int elog_init(const char *confStr)
 {
 	char	error_log_path[PATH_LEN];
 
-    if (mc_conf_read(
-        (char *)confStr, CONF_STR, error_log_path, PATH_LEN) == FUN_RUN_FAIL) {
+    if (!mc_conf_read((char *)confStr, CONF_STR, error_log_path, PATH_LEN)) {
 		mc_conf_print_err(confStr);
 		return	FUN_RUN_FAIL;
 	}

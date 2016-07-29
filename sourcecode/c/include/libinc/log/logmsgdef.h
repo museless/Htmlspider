@@ -29,6 +29,16 @@ enum messageEnum {
     LM16,
     LM17,
     LM18,
+    LM19,
+    LM20,
+    LM21,
+    LM22,
+    LM23,
+    LM24,
+    LM25,
+    LM26,
+    LM27,
+    LM28,
 
     LMMax,
 };

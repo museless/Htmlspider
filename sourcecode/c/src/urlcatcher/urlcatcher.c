@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-07-28 13:25:00
+ *     modification time: 2016-07-29 20:10
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -46,7 +46,7 @@ static  int     mainly_init(void);
 static  bool    ubug_init_source(void);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static  void    ubug_init_weblist(void);
-static  int     ubug_init_urllist(char *urlStr, WEB *webStu);
+static  bool    ubug_init_urllist(char *urlStr, WEB *webStu);
 static  WEBIN  *ubug_list_entity_set(MSLROW data_row);
 static  void    ubug_set_ubset(void);
 
@@ -94,6 +94,8 @@ static  void    ubug_job(WEBIN *wPoint);
 /*-----main-----*/
 int main(int argc, char **argv)
 {
+    log_start(&messageLog, "/var/log/urlcatcher", LOG_LOCAL2);
+
     ubug_command_analyst(argc, argv);
 
     if (mainly_init() && ubug_init_source()) {
@@ -160,19 +162,18 @@ static void ubug_command_analyst(int nPara, char **pComm)
 /*-----mainly_init-----*/
 int mainly_init(void)
 {
-    if (!sp_normal_init("Urlbug", &urlGarCol, "urlbug_err_log"))
+    if (!sp_normal_init("Urlbug", &urlGarCol))
         return  FRET_Z;
 
     mato_init(writeStoreLock, 1);
 
-    if (mc_conf_read("urlbug_max_ulen", CONF_NUM,
-            &urlMaxLen, sizeof(int)) == FUN_RUN_FAIL) {
-        mc_conf_print_err("urlbug_max_ulen");
+    if (!mc_conf_read("urlbug_max_ulen", CONF_NUM, &urlMaxLen, sizeof(int))) {
+        setmsg(LM19, "urlbug_max_ulen");
         return  FRET_Z;
     }
 
     if (urlMaxLen < MIN_URL_LEN || urlMaxLen > MAX_URL_LEN) {
-        printf("Urlbug---> url max size is underlimit: %d\n", urlMaxLen);
+        setmsg(LM27, urlMaxLen);
         return  FRET_Z;
     }
 
@@ -185,41 +186,38 @@ bool ubug_init_source(void)
 {
     int32_t pthread_num;
 
-    log_start(&messageLog, "/var/log/urlcatcher", LOG_LOCAL2);
-
     /* urlbug pthread num read */
-    if (mc_conf_read("urlbug_pthread_num",
-            CONF_NUM, &pthread_num, sizeof(int)) == FUN_RUN_FAIL) {
-        mc_conf_print_err("urlbug_pthread_num");
+    if (!mc_conf_read("urlbug_pthread_num", CONF_NUM, &pthread_num, sizeof(int))) {
+        setmsg(LM19, "urlbug_pthread_num");
         return  false;
     }
 
     if (pthread_num > UBUG_PTHREAD_MAX || pthread_num < UBUG_PTHREAD_MIN) {
-        printf("Urlbug---> pthread num is underlimit: %d\n", pthread_num);
+        setmsg(LM21, pthread_num);
         return  false;
     }
 
     /* muse thread pool init */
     if (!(ubugThreadPool = mpc_create(pthread_num))) {
-        ubug_perror("ubug_init_source - mpc_create", errno);
+        setmsg(LM10);
         return  false;
     }
 
     if ((contStorePool = wmpool_create(pthread_num, WMP_PAGESIZE)) == NULL) {
-        ubug_perror("wmpool_create - contStorePool", errno);
+        setmsg(LM11, "contStorePool");
         return  false;
     }
 
     if (!mgc_add(&urlGarCol, contStorePool, wmpool_destroy))
-        ubug_perror("ubug_init_source - mgc_add - contStorePool", errno);
+        setmsg(LM5, "contStorePool");
 
     if ((urlStorePool = wmpool_create(pthread_num, NAMBUF_LEN)) == NULL) {
-        ubug_perror("wmpool_create - urlStorePool", errno);
+        setmsg(LM11, "urlStorePool");
         return  false;
     }
 
     if (!mgc_add(&urlGarCol, urlStorePool, wmpool_destroy))
-        ubug_perror("ubug_init_source - mgc_add - urlStorePool", errno);
+        setmsg(LM5, "urlStorePool");
 
     return  true;
 }
@@ -228,38 +226,31 @@ bool ubug_init_source(void)
 /*-----ubug_init_dbuf-----*/
 int ubug_init_dbuf(BUFF **pBuff)
 {
-    if (((*pBuff) = buff_stru_init(SQL_GCOM_LEN)) == NULL) {
-        ubug_perror("ubug_init_dbuf - buff_stru_init", errno);
+    if (!((*pBuff) = buff_stru_init(SQL_GCOM_LEN)))
         return  FRET_Z;
-    }
 
     if (!mgc_add(&urlGarCol, (*pBuff), buff_stru_free_all))
-        ubug_perror("ubug_init_dbuf - mgc_add", errno);
+        setmsg(LM5, "Buffstru");
 
-        return  FUN_RUN_OK;
+    return  FUN_RUN_OK;
 }
 
 
 /*-----ubug_init_weblist-----*/
 void ubug_init_weblist(void)
 {
-    char    url_store_table_name[MIDDLE_BUF];
+    char    tabname[MIDDLE_BUF];
 
-    if (mc_conf_read("urls_store_table_name", CONF_STR,
-            url_store_table_name, MIDDLE_BUF) == FUN_RUN_FAIL) {
-        mc_conf_print_err("urls_store_table_name");
+    if (!mc_conf_read("urls_store_table_name", CONF_STR, tabname, MIDDLE_BUF)) {
+        setmsg(LM5, "urls_store_table_name");
         ubug_sig_error();
     }
 
     WEBIN **pList = &urlSaveList;
-    MSLRES *data_result = mysql_return_result(&urlDataBase, 
-                            GET_DIRECTORY, url_store_table_name);
+    MSLRES *data_result = mysql_return_result(&urlDataBase, GET_DIRECTORY, tabname);
 
-    if (!data_result) {
-        if (mysql_error_log(&urlDataBase, urlTabName, 
-                "ubug_init_weblist - mysql_return_result") != FRET_P)
-            ubug_sig_error();
-    }
+    if (!data_result)
+        ubug_db_seterror();
 
     MSLROW  data_row;
 
@@ -276,7 +267,7 @@ void ubug_init_weblist(void)
     (*pList) = NULL;
 
     if (!mgc_add(&urlGarCol, GC_DEFOBJ, ubug_free_weblist))
-        ubug_perror("ubug_init_weblist - mgc_add", errno);
+        setmsg(LM5, "weblist free");
 }
 
 
@@ -301,9 +292,7 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
     list_point->w_urlbufsize = list_point->w_contoffset = 0;
 
     if (!ubug_init_dbuf(&((list_point)->w_buff))) {
-        elog_write(
-        "ubug_list_entity_set - ubug_init_dbuf", FUNCTION_STR, ERROR_STR);
-
+        setmsg(LM3);
         ubug_sig_error();
     }
 
@@ -312,19 +301,14 @@ WEBIN *ubug_list_entity_set(MSLROW data_row)
 
 
 /*-----ubug_init_urllist-----*/
-int ubug_init_urllist(char *urlStr, WEB *webStu)
+bool ubug_init_urllist(char *urlStr, WEB *webStu)
 {
-    if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_P) {
-        /*printf("Host: %s - Path: %s - File: %s - Layer num: %d\n", 
-        webStu->web_host, webStu->web_path, 
-        webStu->web_file, webStu->web_nlayer);*/
-
-        return  FUN_RUN_OK;
+    if (sp_url_seperate(urlStr, strlen(urlStr), webStu) == FRET_Z) {
+        setmsg(LM23, urlStr);
+        return  false;
     }
 
-    printf("Urlbug---> ubug_init_urllist - strange url: %s\n", urlStr);
-
-    return  FRET_Z;
+    return  true;
 }
 
 
@@ -353,11 +337,10 @@ void ubug_set_ubset(void)
 /*-----ubug_create_pthread-----*/
 void ubug_create_pthread(WEBIN *web_info)
 {
-    if (mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)web_info))
-        return;
-
-    elog_write("ubug_create_pthread - mpc_thread_wake", FUNCTION_STR, ERROR_STR);
-    ubug_sig_error();
+    if (!mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)web_info)) {
+        setmsg(LM4);
+        ubug_sig_error();
+    }
 }
 
 
@@ -382,13 +365,13 @@ void ubug_pthread_entrance(void *parameters)
 int ubug_pthread_apply_for_resource(WEBIN *web_info)
 {
     if (!(web_info->w_conbuf = wmpool_malloc(contStorePool))) {
-        ubug_perror("ubug_pthread_apply_for_resource - contbuf", errno);
+        setmsg(LM24, "contbuf");
         return  FRET_N; 
     }
 
     if (!(web_info->w_url = wmpool_malloc(urlStorePool))) {
         wmpool_free(contStorePool, web_info->w_conbuf);
-        ubug_perror("ubug_pthread_apply_for_resource - url", errno);
+        setmsg(LM24, "url store");
         return  FRET_N;
     }
 
@@ -396,8 +379,8 @@ int ubug_pthread_apply_for_resource(WEBIN *web_info)
     web_info->w_urlbufsize = NAMBUF_LEN;
     web_info->w_size = urlRunSet.ubs_dway(web_info);
 
-    printf("url: %s%s%s - size: %d\n", web_info->w_ubuf.web_host, 
-        web_info->w_ubuf.web_path, web_info->w_ubuf.web_file, web_info->w_size);
+    setmsg(LM25, web_info->w_ubuf.web_host, web_info->w_ubuf.web_path, 
+        web_info->w_ubuf.web_file, web_info->w_size);
 
     return  (web_info->w_size > 0) ? FRET_P : FRET_Z;
 }
@@ -428,7 +411,7 @@ void ubug_main_entrance(void)
         urlRunSet.ubs_fstf();
         sleep(TAKE_A_WHILE);
 
-    } while(urlRunSet.ubs_rtime);
+    } while (urlRunSet.ubs_rtime);
 
     ubug_sig_error();
 }

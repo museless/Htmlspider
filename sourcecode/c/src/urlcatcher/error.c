@@ -26,24 +26,22 @@
 
 #include "sp.h"
 
+#include "spuglobal.h"
+#include "spurlb.h"
+
 
 /*---------------------------------------------
  *      Part Four: Urlbug error dispose
  *
  *      1. ubug_sig_error
- *      2. ubug_perror
  *
 -*---------------------------------------------*/
 
 /*-----ubug_sig_error-----*/
 void ubug_sig_error(void)
 {
+    setmsg(LM20);
     kill(getpid(), SIGINT);
 }
 
 
-/*-----ubug_perror-----*/
-void ubug_perror(char *errStr, int nErr)
-{
-    printf("Urlbug---> %s: %s\n", errStr, strerror(nErr));
-}

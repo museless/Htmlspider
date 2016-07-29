@@ -57,8 +57,8 @@ void ubug_init_signal(void)
     sigStru.sa_handler = ubug_signal_handler;
     sigStru.sa_flags = 0;
 
-    if(sigaction(SIGINT, &sigStru, NULL) == FRET_N) {
-        ubug_perror("ubug_init_signal - sigaction - SIGINT", errno);
+    if (sigaction(SIGINT, &sigStru, NULL) == FRET_N) {
+        setmsg(LM9, "SIGINT");
         exit(FUN_RUN_FAIL);
     }
 
@@ -66,8 +66,8 @@ void ubug_init_signal(void)
     sigdelset(&sigMask, SIGINT);
     sigStru.sa_mask = sigMask;
 
-    if(sigaction(SIGSEGV, &sigStru, NULL) == FRET_N) {
-        ubug_perror("ubug_init_signal - sigaction - SIGSEGV", errno);
+    if (sigaction(SIGSEGV, &sigStru, NULL) == FRET_N) {
+        setmsg(LM9, "SIGSEGV");
         exit(FUN_RUN_FAIL);
     }
 }
@@ -79,8 +79,7 @@ void ubug_signal_handler(int nSign)
     if (nSign == SIGINT) {
         pthread_mutex_lock(&sigIntLock);
 
-        printf("UrlBug---> caught SIGINT...\n");
-
+        setmsg(LM26, "SIGINT");
         mpc_destroy(ubugThreadPool);
 
         if (urlRunSet.ubs_fstf)
@@ -93,7 +92,7 @@ void ubug_signal_handler(int nSign)
     }
 
     if (nSign == SIGSEGV) {
-        printf("Urlbug---> caught SIGSEGV\n");
+        setmsg(LM26, "SIGSEGV");
         ubug_sig_error();
     }
 }

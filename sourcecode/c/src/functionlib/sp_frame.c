@@ -32,9 +32,9 @@ static  char    ownNameSave[OWN_NAME_LEN];
 -*--------------------------------------------*/
 
 /*-----sp_normal_init-----*/
-int32_t sp_normal_init(const char *owner_name, Gc *gc, const char *errLoc)
+int32_t sp_normal_init(const char *owner, Gc *gc)
 {
-    snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", owner_name);
+    snprintf(ownNameSave, OWN_NAME_LEN - 1, "%s", owner);
 
     if (!mgc_init(gc)) {
         perror("sp_normal_init - mgc_init");
@@ -43,15 +43,6 @@ int32_t sp_normal_init(const char *owner_name, Gc *gc, const char *errLoc)
 
     if (!mgc_add(gc, GC_DEFOBJ, (gcfun)mc_conf_unload))
         perror("sp_normal_init - mgc_add - mc_conf_unload");
-
-    /* elog init */
-    if (elog_init(errLoc) == FUN_RUN_FAIL) {
-        perror("sp_normal_init - elog_init"); 
-        return  FUN_RUN_END;
-    }
-
-    if (!mgc_add(gc, GC_DEFOBJ, (gcfun)elog_destroy))
-        perror("sp_normal_init - mgc_add - elog");
 
     return  FUN_RUN_OK;
 }

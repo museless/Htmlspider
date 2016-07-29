@@ -139,22 +139,16 @@ int mysql_execl_query(void *sql_handle, const char *sql, va_list ap_list)
 -*---------------------------------------------*/
 
 /*-----mysql_error_log-----*/
-int mysql_error_log(void *sql_handle, char *db_name, char *error_string)
+bool mysql_error_log(void *sql_handle, char *db_name)
 {
     uInt    sql_errno = mysql_errno(sql_handle);
 
-    elog_write(error_string, FUNCTION_STR, MYERR_STR(sql_handle));
-
     if (sql_errno == CR_SERVER_LOST || sql_errno == CR_SERVER_GONE_ERROR) {
-        elog_write(error_string, FUNCTION_STR, "mysql reconnect start...");
-
-        if (mysql_real_connect(
-            sql_handle, NULL, DBUSRNAME, DBUSRKEY, db_name, 0, NULL, 0))
-            return  FUN_RUN_OK;
+        if (!mysql_real_connect(sql_handle, NULL,
+                DBUSRNAME, DBUSRKEY, db_name, 0, NULL, 0))
+            return  false;
     }
 
-    elog_write(error_string, FUNCTION_STR, "mysql reconnect failed");
-
-    return  FUN_RUN_FAIL;
+    return  true;
 }
 
