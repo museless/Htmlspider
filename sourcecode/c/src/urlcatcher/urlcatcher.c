@@ -43,7 +43,7 @@ static  void    ubug_command_analyst(int nPara, char **pComm);
 
 /* Part Five */
 static  int     mainly_init(void);
-static  int     ubug_init_source_pool(void);
+static  bool    ubug_init_source(void);
 static  int     ubug_init_dbuf(BUFF **pBuff);
 static  void    ubug_init_weblist(void);
 static  int     ubug_init_urllist(char *urlStr, WEB *webStu);
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 {
     ubug_command_analyst(argc, argv);
 
-    if (mainly_init() && ubug_init_source_pool()) {
+    if (mainly_init() && ubug_init_source()) {
         ubug_init_signal();
         ubug_init_database();
         ubug_init_weblist();
@@ -148,7 +148,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
  *          Part Five: Initialization
  *
  *          1. mainly_init
- *          2. ubug_init_source_pool
+ *          2. ubug_init_source
  *          4. ubug_init_dbuf
  *          5. ubug_init_weblist
  *          6. ubug_init_urllist
@@ -180,46 +180,48 @@ int mainly_init(void)
 }
 
 
-/*-----ubug_init_source_pool-----*/
-int ubug_init_source_pool(void)
+/*-----ubug_init_source-----*/
+bool ubug_init_source(void)
 {
-    int     pthread_num;
+    int32_t pthread_num;
+
+    log_start(&messageLog, "/var/log/urlcatcher", LOG_LOCAL2);
 
     /* urlbug pthread num read */
     if (mc_conf_read("urlbug_pthread_num",
             CONF_NUM, &pthread_num, sizeof(int)) == FUN_RUN_FAIL) {
         mc_conf_print_err("urlbug_pthread_num");
-        return  FRET_Z;
+        return  false;
     }
 
     if (pthread_num > UBUG_PTHREAD_MAX || pthread_num < UBUG_PTHREAD_MIN) {
         printf("Urlbug---> pthread num is underlimit: %d\n", pthread_num);
-        return  FRET_Z;
+        return  false;
     }
 
     /* muse thread pool init */
     if (!(ubugThreadPool = mpc_create(pthread_num))) {
-        ubug_perror("ubug_init_source_pool - mpc_create", errno);
-        return  FRET_Z;
+        ubug_perror("ubug_init_source - mpc_create", errno);
+        return  false;
     }
 
     if ((contStorePool = wmpool_create(pthread_num, WMP_PAGESIZE)) == NULL) {
         ubug_perror("wmpool_create - contStorePool", errno);
-        return  FRET_Z;
+        return  false;
     }
 
     if (!mgc_add(&urlGarCol, contStorePool, wmpool_destroy))
-        ubug_perror("ubug_init_source_pool - mgc_add - contStorePool", errno);
+        ubug_perror("ubug_init_source - mgc_add - contStorePool", errno);
 
     if ((urlStorePool = wmpool_create(pthread_num, NAMBUF_LEN)) == NULL) {
         ubug_perror("wmpool_create - urlStorePool", errno);
-        return  FRET_Z;
+        return  false;
     }
 
     if (!mgc_add(&urlGarCol, urlStorePool, wmpool_destroy))
-        ubug_perror("ubug_init_source_pool - mgc_add - urlStorePool", errno);
+        ubug_perror("ubug_init_source - mgc_add - urlStorePool", errno);
 
-    return  FRET_P;
+    return  true;
 }
 
 

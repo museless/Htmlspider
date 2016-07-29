@@ -22,6 +22,7 @@
 
 #include "log/log.h"
 #include "log/logmsg.h"
+#include "log/logmsgdef.h"
 
 #include "ipc/mipc.h"
 #include "ipc/msem.h"
@@ -29,4 +30,3 @@
 
 #include "frame.h"
 #include "htmldef.h"
-

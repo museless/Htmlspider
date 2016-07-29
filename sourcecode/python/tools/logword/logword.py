@@ -30,9 +30,9 @@ Head = 45 * '-'
 #                 open file
 #----------------------------------------------
 
-def openfile(suffix):
-    f = open("logmsgdef." + suffix, "w")
-    f.write("/*%s\n *   create time: %s\n-*%s*/\n\n" % 
+def openfile(path, suffix):
+    f = open(("%s/logmsgdef." % path) + suffix, "w")
+    f.write("/*%s\n *   create time: %s\n-*%s*/\n\n" %
         (Head, time.strftime("%Y-%m-%d %H:%M"), Head))
 
     return  f
@@ -46,7 +46,8 @@ def make_file():
     messages = logwordconf.Logwords
     idname_list, msg_list = [], []
 
-    header, csrc = openfile("h"), openfile("c")
+    header, csrc = openfile("../../../c/include/libinc/log", "h"), \
+        openfile("../../../c/src/functionlib/log", "c")
 
     for idx, msg in enumerate(messages):
         idname = "LM" + str(idx)
@@ -57,10 +58,10 @@ def make_file():
             (isinstance(msg[3], str) and len(msg[3]) > 0) 
              and "\"%s\"" % msg[3] or "NULL"))
     
-    header.write("#pragma once\n\nenum messageEnum = {\n%s\n\n    LMMax,\n}" % 
+    header.write("#pragma once\n\nenum messageEnum {\n%s\n\n    LMMax,\n};" % 
         ("\n".join(idname_list)))
 
-    csrc.write("Logmsg logMessage[] = {\n%s\n}\n\n" % ("\n".join(msg_list)))
+    csrc.write("#include \"sp.h\"\n\nLogmsg logMessage[] = {\n%s\n};\n\n" % ("\n".join(msg_list)))
 
     header.close()
     csrc.close()
