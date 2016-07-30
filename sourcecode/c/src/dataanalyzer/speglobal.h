@@ -5,11 +5,11 @@
  *                  extern data
 -*---------------------------------------------*/
 
-extern  MGCH    *exbGarCol;
-extern  BUFF    *extSaveBuf;
+extern  Gc      exbGarCol;
+extern  BUFF   *extSaveBuf;
 
-extern  void    *threadMemPool, *procMemPool;   /* DMPH */
-extern  void    *ebSemControl;                  /* MSEM */
+extern  void   *threadMemPool, *procMemPool;   /* DMPH */
+extern  void   *ebSemControl;                  /* MSEM */
 
 extern  EXBSET  exbRunSet;
 extern  MYSQL   dbNewsHandler, dbDicHandler, dbKeysHandler;
@@ -24,5 +24,5 @@ extern  char    tblKeysName[], dbKeysName[];
 extern  MATOS   pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
 
 extern  uLong   tPaperNum;
-extern  int     exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
+extern  int32_t	nExbugPthead, upMaxTerms, keywordListSize;
 

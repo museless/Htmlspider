@@ -27,5 +27,5 @@ char	tblKeysName[SQL_TABNAME_LEN], dbKeysName[SQL_DBNAME_LEN];
 MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
 
 uLong	tPaperNum;
-int	    exbugIpcFd, nExbugPthead, upMaxTerms, keywordListSize;
+int32_t	nExbugPthead, upMaxTerms, keywordListSize;
 

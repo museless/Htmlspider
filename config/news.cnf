@@ -22,9 +22,6 @@ per_read_times          = 180
 # file locate
 urlbug_sem_key_file     = ../bin/urlcatcher
 
-# error log
-urlbug_err_log          = ../log/news_urlerr.log
-
 # for databases
 urls_database_name      = Url 
 urls_store_table_name   = UALL 
