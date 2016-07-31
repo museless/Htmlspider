@@ -1,5 +1,15 @@
-#ifndef _SPEXTB_H
-#define _SPEXTB_H
+/*---------------------------------------------
+ *     modification time: 2016.07.31 16:50
+ *     mender: Muse
+-*---------------------------------------------*/
+
+/*---------------------------------------------
+ *     creation time: 2015-06-01 
+ *     author: Muse 
+-*---------------------------------------------*/
+
+#pragma once
+
 
 /*---------------------------------------------
  *                 define
@@ -56,7 +66,7 @@ typedef struct  exbset  EXBSET;
 
 typedef void    (*exbent)(void);
 
-typedef int     (*minit)(void);
+typedef bool    (*minit)(void);
 typedef void    (*mwrt)(void *);
 typedef void    (*mfwrt)(void);
 
@@ -157,22 +167,23 @@ struct  wdcomb {
  *                global fun
 -*---------------------------------------------*/
 
-/* sp_extbug_misc.c */
+/* misc.c */
 void    exbug_print_help(void);
 
-/* sp_extbug_signal.c */
+/* signal.c */
 bool    exbug_signal_init(void);
 
-/* sp_extbug_db.c */
-int     exbug_database_init(void);
+/* database.c */
+bool    exbug_database_init(void);
 void    exbug_database_close(void);
 void    exbug_rewind_exmark(const char *pInd, char *maskName);
 void   *exbug_content_download(void);  /* ret: MYSQL_RES */
 
 int     exbug_module_database_init(void);
 void    exbug_create_keyword_table(void);
+void    exbug_db_seterror(void *db, const char *tabname, uint8_t type);
 
-/* sp_extbug_mmseg.c */
+/* mmseg.c */
 void    exbug_segment_entrance(WDCT *wcStru, const char *pNews);
 
 void    exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes);
@@ -180,7 +191,7 @@ void    exbug_word_print(WDCT *printCnt);
 
 void    exbug_wordstru_setting(WDCT *setCnt);
 
-/* sp_extbug_termsctl.c */
+/* termsctl.c */
 void    exbug_extract_keyword(WDCT *extDic);
 
 void    exbug_update_terms(WDCT *upList, const char *pInd);
@@ -189,15 +200,9 @@ void    exbug_data_sync(void);
 int     exbug_dictionary_load(char *fConf, char *savConf, 
             char *fName, CLISTS *pTerm, CLISTS *charHead);
 
-int     exbug_findex_load(char *finPath);
 int     exbug_index_load(WHEAD **cStru, char *iName, int nTerms);
 int     exbug_terms_load(WDCB **termStru, char *termFile, int nOff);
 
-/* sp_extbug_error.c */
-void    exbug_sig_error(int nObj);
-void    exbug_perror(const char *string_head, int error_num);
+/* error.c */
+void    exbug_sig_quit(int type);
 
-/* sp_extbug_message.c */
-void   *exbug_msg_init(int message_fd);
-
-#endif

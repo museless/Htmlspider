@@ -1,12 +1,12 @@
 /*---------------------------------------------
- *     modification time: 2016-03-07 14:10:59
+ *     modification time: 2016-07-31 17:55:00
  *     mender: Muse
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *     creation time: 2015-06-01 
  *     author: Muse 
- *---------------------------------------------*/
+-*---------------------------------------------*/
 
 /*---------------------------------------------
  *      Source file content Eight part
@@ -19,6 +19,7 @@
  *      Part Four:  Database operate
  *      Part Five:  Database module
  *      Part Six:   Database clean
+ *      Part Seven: Database error
  *
 -*---------------------------------------------*/
 
@@ -28,7 +29,6 @@
 
 #include "sp.h"
 
-#include "spmpool.h"
 #include "spextb.h"
 #include "speglobal.h"
 
@@ -53,54 +53,47 @@ static  void    exbug_keysdb_unlink(void);
 -*---------------------------------------------*/
 
 /*-----exbug_database_init-----*/
-int exbug_database_init(void)
+bool exbug_database_init(void)
 {
     mysql_library_init(nrOpt, sqlOpt, NULL);
 
-    if (mc_conf_read("news_database_name", CONF_STR, 
-            dbNewsName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
+    if (!mc_conf_read("news_database_name", CONF_STR, dbNewsName, SQL_DBNAME_LEN)) {
         mc_conf_print_err("news_database_name");
-        return  FUN_RUN_END;
+        return  false;
     }
 
     if (!mysql_simple_connect(&dbNewsHandler, dbNewsName, NULL, 0)) {
-        elog_write("exbug_database_init - mysql_simple_connect", 
-            "dbNewsHandler", "Failed");
-        return  FUN_RUN_FAIL;
+        setmsg(LM16, "news database handler");
+        return  false;
     }
 
     mysql_query(&dbNewsHandler, "set names utf8");
 
-    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_newsdb_unlink))
-        elog_write("exbug_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
+    if (!mgc_add(&objGc, GC_DEFOBJ, (gcfun)exbug_newsdb_unlink))
+        setmsg(LM5, "news db unlink");
 
     /* Mysql Dic handler init */
-    if (mc_conf_read("dic_database_name", CONF_STR, 
-            dbDicName, SQL_DBNAME_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err("dic_database_name");
-        return  FUN_RUN_FAIL;
+    if (!mc_conf_read("dic_database_name", CONF_STR, dbDicName, SQL_DBNAME_LEN)) {
+        setmsg(LM0, "dic_database_name");
+        return  false;
     }
 
     if (!mysql_simple_connect(&dbDicHandler, dbDicName, NULL, 0)) {
-        elog_write("exbug_database_init - mysql_simple_connect", 
-            "dbDicHandler", "Failed");
-        return  FUN_RUN_FAIL;
+        setmsg(LM16, "dictionary database handler");
+        return  false;
     }
 
     mysql_query(&dbDicHandler, "set names utf8");
 
-    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_dicdb_unlink))
-        elog_write("exbug_module_database_init - mgc_add",
-            FUNCTION_STR, ERROR_STR);
+    if (!mgc_add(&objGc, GC_DEFOBJ, (gcfun)exbug_dicdb_unlink))
+        setmsg(LM5, "dictionary db unlink");
 
-    /* read word table name */
-    if (mc_conf_read("word_table_name", CONF_STR,
-            tblWordName, SQL_TABNAME_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err("word_table_name");
-        return  FUN_RUN_END;
+    if (!mc_conf_read("word_table_name", CONF_STR, tblWordName, SQL_TABNAME_LEN)) {
+        setmsg(LM0, "word_table_name");
+        return  false;
     }
 
-    return  FUN_RUN_OK;
+    return  true;
 }
 
 
@@ -110,16 +103,12 @@ void *exbug_content_download(void)
     MSLRES *result;
     
     if (mysql_query(&dbNewsHandler, sqlSeleCom) != FUN_RUN_END) {
-        mysql_error_log(&dbNewsHandler, dbNewsName,
-            "exbug_content_download - mysql_query - sqlSeleCom");
+        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
         return  NULL;
     }
 
-    if ((result = mysql_store_result(&dbNewsHandler)) == NULL) {
-        if (mysql_errno(&dbNewsHandler))
-            mysql_error_log(&dbNewsHandler, dbNewsName,
-                "exbug_content_download - mysql_store_result");
-
+    if (!(result = mysql_store_result(&dbNewsHandler))) {
+        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
         return  NULL;
     }
 
@@ -135,11 +124,7 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
     if (mysql_real_query(&dbNewsHandler, sqlCom, 
             sprintf(sqlCom, SET_NEWS_FLAGS, 
             tblNewsName, maskName, pInd)) != FUN_RUN_END)
-        mysql_error_log(
-            &dbNewsHandler, dbNewsName,
-            "exbug_rewind_exmark - mysql_real_query");
-
-    return;
+        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
 }
 
 
@@ -155,20 +140,18 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
 int exbug_module_database_init(void)
 {
     /* Mysql Keys handler init */
-    if (mc_conf_read("keys_database_name", CONF_STR, 
-            dbKeysName, SQL_DBNAME_LEN) == FRET_N) {
-        mc_conf_print_err("keys_database_name");
+    if (!mc_conf_read("keys_database_name", CONF_STR, dbKeysName, SQL_DBNAME_LEN)) {
+        setmsg(LM0, "keys_database_name");
         return  FUN_RUN_FAIL;
     }
 
     if (!mysql_simple_connect(&dbKeysHandler, dbKeysName, NULL, 0)) {
-        elog_write("exbug_module_database_init - mysql_simple_connect", 
-            "dbKeysHandler", "Failed");
+        setmsg(LM16, "db keys handler");
         return  FUN_RUN_FAIL;
     }
 
-    if (!mgc_add(&exbGarCol, GC_DEFOBJ, (gcfun)exbug_keysdb_unlink))
-        elog_write("exbug_module_database_init - mgc_add", FUNCTION_STR, ERROR_STR);
+    if (!mgc_add(&objGc, GC_DEFOBJ, (gcfun)exbug_keysdb_unlink))
+        setmsg(LM5, "keys database");
 
     exbug_create_keyword_table();
 
@@ -186,11 +169,8 @@ void exbug_create_keyword_table(void)
     /* create news table */
     sprintf(sqlCom, CREAT_KEY_TAB, tblKeysName, dbKeysName);
 
-    if (mysql_query(&dbKeysHandler, sqlCom) != FUN_RUN_END) {
-        mysql_error_log(&dbKeysHandler, 
-            dbKeysName, "exbug_create_keyword_table - mysql_query");
-        exbug_sig_error(PROC_ERROR);
-    }
+    if (mysql_query(&dbKeysHandler, sqlCom) != FUN_RUN_END)
+        exbug_db_seterror(&dbKeysHandler, dbKeysName, PROC_ERROR);
 }
 
 
@@ -204,21 +184,21 @@ void exbug_create_keyword_table(void)
 -*---------------------------------------------*/
 
 /*-----exbug_newsdb_unlink-----*/
-static void exbug_newsdb_unlink(void)
+void exbug_newsdb_unlink(void)
 {
     mysql_close(&dbNewsHandler);
 }
 
 
 /*-----exbug_dicdb_unlink-----*/
-static void exbug_dicdb_unlink(void)
+void exbug_dicdb_unlink(void)
 {
     mysql_close(&dbDicHandler);
 }
 
 
 /*-----exbug_keysdb_unlink-----*/
-static void exbug_keysdb_unlink(void)
+void exbug_keysdb_unlink(void)
 {
     mysql_close(&dbKeysHandler);
 }
@@ -231,3 +211,20 @@ void exbug_database_close(void)
 }
 
 
+/*---------------------------------------------
+ *          Part Six: Database error 
+ *
+ *          1. exbug_db_seterror
+ *
+-*---------------------------------------------*/
+
+/*-----exbug_db_seterror-----*/
+void exbug_db_seterror(void *db, const char *tabname, uint8_t type)
+{
+    setmsg(LM22, MYERR_STR(db));
+
+    if (!mysql_error_log(db, tabname)) {
+        setmsg(LM22, "restart failed");
+        exbug_sig_quit(type);
+    }
+}

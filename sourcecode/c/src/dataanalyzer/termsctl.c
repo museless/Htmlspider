@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-18 09:25:59
+ *     modification time: 2016-07-31 17:10:00
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -27,9 +27,6 @@
 
 #include "sp.h"
 
-#include "mmdpool.h"
-#include "mmdperr.h"
-
 #include "spextb.h"
 #include "speglobal.h"
 
@@ -39,6 +36,13 @@
 -*---------------------------------------------*/
 
 static int  fileIndexBuf[WORD_LEN_LIMIT]; 
+
+
+/*---------------------------------------------
+ *          Part Two: Local function
+-*---------------------------------------------*/
+
+static bool exbug_findex_load(char *finPath);
 
 
 /*---------------------------------------------
@@ -68,8 +72,8 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
             (upList->wc_tbytes + (upList->wc_ndiff * PER_WD_MORE)) + 1);
 
     if (!update_string) {
-        elog_write("exbug_update_terms - mmdp_malloc", FUNCTION_STR, ERROR_STR);
-        exbug_sig_error(PTHREAD_ERROR);
+        setmsg(LM15);
+        exbug_sig_quit(PTHREAD_ERROR);
     }
 
     for (nOff = nCnt = 0; pList && nCnt < upMaxTerms; nCnt++) {
@@ -86,11 +90,8 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
 
     if (!buff_size_enough(extSaveBuf, nOff + UPKEY_OTH_MAX)) {
         if (mysql_real_query(&dbKeysHandler, 
-                buff_place_start(extSaveBuf), buff_now_size(extSaveBuf))) {
-            if (mysql_error_log(&dbKeysHandler, dbKeysName, 
-                    "exbug_update_terms - mysql_real_query") != FUN_RUN_OK)
-                exbug_sig_error(PTHREAD_ERROR);
-        }
+                buff_place_start(extSaveBuf), buff_now_size(extSaveBuf)))
+            exbug_db_seterror(&dbKeysHandler, dbKeysName, PTHREAD_ERROR);
 
         buff_stru_make_empty(extSaveBuf);
     }
@@ -110,15 +111,12 @@ void exbug_data_sync(void)
 {
     mato_lock(dicDbLock);
 
-    if (buff_check_exist(extSaveBuf)) {
-        if (!buff_stru_empty(extSaveBuf)) {
-            if (mysql_real_query(&dbKeysHandler,
-                    buff_place_start(extSaveBuf), buff_now_size(extSaveBuf)))
-                elog_write("exbug_data_sync", 
-                    FUNCTION_STR, (char *)mysql_error(&dbKeysHandler));
+    if (buff_check_exist(extSaveBuf) && !buff_stru_empty(extSaveBuf)) {
+        if (mysql_real_query(&dbKeysHandler,
+                buff_place_start(extSaveBuf), buff_now_size(extSaveBuf)))
+            setmsg(LM22, (char *)mysql_error(&dbKeysHandler));
 
-            buff_stru_make_empty(extSaveBuf);
-        }
+        buff_stru_make_empty(extSaveBuf);
     }
 
     mato_unlock(dicDbLock);
@@ -143,24 +141,23 @@ int exbug_dictionary_load(char *fConf, char *savConf,
     WHEAD **pHead;
     char    nameBuf[PATH_LEN];
     char    dicPath[PATH_LEN];
-    int     nCnt;
 
-    if (mc_conf_read(fConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err(fConf);
+    if (!mc_conf_read(fConf, CONF_STR, dicPath, PATH_LEN)) {
+        setmsg(LM0, fConf);
         return  FUN_RUN_FAIL;
     }
 
-    if (exbug_findex_load(dicPath) == FUN_RUN_FAIL) {
-        printf("Extbug---> exbug_findex_load failed\n");
+    if (!exbug_findex_load(dicPath)) {
+        setmsg(LM30);
         return  FUN_RUN_FAIL;
     }
 
-    if (mc_conf_read(savConf, CONF_STR, dicPath, PATH_LEN) == FUN_RUN_FAIL) {
-        mc_conf_print_err(savConf);
+    if (!mc_conf_read(savConf, CONF_STR, dicPath, PATH_LEN)) {
+        setmsg(LM0, savConf);
         return  FUN_RUN_FAIL;
     }
 
-    for (nCnt = 0; nCnt < WORD_LEN_LIMIT; nCnt++) {
+    for (int nCnt = 0; nCnt < WORD_LEN_LIMIT; nCnt++) {
         sprintf(nameBuf, "%s/%s%d", dicPath, fName, nCnt + 2);
 
         pContent = ((WDCB **)pTerm + nCnt);
@@ -184,36 +181,36 @@ int exbug_dictionary_load(char *fConf, char *savConf,
 
 
 /*-----exbug_findex_load-----*/
-int exbug_findex_load(char *finPath)
+bool exbug_findex_load(char *finPath)
 {
     char   *fiPoint, *pMov;
     int    *inBuf = fileIndexBuf;
 
     if (read_all_file(&fiPoint, finPath, 0) == FUN_RUN_FAIL)
-        return  FUN_RUN_FAIL;
+        return  false;
 
     for (pMov = fiPoint; *pMov; pMov++, inBuf++) {
         *inBuf = atoi(pMov);
         
-        if ((pMov = strchr(pMov, '\n')) == NULL)
+        if (!(pMov = strchr(pMov, '\n')))
             break;
     }
 
     free(fiPoint);
 
-    return  FUN_RUN_OK;
+    return  true;
 }
 
 
 /*-----exbug_index_load-----*/
 int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 {
-    WHEAD   *cNext;
-    char    *iStore, *iMov;
-    int      term_size = ((nTerms + 1) * sizeof(WHEAD));
+    WHEAD  *cNext;
+    char   *iStore, *iMov;
+    int32_t term_size = ((nTerms + 1) * sizeof(WHEAD));
 
-    if ((cNext = *cStru = mmdp_malloc(procMemPool, term_size)) == NULL) {
-        exbug_perror("exbug_index_load - mmdp_malloc", errno);
+    if (!(cNext = *cStru = mmdp_malloc(procMemPool, term_size))) {
+        setmsg(LM15);
         return  FUN_RUN_END;
     }
 
@@ -226,15 +223,15 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 
         cNext->dc_off = atoi(iMov);
 
-        if ((iMov = strchr(iMov, '\t')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - miss tab", errno);
+        if (!(iMov = strchr(iMov, '\t'))) {
+            setmsg(LM0, "missing tab");
             return  FUN_RUN_END;
         }
 
         cNext->dc_cnt = atoi(++iMov);
 
-        if ((iMov = strchr(iMov, '\n')) == NULL) {
-            exbug_perror("exbug_index_load - strchr - miss enter", errno);
+        if (!(iMov = strchr(iMov, '\n'))) {
+            setmsg(LM0, "missing enter");
             return  FUN_RUN_END;
         }
     }
@@ -250,18 +247,20 @@ int exbug_index_load(WHEAD **cStru, char *iName, int nTerms)
 /*-----exbug_terms_load-----*/
 int exbug_terms_load(WDCB **termStru, char *termFile, int nOff)
 {
-    if ((*termStru = mmdp_malloc(procMemPool, sizeof(WDCB))) == NULL) {
-        exbug_perror("exbug_terms_load - mmdp_malloc", errno);
+    if (!(*termStru = mmdp_malloc(procMemPool, sizeof(WDCB)))) {
+        setmsg(LM15);
         return  FUN_RUN_END;
     }
 
     memset(*termStru, 0, sizeof(WDCB));
 
-    if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FRET_N)
+    if (read_all_file(&((*termStru)->wb_lterms), termFile, 0) == FRET_N) {
+        setmsg(LM31);
         return  FUN_RUN_END;
+    }
 
-    if (mgc_add(exbGarCol, ((*termStru)->wb_lterms), free) != FUN_RUN_OK)
-        printf("Extbug---> exbug_terms_load - mgc_add failed\n");
+    if (!mgc_add(&objGc, ((*termStru)->wb_lterms), free))
+        setmsg(LM5, "terms");
 
     if (exbRunSet.emod_exinit) {
         if (!exbRunSet.emod_exinit(*termStru, nOff))

@@ -28,7 +28,6 @@
 
 #include "sp.h"
 
-#include "mmdpool.h"
 #include "spextb.h"
 #include "speglobal.h"
 
@@ -184,8 +183,8 @@ void exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes)
 
     if (!(*wdList)) {
         if (!(*wdList = mmdp_malloc(threadMemPool, sizeof(WST)))) {
-            elog_write("exbug_word_add - mmdp_malloc", "wdList", "failed");
-            exbug_sig_error(PTHREAD_ERROR);
+            setmsg(LM15);
+            exbug_sig_quit(PTHREAD_ERROR);
         }
 
         (*wdList)->ws_buf = (char *)addStr;

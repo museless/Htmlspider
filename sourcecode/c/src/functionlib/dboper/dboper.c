@@ -139,7 +139,7 @@ int mysql_execl_query(void *sql_handle, const char *sql, va_list ap_list)
 -*---------------------------------------------*/
 
 /*-----mysql_error_log-----*/
-bool mysql_error_log(void *sql_handle, char *db_name)
+bool mysql_error_log(void *sql_handle, const char *db_name)
 {
     uInt    sql_errno = mysql_errno(sql_handle);
 

@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-07-18 12:20:45
+ *     modification time: 2016-07-31 10:20:45
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -41,6 +41,9 @@ typedef int MATOS;
 
 #define mato_init(ato, set) \
         ato = set
+
+#define mato_one(ato) \
+        mato_init(ato, 1)
 
 #define mato_inc(ato) \
         __sync_fetch_and_add(&ato, 1)

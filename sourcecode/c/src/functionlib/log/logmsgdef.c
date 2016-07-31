@@ -5,7 +5,7 @@
 #include "sp.h"
 
 Logmsg logMessage[] = {
-    {LM0, ERR, false, "url spider config read error", "%s"},
+    {LM0, ERR, false, "config read error", "%s"},
     {LM1, ERR, false, "mysql_connect", "%s"},
     {LM2, WARN, false, "sp_net_html_download", "%s: host: %s"},
     {LM3, ERR, true, "ubug_init_dbuf", NULL},
@@ -25,7 +25,7 @@ Logmsg logMessage[] = {
     {LM17, ERR, true, "mmdp_create", NULL},
     {LM18, ERR, false, "strchr", "%s"},
     {LM19, CRIT, false, "configure read failed", "%s"},
-    {LM20, ALERT, false, "urlcatcher exit by sigint", NULL},
+    {LM20, ALERT, false, "exit by sigint", NULL},
     {LM21, ERR, false, "pthread num out of limit", "%d"},
     {LM22, ERR, false, "mysql error", "%s"},
     {LM23, WARN, false, "strange url", "%s"},
@@ -34,5 +34,8 @@ Logmsg logMessage[] = {
     {LM26, ALERT, false, "caught signal", "%s"},
     {LM27, CRIT, false, "url len out of control", "%d"},
     {LM28, NOTI, false, "value set default", "%s"},
+    {LM29, ERR, true, "msem_create", NULL},
+    {LM30, ERR, true, "exbug_findex_load", NULL},
+    {LM31, ERR, true, "read_all_file", NULL},
 };
 

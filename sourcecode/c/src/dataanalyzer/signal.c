@@ -21,8 +21,6 @@
 
 #include "sp.h"
 
-#include "mpctl.h"
-
 #include "spextb.h"
 #include "speglobal.h"
 
@@ -91,14 +89,13 @@ static void exbug_signal_handler(int nSignal)
     if (nSignal == SIGINT) {
         pthread_mutex_lock(&sigIntLock);
 
-        printf("Extbug---> inside SIGINT...\n");
+        setmsg(LM26, "SIGINT");
         
-        while(nTimes++ < nExbugPthead && !mato_sub_and_test(pthreadCtlLock, 0))
+        while (nTimes++ < nExbugPthead && !mato_sub_and_test(pthreadCtlLock, 0))
             sleep(TAKE_A_SEC);
 
         exbug_data_sync();
-        mgc_all_clean(exbGarCol);
-        mgc_one_clean(&extResCol);
+        mgc_all_clean(&objGc);
 
         printf("Extbug---> quitting...\n");
         exit(FUN_RUN_FAIL);
@@ -107,7 +104,7 @@ static void exbug_signal_handler(int nSignal)
     if (nSignal == SIGSEGV) {
         pthread_mutex_lock(&sigSegLock);
 
-        printf("Extbug---> caught SIGSEGV\n");
-        exbug_sig_error(PTHREAD_ERROR);
+        setmsg(LM26, "SIGSEGV");
+        exbug_sig_quit(PTHREAD_ERROR);
     }
 }

@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-17 21:30
+ *     modification time: 2016-07-31 17:20
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -47,13 +47,10 @@ void exbug_print_help(void)
 {
     char   *file_store;
     char    help_file_path[] = "extbug.hlp";
-    int     file_size;
-
-    file_size = read_all_file(&file_store, help_file_path, 0);
+    int     file_size = read_all_file(&file_store, help_file_path, 0);;
 
     if (file_size == FRET_N) {
-        printf("Help file: %s\n", help_file_path);
-        exbug_perror("exbug_print_help - read_all_file", errno);
+        setmsg(LM31);
         return;
     }
 

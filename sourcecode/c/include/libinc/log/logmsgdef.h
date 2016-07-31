@@ -39,6 +39,9 @@ enum messageEnum {
     LM26,
     LM27,
     LM28,
+    LM29,
+    LM30,
+    LM31,
 
     LMMax,
 };

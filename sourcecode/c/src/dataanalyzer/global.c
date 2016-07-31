@@ -1,5 +1,15 @@
-#include "spinc.h"
-#include "spdb.h"
+/*---------------------------------------------
+ *     modification time: 2016-07-31 16:05:00
+ *     mender: Muse
+-*---------------------------------------------*/
+
+/*---------------------------------------------
+ *     creation time: 2015-06-01 
+ *     author: Muse 
+-*---------------------------------------------*/
+
+
+#include "sp.h"
 #include "spextb.h"
 #include "speglobal.h"
 
@@ -8,7 +18,8 @@
  *                Global data
 -*---------------------------------------------*/
 
-Gc       exbGarCol;
+Muselog  messageLog;
+Gc       objGc;
 BUFF	*extSaveBuf;
 
 void	*threadMemPool, *procMemPool;	/* DMPH */

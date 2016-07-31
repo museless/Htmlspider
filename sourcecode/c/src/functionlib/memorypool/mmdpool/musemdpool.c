@@ -1,5 +1,4 @@
-#include "spinc.h"
-#include "mmdpool.h"
+#include "sp.h"
 
 
 /* local data */
@@ -31,7 +30,6 @@ static	DMPB	*mmdp_default_block_search(DMPB *begBlock, mpt_t *pLoct);
 #define	mmdp_handler_set_empty(hStru) { \
 	hStru->mh_big = hStru->mh_blast = NULL; \
 	hStru->mh_stru = NULL; \
-	hStru->mh_err = MMDP_NO_ERROR; \
 	hStru->mh_cnt = 0; \
 }
 

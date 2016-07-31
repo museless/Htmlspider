@@ -20,7 +20,6 @@ struct  dmp_handler {
     msize_t mh_sizebor; /* size border */
 
     msize_t mh_cnt;     /* cnt for pool smaller than DEFAULT_BSIZE */
-    merr_t  mh_err;     /* pool err num, one handler one err */
     MATOS   mh_biglock, mh_deflock;
 };
 

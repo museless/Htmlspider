@@ -217,11 +217,11 @@ int     count_enter_num(const char *string);
 /* dboper/dboper.c */
 int	    mysql_string_exist_check(void *chkSql, char *chkCom);
 void   *mysql_return_result(void *sql_handle, const char *sql_string, ...);
-int     mysql_simple_connect(
-        void *sql_handle, const char *database_name, const char *host, int port);
+int     mysql_simple_connect(void *sql_handle, 
+            const char *database_name, const char *host, int port);
 
 int     mysql_creat_table(void *sql_handle, const char *creat_string, ...);
-bool    mysql_error_log(void *sql_handle, char *db_name);
+bool    mysql_error_log(void *sql_handle, const char *db_name);
 
 /* sp_bufoper.c */
 
@@ -245,10 +245,4 @@ BUFF   *buff_stru_init(int nMalloc);
 void	buff_stru_free_all(void *bufStru);
 
 char   *buff_stru_strstr(BUFF *strBuf, char *needStr);
-
-/* sp_elog.c */
-int	    elog_init(const char *confStr);
-int	    elog_write(char *errStr, char *objStr1, char *objStr2);
-void	elog_write_force(void);
-void	elog_destroy(void);
 
