@@ -57,7 +57,7 @@ void ubug_init_database(void)
         ubug_sig_error();
     }
 
-    if (!mgc_add(&urlGarCol, GC_DEFOBJ, ubug_db_clean))
+    if (!mgc_add(&objGc, GC_DEFOBJ, ubug_db_clean))
         setmsg(LM5, "database clean");
 
     ubug_create_dbtable();

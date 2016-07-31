@@ -107,7 +107,7 @@ int main(int argc, char **argv)
         ubug_main_entrance();
     }
 
-    mgc_all_clean(&urlGarCol);
+    mgc_all_clean(&objGc);
 
     exit(FRET_Z);
 }
@@ -162,7 +162,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
 /*-----mainly_init-----*/
 int mainly_init(void)
 {
-    if (!sp_normal_init("Urlbug", &urlGarCol))
+    if (!frame("Urlbug"))
         return  FRET_Z;
 
     mato_init(writeStoreLock, 1);
@@ -208,7 +208,7 @@ bool ubug_init_source(void)
         return  false;
     }
 
-    if (!mgc_add(&urlGarCol, contStorePool, wmpool_destroy))
+    if (!mgc_add(&objGc, contStorePool, wmpool_destroy))
         setmsg(LM5, "contStorePool");
 
     if ((urlStorePool = wmpool_create(pthread_num, NAMBUF_LEN)) == NULL) {
@@ -216,7 +216,7 @@ bool ubug_init_source(void)
         return  false;
     }
 
-    if (!mgc_add(&urlGarCol, urlStorePool, wmpool_destroy))
+    if (!mgc_add(&objGc, urlStorePool, wmpool_destroy))
         setmsg(LM5, "urlStorePool");
 
     return  true;
@@ -229,7 +229,7 @@ int ubug_init_dbuf(BUFF **pBuff)
     if (!((*pBuff) = buff_stru_init(SQL_GCOM_LEN)))
         return  FRET_Z;
 
-    if (!mgc_add(&urlGarCol, (*pBuff), buff_stru_free_all))
+    if (!mgc_add(&objGc, (*pBuff), buff_stru_free_all))
         setmsg(LM5, "Buffstru");
 
     return  FUN_RUN_OK;
@@ -266,7 +266,7 @@ void ubug_init_weblist(void)
 
     (*pList) = NULL;
 
-    if (!mgc_add(&urlGarCol, GC_DEFOBJ, ubug_free_weblist))
+    if (!mgc_add(&objGc, GC_DEFOBJ, ubug_free_weblist))
         setmsg(LM5, "weblist free");
 }
 
@@ -409,7 +409,7 @@ void ubug_main_entrance(void)
         }
 
         urlRunSet.ubs_fstf();
-        sleep(TAKE_A_WHILE);
+        sleep(20);
 
     } while (urlRunSet.ubs_rtime);
 

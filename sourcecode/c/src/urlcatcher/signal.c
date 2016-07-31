@@ -85,7 +85,7 @@ void ubug_signal_handler(int nSign)
         if (urlRunSet.ubs_fstf)
             urlRunSet.ubs_fstf();
 
-        mgc_all_clean(&urlGarCol);
+        mgc_all_clean(&objGc);
         
         printf("UrlBug---> quitting...\n");
         exit(FUN_RUN_FAIL);

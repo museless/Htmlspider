@@ -5,8 +5,8 @@
 /* global data */
 WEBIN   *urlSaveList;
 WPOOL   *contStorePool, *urlStorePool;
-Gc       urlGarCol;
 
+Gc       objGc;
 Muselog  messageLog;
 
 void    *ubugThreadPool;/* PTHPOOL */
