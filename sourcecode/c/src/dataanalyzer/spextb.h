@@ -161,7 +161,7 @@ struct  wdcomb {
 void    exbug_print_help(void);
 
 /* sp_extbug_signal.c */
-int     exbug_signal_init(void);
+bool    exbug_signal_init(void);
 
 /* sp_extbug_db.c */
 int     exbug_database_init(void);

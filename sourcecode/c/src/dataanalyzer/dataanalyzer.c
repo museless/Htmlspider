@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-05-16 19:00:00
+ *     modification time: 2016-07-30 17:05:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -52,10 +52,10 @@ static  void    exbug_option_analyst(int nPara, char **paraList);
 static  void    exbug_access(void);
 
 /* Part Five */
-static  int     mainly_init(void);
+static  bool    mainly_init(void);
 static  void    exbug_data_init(void);
 static  void    exbug_tblname_set(char *time_string);
-static  int     exbug_mempool_init(void);
+static  bool    exbug_mempool_init(void);
 static  int     exbug_read_config(void); 
 static  void    exbug_work_prepare(void);
 
@@ -152,10 +152,10 @@ void exbug_option_analyst(int nPara, char **paraList)
 /*-----exbug_access-----*/
 void exbug_access(void)
 {
-    if (mainly_init() == FRET_Z) 
+    if (!mainly_init())
         return;
 
-    if (exbug_database_init() == FRET_Z || exbug_mempool_init() == FRET_Z)
+    if (exbug_database_init() == FRET_Z || !exbug_mempool_init())
         return;
 
     if (exbug_dictionary_load("extbug_noun_findex_path", "extbug_noun_path",
@@ -182,14 +182,14 @@ void exbug_access(void)
 -*---------------------------------------------*/
 
 /*-----mainly_init-----*/
-static int mainly_init(void)
+bool mainly_init(void)
 {
     exbug_runset_init(exbug_keyword_job, exbug_work_setting, 
         NULL, NULL, NULL, exbug_create_keyword_table, 
         exbug_extract_keyword, exbug_update_terms, MASK_EXT);
 
-    if (!sp_normal_init("Extbug", &exbGarCol, "extbug_err_locate"))
-        return  FUN_RUN_END;
+    if (!sp_normal_init("Extbug", &exbGarCol))
+        return  false;
 
     /* atomic type parameter init */
     mato_init(pthreadCtlLock, 0);
@@ -197,11 +197,12 @@ static int mainly_init(void)
     mato_init(nPaperLock, 1);
 
     if (exbug_read_config() == FRET_Z)
-        return  FRET_Z;
+        return  false;
 
     exbug_data_init();
 
-    sprintf(sqlSeleCom, GET_NEWS_CONT, tblNewsName, exbRunSet.emod_maname, nExbugPthead);
+    sprintf(sqlSeleCom, GET_NEWS_CONT,
+        tblNewsName, exbRunSet.emod_maname, nExbugPthead);
 
     return  exbug_signal_init();
 }
@@ -229,11 +230,11 @@ void exbug_tblname_set(char *time_string)
 
 
 /*-----exbug_mempool_init-----*/
-static int exbug_mempool_init(void)
+bool exbug_mempool_init(void)
 {
     if ((threadMemPool = mmdp_create(upMaxTerms * PER_WORD_MAX)) == NULL) {
         exbug_perror("exbug_mempool_init - mmdp_create thread", errno);
-        return  FUN_RUN_END;    
+        return  false;
     }
 
     if (!mgc_add(&exbGarCol, threadMemPool, (gcfun)mmdp_free_all))
@@ -241,13 +242,13 @@ static int exbug_mempool_init(void)
 
     if ((procMemPool = mmdp_create(PROC_MP_SIZE)) == NULL) {
         exbug_perror("exbug_mempool_init - mmdp_create proc", errno);
-        return  FUN_RUN_END;    
+        return  false;
     }
 
     if (!mgc_add(&exbGarCol, procMemPool, (gcfun)mmdp_free_all))
         exbug_perror("exbug_mempool_init - mgc_add - procMemPool", errno);
 
-    return  FUN_RUN_OK;
+    return  true;
 }
 
 
@@ -329,7 +330,7 @@ void exbug_keyword_job(void)
     NCONT  *pContent;
     MSLROW  news_data;
 
-    while (FRET_P) {
+    while (true) {
         if (!(newsRes = exbug_content_download())) {
             sleep(TAKE_A_EYECLOSE);
             continue;

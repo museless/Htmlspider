@@ -1,9 +1,6 @@
 # This is extbug's configure file
 # Warning: all file name should less than 128bytes
 
-# log locate #
-extbug_err_locate	= ../log/dataanalyzer_error.log
-
 # pthread num #
 # should smaller than 16 #
 extbug_pthread_num	= 2
