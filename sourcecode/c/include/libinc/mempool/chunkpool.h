@@ -1,56 +1,49 @@
-#ifndef	_SPMPOOL_H
-#define	_SPMPOOL_H
+/*---------------------------------------------
+ *     modification time: 2016-08-02 00:15:30
+ *     mender: Muse
+-*---------------------------------------------*/
 
-/*-----------------------------
- *          Define
--*-----------------------------*/
-
-#define	WMP_BITS_PER_BITMAP	        0x20    /* 32 */
-#define	WMP_BITS_PER_BITMAP_SHIFT	0x5     /* 2 ^ 5 */
-#define	WMP_PSIZE_BOR	            0x4B000
-#define	WMP_PAGESIZE	            0x50000
-
-#define	WMP_BIT_BLOCK	            0x1
-#define	WMP_BIT_UNBLOCK	            0x0
+#pragma once
 
 
-/*-----------------------------
- *          Typedef
--*-----------------------------*/
+/*---------------------------------------------
+ *                   Define
+-*---------------------------------------------*/
 
-typedef struct  w_mempool   WPOOL;
+#define WMP_PSIZE_BOR   0x4B000
+#define WMP_PAGESIZE    0x50000
 
 
-/*-----------------------------
- *          Struct
--*-----------------------------*/
+/*---------------------------------------------
+ *                  Typedef
+-*---------------------------------------------*/
 
-struct	w_mempool {
-    char   *wmp_start;
-    int    *wmp_bitmap;
+typedef struct chunkmpool   WPOOL;
 
-    MATOS   wmp_atomic; /* mutipthread protect */
 
-    int	    wmp_psize;	/* page size */
-    int	    wmp_clip;	/* block num */
+/*---------------------------------------------
+ *                  Struct
+-*---------------------------------------------*/
+
+struct chunkmpool {
+    uint8_t *wmp_start;
+    int32_t *wmp_bitmap;
+
+    int32_t  wmp_psize; /* page size */
+    int32_t  wmp_clip;  /* block num */
+
+    MATOS    wmp_atomic; /* atomic lock */
 };
 
 
-/*-----------------------------
- *      Global function
--*-----------------------------*/
+/*---------------------------------------------
+ *                 Function
+-*---------------------------------------------*/
 
 WPOOL  *wmpool_create(int clip_num, int per_clip_size);
 void   *wmpool_malloc(WPOOL *handler);
 void   *wmpool_calloc(WPOOL *handler);
-void	wmpool_free(WPOOL *pHandler, void *free_addr);
-void	wmpool_destroy(void *handler);
+void    wmpool_free(WPOOL *pHandler, void *free_addr);
+void    wmpool_destroy(void *handler);
 
 
-/*-----------------------------
- *       Macro function
--*-----------------------------*/
-
-#define	wmpool_bit_is_block(nByte, nBit)	((nByte >> nBit) & WMP_BIT_BLOCK)
-
-#endif
