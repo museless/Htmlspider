@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-02-23 13:05:59
+ *     modification time: 2016-08-02 16:50:00
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -18,7 +18,6 @@
  *
  *      Part Four:  Segment main
  *      Part Five:  Wordlist control
- *      Part Six:   WordStru control
  *
 -*---------------------------------------------*/
 
@@ -213,17 +212,3 @@ void exbug_word_print(WDCT *printCnt)
 }
 
 
-/*---------------------------------------------
- *          Part Six: WordStru control
- *
- *          1. exbug_wordstru_setting
- *
--*---------------------------------------------*/
-
-/*-----exbug_wordstru_setting-----*/
-void exbug_wordstru_setting(WDCT *setCnt)
-{
-    setCnt->wc_list = NULL;
-    setCnt->wc_ndiff = setCnt->wc_total = 0;
-    setCnt->wc_tbytes = 0;
-}

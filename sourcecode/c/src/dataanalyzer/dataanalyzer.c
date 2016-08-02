@@ -49,7 +49,6 @@ static  bool    exbug_prepare(void);
 
 /* Part Five */
 static  bool    mainly_init(void);
-static  void    exbug_data_init(void);
 static  void    exbug_tblname_set(char *time_string);
 static  bool    exbug_mempool_init(void);
 static  bool    exbug_read_config(void); 
@@ -58,11 +57,10 @@ static  bool    exbug_work_setting(void);
 
 /* Part Seven */
 static  void    exbug_keyword_job(void);
-static  void    exbug_create_pthread(NCONT *pPara);
-static  void   *exbug_memory_malloc(int nSize);
+static  void    exbug_create_pthread(MSLROW row);
 
 /* Part Ten */
-static  void    *exbug_pthread_entrance(void *pPara);
+static  void    *exbug_work(void *params);
 
 
 /*---------------------------------------------
@@ -95,6 +93,8 @@ static  void    *exbug_pthread_entrance(void *pPara);
 /*-----main-----*/
 int main(int argc, char *argv[])
 {
+    log_start(&messageLog, "/var/log/dataanalyzer", LOG_LOCAL3);
+
     exbug_option_analyst(argc, argv);
 
     if (exbug_prepare())
@@ -138,7 +138,7 @@ void exbug_option_analyst(int nPara, char **paraList)
     
     if (!conf_flags) {
         printf("Extbug---> must set [-c]\n");
-        exit(FUN_RUN_FAIL);    
+        exit(FRET_Z);    
     }
     
     if (!time_flags)
@@ -166,11 +166,10 @@ bool exbug_prepare(void)
  *          Part Five: Initialization
  *
  *          1. mainly_init
- *          2. exbug_data_init
- *          3. exbug_tblname_set
- *          4. exbug_mempool_init
- *          5. exbug_read_config
- *          6. exbug_work_setting
+ *          2. exbug_tblname_set
+ *          3. exbug_mempool_init
+ *          4. exbug_read_config
+ *          5. exbug_work_setting
  *
 -*---------------------------------------------*/
 
@@ -186,26 +185,15 @@ bool mainly_init(void)
 
     /* atomic type parameter init */
     mato_init(pthreadCtlLock, 0);
-    mato_init(freeCtlLock, 0);
     mato_one(nPaperLock);
 
     if (!exbug_read_config())
         return  false;
 
-    exbug_data_init();
-
     sprintf(sqlSeleCom, GET_NEWS_CONT,
         tblNewsName, exbRunSet.emod_maname, nExbugPthead);
 
     return  exbug_signal_init();
-}
-
-
-/*-----exbug_data_init-----*/
-void exbug_data_init(void)
-{
-    memset(&charTermList, 0, sizeof(CLISTS));
-    memset(&charHeadSave, 0, sizeof(CLISTS));
 }
 
 
@@ -281,7 +269,7 @@ bool exbug_read_config(void)
 /*-----exbug_work_setting-----*/
 bool exbug_work_setting(void)
 {
-    if (exbug_module_database_init() == FUN_RUN_FAIL)
+    if (exbug_module_database_init() == FRET_Z)
         return  false;
 
     if (!mgc_add(&objGc, GC_DEFOBJ, (gcfun)exbug_database_close))
@@ -304,38 +292,29 @@ bool exbug_work_setting(void)
  *
  *          1. exbug_keyword_job
  *          2. exbug_create_pthread
- *          3. exbug_memory_malloc
  *
 -*---------------------------------------------*/
 
 /*----exbug_keyword_job-----*/
 void exbug_keyword_job(void)
 {
-    MSLRES *newsRes;
-    NCONT  *pContent;
-    MSLROW  news_data;
+    MSLRES *result;
+    MSLROW  news_row;
 
     while (true) {
-        if (!(newsRes = exbug_content_download())) {
+        if (!(result = exbug_content_download())) {
             sleep(TAKE_A_EYECLOSE);
             continue;
         }
 
-        while ((news_data = mysql_fetch_row(newsRes))) {
+        while ((news_row = mysql_fetch_row(result))) {
             msem_wait(ebSemControl);
-
-            pContent = exbug_memory_malloc(sizeof(NCONT));
-
-            pContent->nc_ind = (char *)news_data[0];
-            pContent->nc_cont = (char *)news_data[1];
-
-            exbug_create_pthread(pContent);
+            exbug_create_pthread(news_row);
         }
 
-        while (!mato_sub_and_test(freeCtlLock, 0))
-            ;   /* nothing */
+        //mpc_thread_wait(&threadPool);
 
-        mysql_free_result(newsRes);
+        mysql_free_result(result);
         mmdp_reset_default(threadMemPool);
         exbug_data_sync();
     }
@@ -343,62 +322,46 @@ void exbug_keyword_job(void)
 
 
 /*-----exbug_create_pthread-----*/
-void exbug_create_pthread(NCONT *pPara)
+void exbug_create_pthread(MSLROW row)
 {
     pth_t   thread_id;
 
-    exbug_rewind_exmark(pPara->nc_ind, exbRunSet.emod_maname);
-    mato_inc(freeCtlLock);
+    exbug_rewind_exmark(row[IDX_OFF], exbRunSet.emod_maname);
 
-    if (pthread_create(&thread_id, NULL, exbug_pthread_entrance, (void *)pPara)) {
+    if (pthread_create(&thread_id, NULL, exbug_work, row)) {
         setmsg(LM14);
         exbug_sig_quit(PROC_ERROR);
     }
 }
 
 
-/*-----exbug_memory_malloc-----*/
-void *exbug_memory_malloc(int nSize)
-{
-    void   *addr = mmdp_malloc(threadMemPool, nSize);
-
-    if (!addr) {
-        setmsg(LM15);
-        exbug_sig_quit(PROC_ERROR);
-    }
-
-    return  addr;
-}
-
-
 /*---------------------------------------------
  *          Part Ten: Extbug work
  *
- *          1. exbug_pthread_entrance
+ *          1. exbug_work
  *
 -*---------------------------------------------*/
 
-/*-----exbug_pthread_entrance-----*/
-void *exbug_pthread_entrance(void *pPara)
+/*-----exbug_work-----*/
+void *exbug_work(void *news_row)
 {
-    WDCT    wCnt;
+    MSLROW  row = (MSLROW)news_row;
+    WDCT    wCnt = {0};
 
     mato_inc(pthreadCtlLock);
 
     pthread_detach(pthread_self());
 
-    exbug_wordstru_setting(&wCnt);
-    exbug_segment_entrance(&wCnt, ((NCONT *)pPara)->nc_cont);
+    exbug_segment_entrance(&wCnt, row[CONT_OFF]);
 
     if (exbRunSet.emod_rmode) {
         exbRunSet.emod_rmode(&wCnt);
 
         if (exbRunSet.emod_up)
-            exbRunSet.emod_up(&wCnt, ((NCONT *)pPara)->nc_ind);
+            exbRunSet.emod_up(&wCnt, row[IDX_OFF]);
     }
 
     mato_dec(pthreadCtlLock);
-    mato_dec(freeCtlLock);
     msem_wake(ebSemControl);
 
     return  NULL;

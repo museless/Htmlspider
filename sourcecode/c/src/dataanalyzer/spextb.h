@@ -21,6 +21,9 @@
 #define UTF8_WORD_LEN   0x3
 #define TWO_U8WORD_LEN  0x6
 
+#define IDX_OFF         0x0
+#define CONT_OFF        0x1
+
 #define ETB_SEG_MAXTMS  0x10
 #define WORD_CMP_MAX    ETB_SEG_MAXTMS
 
@@ -128,8 +131,8 @@ struct exbset {
 };
 
 struct  newcont {
-    const   char    *nc_cont;
-    const   char    *nc_ind;
+    const char *nc_cont;
+    const char *nc_ind;
 };
 
 struct  sepword {
@@ -188,8 +191,6 @@ void    exbug_segment_entrance(WDCT *wcStru, const char *pNews);
 
 void    exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes);
 void    exbug_word_print(WDCT *printCnt);
-
-void    exbug_wordstru_setting(WDCT *setCnt);
 
 /* termsctl.c */
 void    exbug_extract_keyword(WDCT *extDic);

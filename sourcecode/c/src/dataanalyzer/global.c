@@ -27,7 +27,7 @@ void	*ebSemControl;			        /* MSEM */
 
 EXBSET	exbRunSet;
 MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
-CLISTS	charTermList, charHeadSave;
+CLISTS	charTermList = {0}, charHeadSave = {0};
 
 char	sqlSeleCom[SQL_LICOM_LEN];
 
