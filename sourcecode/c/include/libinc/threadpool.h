@@ -1,79 +1,79 @@
-#ifndef	_MPCTL_H
-#define	_MPCTL_H
+/*---------------------------------------------
+ *     modification time: 2016-07-24 08:00:45
+ *     mender: Muse
+-*---------------------------------------------*/
 
-/*---------------------
-	include
------------------------*/
+/*---------------------------------------------
+ *     file: threads.h 
+ *     creation time: 2016-07-11 12:57:45
+ *     author: Muse 
+-*---------------------------------------------*/
 
-#include <stdio.h>
-#include <stdlib.h>
+/*---------------------------------------------
+ *       Source file content Five part
+ *
+ *       Part Zero:  Include
+ *       Part One:   Define 
+ *       Part Two:   Typedef
+ *       Part Three: Struct
+ *
+ *       Part Four:  Function
+ *
+-*---------------------------------------------*/
 
-#include <pthread.h>
+/*---------------------------------------------
+ *             Part Zero: Include
+-*---------------------------------------------*/
 
-#include <time.h>
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <unistd.h>
-
-
-/*---------------------
-	define
------------------------*/
-
-/* normal use */
-#define	PTH_RUN_OK              1
-#define	PTH_RUN_END		        0
-#define	PTH_RUN_FAIL		    -1
-
-#define	PTH_RUN_PERMANENT	    0x1
-
-
-/*---------------------
-	typedef
------------------------*/
-
-typedef	pthread_mutex_t	        pmut_t;
-typedef	pthread_cond_t	        pcd_t;
-
-typedef	void	                (*pthrun)(void *);
-
-typedef	struct pthread_pool     PTHPOOL;
-typedef	struct pthread_entity	PTHENT;
+#pragma once
 
 
-/*---------------------
-	struct
------------------------*/
+/*---------------------------------------------
+ *            Part Two: Typedef
+-*---------------------------------------------*/
 
-struct	pthread_pool {
-	PTHENT *pl_list;
+typedef pthread_mutex_t     mutex_t;
+typedef pthread_cond_t      cond_t;
+typedef pthread_barrier_t   barrier_t;
+typedef pthread_t           thread_t;
 
-	TMVAL   pl_tim;
-	int     pl_cnt;
+typedef void                (*throutine)(void *);
+
+typedef struct threadpool   Threads;
+typedef struct threadentity Pthent;
+
+
+/*---------------------------------------------
+ *            Part Three: Struct
+-*---------------------------------------------*/
+
+struct threadpool {
+    Pthent     *threads;
+
+    int32_t     cnt;
+    barrier_t   barrier;
 };
 
-struct	pthread_entity {
-	void   *pe_data;
-	pthrun	pe_run;
+struct threadentity {
+    thread_t    tid;
 
-	pth_t	pe_tid;
+    throutine   routine;
+    void       *params;
 
-	pmut_t	pe_mutex;
-	pcd_t	pe_cond;
+    barrier_t  *barrier;
+    mutex_t     mutex;
+    cond_t      cond;
 
-    int     pe_flags;
+    int32_t     flags;
 };
 
 
-/*---------------------
-	glo fun
------------------------*/
+/*---------------------------------------------
+ *            Part Four: Function
+-*---------------------------------------------*/
 
-PTHPOOL    *mpc_create(int nPthread);
-int 	    mpc_thread_wake(PTHPOOL *threadPool, pthrun runFun, void *pPara);
-void	    mpc_thread_wait(PTHPOOL *thPool);
-void	    mpc_destroy(PTHPOOL *thPool);
+bool    mpc_create(Threads *pool, int numbers);
+bool    mpc_thread_wake(Threads *pool, throutine func, void *params);
+bool    mpc_thread_wait(Threads *pool);
+bool    mpc_destroy(Threads *pool);
 
-
-#endif

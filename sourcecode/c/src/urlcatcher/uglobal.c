@@ -9,7 +9,7 @@ WPOOL   *contStorePool, *urlStorePool;
 Gc       objGc;
 Muselog  messageLog;
 
-void    *ubugThreadPool;/* PTHPOOL */
+Threads  ubugThreadPool;
 
 UBSET    urlRunSet;
 MYSQL    urlDataBase;

@@ -31,7 +31,7 @@
 
 
 /* local data */
-static  pmut_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;
+static mutex_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;
 
 
 /*---------------------------------------------
@@ -80,7 +80,7 @@ void ubug_signal_handler(int nSign)
         pthread_mutex_lock(&sigIntLock);
 
         setmsg(LM26, "SIGINT");
-        mpc_destroy(ubugThreadPool);
+        mpc_destroy(&ubugThreadPool);
 
         if (urlRunSet.ubs_fstf)
             urlRunSet.ubs_fstf();

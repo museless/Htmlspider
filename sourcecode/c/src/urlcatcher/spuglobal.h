@@ -56,7 +56,7 @@ extern Muselog  messageLog;
 extern WEBIN   *urlSaveList;
 extern WPOOL   *contStorePool, *urlStorePool;
 extern Gc       objGc;
-extern void    *ubugThreadPool;
+extern Threads  ubugThreadPool;
 extern UBSET    urlRunSet;
 extern MYSQL    urlDataBase;
 extern SPPING   ubugPingInfo;

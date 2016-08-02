@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-07-29 20:10
+ *     modification time: 2016-08-02 22:10
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -9,7 +9,7 @@
 -*---------------------------------------------*/
 
 /*---------------------------------------------
- *        Source file content Nine part
+ *       Source file content Nine part
  *
  *       Part Zero:  Include
  *       Part One:   Define 
@@ -51,7 +51,6 @@ static  WEBIN  *ubug_list_entity_set(MSLROW data_row);
 static  void    ubug_set_ubset(void);
 
 /* Part Six */
-static  void    ubug_create_pthread(WEBIN *web_info);
 static  void    ubug_pthread_entrance(void *parameters);
 static  int     ubug_pthread_apply_for_resource(WEBIN *web_info);
 
@@ -198,7 +197,7 @@ bool ubug_init_source(void)
     }
 
     /* muse thread pool init */
-    if (!(ubugThreadPool = mpc_create(pthread_num))) {
+    if (!mpc_create(&ubugThreadPool, pthread_num)) {
         setmsg(LM10);
         return  false;
     }
@@ -328,21 +327,10 @@ void ubug_set_ubset(void)
 /*---------------------------------------------
  *      Part Six: Running preparation
  *
- *      1. ubug_create_pthread
- *      2. ubug_pthread_entrance
- *      3. ubug_pthread_apply_for_resource
+ *      1. ubug_pthread_entrance
+ *      2. ubug_pthread_apply_for_resource
  *
 -*---------------------------------------------*/
-    
-/*-----ubug_create_pthread-----*/
-void ubug_create_pthread(WEBIN *web_info)
-{
-    if (!mpc_thread_wake(ubugThreadPool, ubug_pthread_entrance, (void *)web_info)) {
-        setmsg(LM4);
-        ubug_sig_error();
-    }
-}
-
 
 /*-----ubug_pthread_entrance-----*/
 void ubug_pthread_entrance(void *parameters)
@@ -397,15 +385,15 @@ int ubug_pthread_apply_for_resource(WEBIN *web_info)
 /*-----ubug_main_entrance-----*/
 void ubug_main_entrance(void)
 {
-    WEBIN   *webPoint;
+    WEBIN  *info;
 
     do {
         ubug_ping();
+        urlCatchNum = 0;
 
-        for (urlCatchNum = 0, webPoint = urlSaveList;
-                webPoint != NULL; webPoint = webPoint->w_next) {
-            mpc_thread_wait(ubugThreadPool);
-            ubug_create_pthread(webPoint);
+        for (info = urlSaveList; info; info = info->w_next) {
+            while (!mpc_thread_wake(&ubugThreadPool, ubug_pthread_entrance, info))
+                ;   /* nothing */        
         }
 
         urlRunSet.ubs_fstf();

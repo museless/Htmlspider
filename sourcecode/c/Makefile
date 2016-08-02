@@ -28,7 +28,7 @@ OURLB	= src/urlcatcher/urlcatcher.c src/urlcatcher/databasectl.c \
 		  src/functionlib/ipc/muse_sem.c \
 		  src/functionlib/log/log.c \
 		  src/functionlib/log/logmsgdef.c src/functionlib/log/logmsg.c \
-		  src/functionlib/threadpool/musepthctl.c \
+		  src/functionlib/threadpool.c \
 		  src/functionlib/network/sp_network.c \
 		  src/functionlib/network/ping/ping.c \
 		  src/functionlib/network/icmp/icmp.c \
