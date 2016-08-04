@@ -16,6 +16,7 @@ _intro = "Parser for scel"
 
 import sys
 import os
+import chardet
 from struct import pack, unpack
 
 
@@ -30,6 +31,18 @@ SCEL_MINSIZE = 0x2628
 #                   parse
 #----------------------------------------------
 
+def make_utf8(word):
+    result = bytes() 
+
+    for idx in range(0, len(word), 2):
+        result += pack("BBB", 
+            0xE0 | (word[idx + 1] >> 4), 
+            0x80 | ((word[idx + 1] & 0xF) << 2) | (word[idx] >> 6),
+            (0x80 | (word[idx] & 0x3F)))
+
+    return  result 
+
+
 def parse_scel(src):
     if os.path.getsize(src) <= SCEL_MINSIZE:
         print("{} not a scel file".format(src))
@@ -42,16 +55,17 @@ def parse_scel(src):
 
         while offset < size:
             same = unpack("H", scel[offset: offset + 2])[0]
-            wsize = unpack("H", scel[offset + 2: offset + 4])[0]
-            offset += wsize + 4
+            offset += 2
+            wsize = unpack("H", scel[offset: offset + 2])[0]
+            offset += (wsize + 2)
 
-            while same > 0:
+            for count in range(same):
                 wsize = unpack("H", scel[offset: offset + 2])[0]
                 offset += 2
 
-                print(wsize)
-
-                same -= 1
+                word = make_utf8(unpack("%ds" % wsize, scel[offset: offset + wsize])[0])
+                print(word.decode("utf8"))
+                offset += wsize + 0xc
 
 
 #----------------------------------------------
