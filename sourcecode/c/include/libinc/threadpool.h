@@ -49,6 +49,10 @@ typedef struct threadentity Pthent;
 
 struct threadpool {
     Pthent     *threads;
+    Pthent     *freelist;
+
+    mutex_t     free_lock;
+    cond_t      free_cond;
 
     int32_t     cnt;
     barrier_t   barrier;
@@ -56,6 +60,9 @@ struct threadpool {
 
 struct threadentity {
     thread_t    tid;
+
+    Threads    *pool;
+    Pthent     *next;
 
     throutine   routine;
     void       *params;
@@ -74,6 +81,8 @@ struct threadentity {
 
 bool    mpc_create(Threads *pool, int numbers);
 bool    mpc_thread_wake(Threads *pool, throutine func, void *params);
+bool    mpc_thread_trywake(Threads *pool, throutine func, void *params);
 bool    mpc_thread_wait(Threads *pool);
 bool    mpc_destroy(Threads *pool);
+
 
