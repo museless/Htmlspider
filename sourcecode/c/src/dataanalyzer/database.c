@@ -103,12 +103,12 @@ void *exbug_content_download(void)
     MSLRES *result;
     
     if (mysql_query(&dbNewsHandler, sqlSeleCom) != FUN_RUN_END) {
-        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
+        exbug_db_seterror(&dbNewsHandler, dbNewsName);
         return  NULL;
     }
 
     if (!(result = mysql_store_result(&dbNewsHandler))) {
-        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
+        exbug_db_seterror(&dbNewsHandler, dbNewsName);
         return  NULL;
     }
 
@@ -124,7 +124,7 @@ void exbug_rewind_exmark(const char *pInd, char *maskName)
     if (mysql_real_query(&dbNewsHandler, sqlCom, 
             sprintf(sqlCom, SET_NEWS_FLAGS, 
             tblNewsName, maskName, pInd)) != FUN_RUN_END)
-        exbug_db_seterror(&dbNewsHandler, dbNewsName, PROC_ERROR);
+        exbug_db_seterror(&dbNewsHandler, dbNewsName);
 }
 
 
@@ -170,7 +170,7 @@ void exbug_create_keyword_table(void)
     sprintf(sqlCom, CREAT_KEY_TAB, tblKeysName, dbKeysName);
 
     if (mysql_query(&dbKeysHandler, sqlCom) != FUN_RUN_END)
-        exbug_db_seterror(&dbKeysHandler, dbKeysName, PROC_ERROR);
+        exbug_db_seterror(&dbKeysHandler, dbKeysName);
 }
 
 
@@ -219,12 +219,12 @@ void exbug_database_close(void)
 -*---------------------------------------------*/
 
 /*-----exbug_db_seterror-----*/
-void exbug_db_seterror(void *db, const char *tabname, uint8_t type)
+void exbug_db_seterror(void *db, const char *tabname)
 {
     setmsg(LM22, MYERR_STR(db));
 
     if (!mysql_error_log(db, tabname)) {
         setmsg(LM22, "restart failed");
-        exbug_sig_quit(type);
+        exbug_sig_quit();
     }
 }

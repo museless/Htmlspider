@@ -184,7 +184,7 @@ void   *exbug_content_download(void);  /* ret: MYSQL_RES */
 
 int     exbug_module_database_init(void);
 void    exbug_create_keyword_table(void);
-void    exbug_db_seterror(void *db, const char *tabname, uint8_t type);
+void    exbug_db_seterror(void *db, const char *tabname);
 
 /* mmseg.c */
 void    exbug_segment_entrance(WDCT *wcStru, const char *pNews);
@@ -205,5 +205,5 @@ int     exbug_index_load(WHEAD **cStru, char *iName, int nTerms);
 int     exbug_terms_load(WDCB **termStru, char *termFile, int nOff);
 
 /* error.c */
-void    exbug_sig_quit(int type);
+void    exbug_sig_quit(void);
 

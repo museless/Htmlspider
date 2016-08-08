@@ -22,11 +22,8 @@
 -*---------------------------------------------*/
 
 /*-----exbug_sig_quit-----*/
-void exbug_sig_quit(int type)
+void exbug_sig_quit(void)
 {
-    if (type == PTHREAD_ERROR)
-        mato_dec(pthreadCtlLock);
-
     setmsg(LM20);
     kill(getpid(), SIGINT);
 }

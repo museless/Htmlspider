@@ -183,7 +183,7 @@ void exbug_word_add(WDCT *addCnt, const char *addStr, int addSize, int nTimes)
     if (!(*wdList)) {
         if (!(*wdList = mmdp_malloc(threadMemPool, sizeof(WST)))) {
             setmsg(LM15);
-            exbug_sig_quit(PTHREAD_ERROR);
+            exbug_sig_quit();
         }
 
         (*wdList)->ws_buf = (char *)addStr;

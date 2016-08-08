@@ -73,7 +73,7 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
 
     if (!update_string) {
         setmsg(LM15);
-        exbug_sig_quit(PTHREAD_ERROR);
+        exbug_sig_quit();
     }
 
     for (nOff = nCnt = 0; pList && nCnt < upMaxTerms; nCnt++) {
@@ -91,7 +91,7 @@ void exbug_update_terms(WDCT *upList, const char *pInd)
     if (!buff_size_enough(extSaveBuf, nOff + UPKEY_OTH_MAX)) {
         if (mysql_real_query(&dbKeysHandler, 
                 buff_place_start(extSaveBuf), buff_now_size(extSaveBuf)))
-            exbug_db_seterror(&dbKeysHandler, dbKeysName, PTHREAD_ERROR);
+            exbug_db_seterror(&dbKeysHandler, dbKeysName);
 
         buff_stru_make_empty(extSaveBuf);
     }

@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-07-31 11:05:00
+ *     modification time: 2016-08-08 21:40:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -9,7 +9,7 @@
 -*---------------------------------------------*/
 
 /*---------------------------------------------
- *      Source file content Eleven part
+ *      Source file content Ten part
  *
  *      Part Zero:  Include
  *      Part One:   Local data
@@ -57,10 +57,9 @@ static  bool    exbug_work_setting(void);
 
 /* Part Seven */
 static  void    exbug_keyword_job(void);
-static  void    exbug_create_pthread(MSLROW row);
 
 /* Part Ten */
-static  void    *exbug_work(void *params);
+static  void    exbug_work(void *params);
 
 
 /*---------------------------------------------
@@ -183,12 +182,13 @@ bool mainly_init(void)
     if (!frame("Extbug"))
         return  false;
 
-    /* atomic type parameter init */
-    mato_init(pthreadCtlLock, 0);
-    mato_one(nPaperLock);
-
     if (!exbug_read_config())
         return  false;
+
+    if (!(mpc_create(&threadPool, nExbugPthead))) {
+        setmsg(LM10);
+        return  false;
+    }
 
     sprintf(sqlSeleCom, GET_NEWS_CONT,
         tblNewsName, exbRunSet.emod_maname, nExbugPthead);
@@ -254,14 +254,6 @@ bool exbug_read_config(void)
 
     upMaxTerms = ((upMaxTerms > MAX_UP_TERMS) ? MAX_UP_TERMS : upMaxTerms) + 1;
 
-    if (!(ebSemControl = msem_create(path_string, nExbugPthead, PROJ_PTH_CTL))) {
-        setmsg(LM29);
-        return  false;
-    }
-    
-    if (!mgc_add(&objGc, ebSemControl, (gcfun)msem_destroy))
-        setmsg(LM5, "sem");
-
     return  true;
 }
 
@@ -291,7 +283,6 @@ bool exbug_work_setting(void)
  *          Part Seven: Exbug entrance
  *
  *          1. exbug_keyword_job
- *          2. exbug_create_pthread
  *
 -*---------------------------------------------*/
 
@@ -308,29 +299,19 @@ void exbug_keyword_job(void)
         }
 
         while ((news_row = mysql_fetch_row(result))) {
-            msem_wait(ebSemControl);
-            exbug_create_pthread(news_row);
+            exbug_rewind_exmark(news_row[IDX_OFF], exbRunSet.emod_maname);
+
+            if (mpc_thread_wake(&threadPool, exbug_work, news_row)) {
+                setmsg(LM4);
+                exbug_sig_quit();
+            }
         }
 
-        //mpc_thread_wait(&threadPool);
+        mpc_thread_wait(&threadPool);
 
         mysql_free_result(result);
         mmdp_reset_default(threadMemPool);
         exbug_data_sync();
-    }
-}
-
-
-/*-----exbug_create_pthread-----*/
-void exbug_create_pthread(MSLROW row)
-{
-    pth_t   thread_id;
-
-    exbug_rewind_exmark(row[IDX_OFF], exbRunSet.emod_maname);
-
-    if (pthread_create(&thread_id, NULL, exbug_work, row)) {
-        setmsg(LM14);
-        exbug_sig_quit(PROC_ERROR);
     }
 }
 
@@ -343,14 +324,10 @@ void exbug_create_pthread(MSLROW row)
 -*---------------------------------------------*/
 
 /*-----exbug_work-----*/
-void *exbug_work(void *news_row)
+void exbug_work(void *news_row)
 {
     MSLROW  row = (MSLROW)news_row;
     WDCT    wCnt = {0};
-
-    mato_inc(pthreadCtlLock);
-
-    pthread_detach(pthread_self());
 
     exbug_segment_entrance(&wCnt, row[CONT_OFF]);
 
@@ -360,9 +337,4 @@ void *exbug_work(void *news_row)
         if (exbRunSet.emod_up)
             exbRunSet.emod_up(&wCnt, row[IDX_OFF]);
     }
-
-    mato_dec(pthreadCtlLock);
-    msem_wake(ebSemControl);
-
-    return  NULL;
 }

@@ -49,7 +49,7 @@ OEXTB	= src/dataanalyzer/dataanalyzer.c src/dataanalyzer/database.c \
 		  src/functionlib/log/log.c \
 		  src/functionlib/log/logmsgdef.c src/functionlib/log/logmsg.c \
 		  src/functionlib/ipc/muse_sem.c \
-		  src/functionlib/threadpool/musepthctl.c \
+		  src/functionlib/threadpool.c \
 		  src/functionlib/mempool/mmdpool.c
 
 OTEST   = src/tester/tester.c \
@@ -66,7 +66,7 @@ OTEST   = src/tester/tester.c \
 		  src/functionlib/ipc/muse_sem.c \
 		  src/functionlib/log/log.c \
 		  src/functionlib/log/logmsgdef.c src/functionlib/log/logmsg.c \
-		  src/functionlib/threadpool/musepthctl.c \
+		  src/functionlib/threadpool.c \
 		  src/functionlib/network/ping/ping.c \
 		  src/functionlib/network/icmp/icmp.c \
 		  src/urlcatcher/rule.c src/urlcatcher/uglobal.c

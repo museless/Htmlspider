@@ -18,12 +18,12 @@
  *                Global data
 -*---------------------------------------------*/
 
+Threads  threadPool;
 Muselog  messageLog;
 Gc       objGc;
 BUFF	*extSaveBuf;
 
 void	*threadMemPool, *procMemPool;	/* DMPH */
-void	*ebSemControl;			        /* MSEM */
 
 EXBSET	exbRunSet;
 MYSQL	dbNewsHandler, dbDicHandler, dbKeysHandler;
@@ -35,7 +35,7 @@ char	tblNewsName[SQL_TABNAME_LEN], dbNewsName[SQL_DBNAME_LEN];
 char	tblWordName[SQL_TABNAME_LEN], dbDicName[SQL_DBNAME_LEN];
 char	tblKeysName[SQL_TABNAME_LEN], dbKeysName[SQL_DBNAME_LEN];
 
-MATOS	pthreadCtlLock, freeCtlLock, nPaperLock, dicDbLock;
+MATOS	dicDbLock;
 
 uLong	tPaperNum;
 int32_t	nExbugPthead, upMaxTerms, keywordListSize;
