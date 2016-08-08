@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *  modification time: 2016.08.05 13:10
+ *  modification time: 2016.08.07 20:10
  *  creator: Muse
  *  mender: Muse
  *  intro: pthread pool
@@ -41,6 +41,12 @@
     thread->next = NULL; \
 }
 
+#define _check_params(pool) { \
+    if (!pool || !pool->threads) { \
+        errno = EINVAL; \
+        return  false; \
+    } \
+}
 
 
 /*---------------------------------------------
@@ -65,12 +71,13 @@ static  void   *_thread_routine(void *thread_para);
 static  bool    _thread_prepare(Pthent *entity);
 
 /* Part Six */
-static  void    _time_wait(int sec, int microsec);
+static  void    _time_wait(int sec, int nanosec);
 static  Pthent *_empty_slot(Threads *thread_pool);
 static  bool    _thread_create(Threads *pool, Pthent *thread);
 static  void    _thread_cleanup(void *thread_para);
 
 static  void    _thread_join(Pthent *th_entity);
+static  bool    _thread_wait(Threads *pool, const struct timespec *abstime);
 
 
 /*---------------------------------------------
@@ -78,7 +85,7 @@ static  void    _thread_join(Pthent *th_entity);
  *
  *          1. mpc_create
  *          2. mpc_thread_wake
- *          3. mpc_thread_wake
+ *          3. mpc_thread_trywake
  *          4. mpc_thread_wait
  *          5. mpc_destroy
  *
@@ -170,32 +177,23 @@ bool mpc_thread_trywake(Threads *pool, throutine func, void *params)
 /*-----mpc_thread_wait-----*/
 bool mpc_thread_wait(Threads *pool)
 {
-    if (!pool || !pool->threads) {
+    _check_params(pool);
+
+    return  _thread_wait(pool, NULL);
+}
+
+
+/*-----mpc_thread_trywait-----*/
+bool mpc_thread_trywait(Threads *pool, struct timespec *abstime)
+{
+    _check_params(pool);
+
+    if (!abstime) {
         errno = EINVAL;
         return  false;
-    }   
-
-    Pthent *entity = pool->threads;
-
-    for (; entity < pool->threads + pool->cnt; entity++) {
-        errno = pthread_mutex_trylock(&entity->mutex);
-
-        if (errno == EBUSY && entity->flags == PTH_IS_BUSY) {
-            _time_wait(0, 20000);
-
-            errno = pthread_mutex_trylock(&entity->mutex);
-
-            if (errno == EBUSY)
-                return  false;
-        }
-
-        while (entity->flags == PTH_IS_BUSY)
-            pthread_cond_wait(&entity->cond, &entity->mutex);
-
-        pthread_mutex_unlock(&entity->mutex);
     }
 
-    return  true;
+    return  _thread_wait(pool, abstime);
 }
 
 
@@ -216,7 +214,7 @@ bool mpc_destroy(Threads *pool)
                 errno = pthread_mutex_trylock(&th_entity->mutex);
 
                 if (errno == EBUSY && th_entity->flags == PTH_IS_BUSY) {
-                    _time_wait(0, 10000);
+                    _time_wait(0, 1000000);
                     _thread_join(th_entity);
                     continue;
                 }
@@ -308,17 +306,18 @@ bool _thread_prepare(Pthent *entity)
  *          3. _thread_create
  *          4. _thread_cleanup
  *          5. _thread_join
+ *          6. _thread_wait
  *
 **-----------------------------------------------*/
 
 /*-----_time_wait-----*/
-void _time_wait(int sec, int microsec)
+void _time_wait(int sec, int nanosec)
 {
-    struct timeval  clock;
+    struct timespec clock;
 
     clock.tv_sec = sec;
-    clock.tv_usec = microsec;
-    select(0, NULL, NULL, NULL, &clock);
+    clock.tv_nsec = nanosec;
+    pselect(0, NULL, NULL, NULL, &clock, NULL);
 }
 
 
@@ -381,4 +380,30 @@ void _thread_join(Pthent *th_entity)
     pthread_join(th_entity->tid, NULL);
 }
 
+
+/*-----_thread_wait-----*/
+bool _thread_wait(Threads *pool, const struct timespec *abstime)
+{
+    Pthent *entity = pool->threads;
+
+    for (; entity < pool->threads + pool->cnt; entity++) {
+        while (entity->flags == PTH_IS_BUSY) {
+            errno = (abstime) ? 
+                pthread_cond_timedwait(&entity->cond, &entity->mutex, abstime) :
+                pthread_cond_wait(&entity->cond, &entity->mutex);
+        }
+
+        if (errno == ETIMEDOUT || entity->flags == PTH_IS_BUSY) {
+            _time_wait(abstime->tv_sec, abstime->tv_nsec);
+
+            if (entity->flags == PTH_IS_BUSY)
+                return  false;
+        }
+
+        if (errno)
+            return  false;
+    }
+
+    return  true;
+}
 
