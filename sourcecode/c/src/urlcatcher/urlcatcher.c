@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-08-02 22:10
+ *     modification time: 2016-08-12 00:50:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -183,7 +183,8 @@ int mainly_init(void)
 /*-----ubug_init_source-----*/
 bool ubug_init_source(void)
 {
-    int32_t pthread_num;
+    sigset_t    set;
+    int32_t     pthread_num;
 
     /* urlbug pthread num read */
     if (!mc_conf_read("urlbug_pthread_num", CONF_NUM, &pthread_num, sizeof(int))) {
@@ -196,8 +197,12 @@ bool ubug_init_source(void)
         return  false;
     }
 
+    sigemptyset(&set);
+    sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGSEGV);
+
     /* muse thread pool init */
-    if (!mpc_create(&ubugThreadPool, pthread_num)) {
+    if (!mpc_create(&ubugThreadPool, pthread_num, SIG_BLOCK, &set)) {
         setmsg(LM10);
         return  false;
     }

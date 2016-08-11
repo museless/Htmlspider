@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *  modification time: 2016.08.08 22:30
+ *  modification time: 2016.08.12 00:50
  *  mender: Muse
 -*---------------------------------------------*/
 
@@ -23,14 +23,6 @@
 
 #include "spextb.h"
 #include "speglobal.h"
-
-
-/*---------------------------------------------
- *           Part One: Local data
--*---------------------------------------------*/
-
-static mutex_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;
-static mutex_t  sigSegLock = PTHREAD_MUTEX_INITIALIZER;
 
 
 /*---------------------------------------------
@@ -86,8 +78,6 @@ bool exbug_signal_init(void)
 void exbug_signal_handler(int nSignal)
 {
     if (nSignal == SIGINT) {
-        pthread_mutex_lock(&sigIntLock);
-
         setmsg(LM26, "SIGINT");
 
         exbug_data_sync();
@@ -99,8 +89,6 @@ void exbug_signal_handler(int nSignal)
     }
 
     if (nSignal == SIGSEGV) {
-        pthread_mutex_lock(&sigSegLock);
-
         setmsg(LM26, "SIGSEGV");
         exbug_sig_quit();
     }

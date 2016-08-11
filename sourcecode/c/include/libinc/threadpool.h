@@ -56,6 +56,10 @@ struct threadpool {
 
     int32_t     cnt;
     barrier_t   barrier;
+
+    /* signal mask */
+    int32_t     how;
+    sigset_t    sigset;
 };
 
 struct threadentity {
@@ -79,7 +83,7 @@ struct threadentity {
  *            Part Four: Function
 -*---------------------------------------------*/
 
-bool    mpc_create(Threads *pool, int numbers);
+bool    mpc_create(Threads *pool, int num, int32_t how, sigset_t *sigset);
 bool    mpc_thread_wake(Threads *pool, throutine func, void *params);
 bool    mpc_thread_trywake(Threads *pool, throutine func, void *params);
 bool    mpc_thread_wait(Threads *pool);

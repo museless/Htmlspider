@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-04-22 22:10:00
+ *     modification time: 2016-08-12 00:50:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -28,10 +28,6 @@
 
 #include "spuglobal.h"
 #include "spurlb.h"
-
-
-/* local data */
-static mutex_t  sigIntLock = PTHREAD_MUTEX_INITIALIZER;
 
 
 /*---------------------------------------------
@@ -77,8 +73,6 @@ void ubug_init_signal(void)
 void ubug_signal_handler(int nSign)
 {
     if (nSign == SIGINT) {
-        pthread_mutex_lock(&sigIntLock);
-
         setmsg(LM26, "SIGINT");
         mpc_destroy(&ubugThreadPool);
 
@@ -96,3 +90,4 @@ void ubug_signal_handler(int nSign)
         ubug_sig_error();
     }
 }
+

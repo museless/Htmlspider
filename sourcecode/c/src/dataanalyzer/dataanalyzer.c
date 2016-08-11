@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-08-08 21:40:00
+ *     modification time: 2016-08-12 00:50:00
  *     mender: Muse
 -*---------------------------------------------*/
 
@@ -185,7 +185,13 @@ bool mainly_init(void)
     if (!exbug_read_config())
         return  false;
 
-    if (!(mpc_create(&threadPool, nExbugPthead))) {
+    sigset_t    set;
+
+    sigemptyset(&set);
+    sigaddset(&set, SIGINT);
+    sigaddset(&set, SIGSEGV);
+
+    if (!(mpc_create(&threadPool, nExbugPthead, SIG_BLOCK, &set))) {
         setmsg(LM10);
         return  false;
     }

@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *  modification time: 2016.08.07 20:10
+ *  modification time: 2016.08.09 18:10
  *  creator: Muse
  *  mender: Muse
  *  intro: pthread pool
@@ -68,7 +68,7 @@ enum PTHREAD_STATE {
 
 /* Part Five */
 static  void   *_thread_routine(void *thread_para);
-static  bool    _thread_prepare(Pthent *entity);
+static  bool    _thread_prepare(Threads *pool, Pthent *entity);
 
 /* Part Six */
 static  void    _time_wait(int sec, int nanosec);
@@ -92,18 +92,24 @@ static  bool    _thread_wait(Threads *pool, const struct timespec *abstime);
 -*---------------------------------------------*/
 
 /*-----mpc_create------*/
-bool mpc_create(Threads *pool, int numbers)
+bool mpc_create(Threads *pool, int num, int32_t how, sigset_t *sigset)
 {
-    if (!pool || numbers < 1) {
+    if (!pool || num < 1) {
         errno = EINVAL;
         return  false;
     }
 
-    if ((errno = pthread_barrier_init(&pool->barrier, NULL, numbers + 1)))
+    if ((errno = pthread_barrier_init(&pool->barrier, NULL, num + 1)))
         return  false;
 
-    pool->cnt = numbers;
+    pool->cnt = num;
     pool->freelist = NULL;
+    pool->how = -1;
+
+    if (sigset) {
+        pool->how = how;
+        pool->sigset = *sigset;
+    }
 
     if (!(pool->threads = malloc(pool->cnt * sizeof(Pthent)))) {
         mpc_destroy(pool);
@@ -251,7 +257,7 @@ void *_thread_routine(void *thread_para)
     Pthent  *th_entity = (Pthent *)thread_para;
     Threads *pool = th_entity->pool; 
 
-    _thread_prepare(th_entity);
+    _thread_prepare(pool, th_entity);
     pthread_cleanup_push(_thread_cleanup, th_entity);
 
     while (true) {
@@ -283,9 +289,14 @@ void *_thread_routine(void *thread_para)
 
 
 /*-----_thread_prepare-----*/
-bool _thread_prepare(Pthent *entity)
+bool _thread_prepare(Threads *pool, Pthent *entity)
 {
     if (entity->flags == PTH_IS_UNINITED) {
+        if (pool->how != -1) {
+            if (pthread_sigmask(pool->how, &pool->sigset, NULL) == -1)
+                return  false;
+        }
+
         if ((errno = pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL)) ||
             (errno = pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL)))
             return  false;
