@@ -6,7 +6,7 @@
 
 _author = "Muse"
 _creation = "2016.08.03 17:10"
-_modify = "2016.08.03 17:10"
+_modify = "2016.08.23 10:10"
 _intro = "Parser for scel"
 
 
@@ -16,7 +16,6 @@ _intro = "Parser for scel"
 
 import sys
 import os
-import chardet
 from struct import pack, unpack
 
 
@@ -26,6 +25,19 @@ from struct import pack, unpack
 
 SCEL_MINSIZE = 0x2628
 
+
+#----------------------------------------------
+#                   write
+#----------------------------------------------
+
+def word_format(word_list, dest):
+    with open(dest, "w") as f:
+        f.write("#-*- coding:utf8 -*-\n\nWord = [\n")
+
+        for word in word_list:
+            f.write("    \"%s\",\n" % word)
+
+        f.write("]\n")
 
 #----------------------------------------------
 #                   parse
@@ -48,6 +60,8 @@ def parse_scel(src):
         print("{} not a scel file".format(src))
         return  False
 
+    word_list = []
+
     with open(src, "rb") as f:
         f.seek(SCEL_MINSIZE)
         scel = f.read()
@@ -63,10 +77,13 @@ def parse_scel(src):
                 wsize = unpack("H", scel[offset: offset + 2])[0]
                 offset += 2
 
-                word = make_utf8(unpack("%ds" % wsize, scel[offset: offset + wsize])[0])
-                print(word.decode("utf8"))
+                word = make_utf8(unpack("%ds" % wsize, 
+                    scel[offset: offset + wsize])[0])
+
+                word_list.append(word.decode("utf8"))
                 offset += wsize + 0xc
 
+    return  word_list
 
 #----------------------------------------------
 #                    main 
@@ -79,7 +96,7 @@ def main(argv = sys.argv):
 
     src, dest = argv[1], argv[2]
 
-    parse_scel(src)
+    word_format(parse_scel(src), dest)
 
 
 if __name__ == "__main__":
