@@ -1,5 +1,5 @@
 /*---------------------------------------------
- *     modification time: 2016-08-02 16:50:00
+ *     modification time: 2016-08-26 11:50:00
  *     mender: Muse
  *---------------------------------------------*/
 
@@ -35,10 +35,12 @@
  *           Part One: Local data
 -*---------------------------------------------*/
 
-static  SEPWORD sepStrStore[] = {{"。"}, {"，"}, {"、"}, {"；"}, {"‘"}, {"’"}, {"“"}, 
-            {"”"}, {"［"}, {"］"}, {"｛"}, {"｝"}};
+static SEPWORD  sepStrStore[] = {
+    {"。"}, {"，"}, {"、"}, {"；"}, 
+    {"‘"}, {"’"}, {"“"}, {"”"}, 
+    {"［"}, {"］"}, {"｛"}, {"｝"}};
 
-static  int nSepStr = sizeof(sepStrStore) / sizeof(sepStrStore[0]);
+static int  nSepStr = sizeof(sepStrStore) / sizeof(sepStrStore[0]);
 
 
 /*---------------------------------------------
@@ -87,42 +89,42 @@ void exbug_simple_segment(WDCT *pCnt, const char *strBeg, int segment_len)
 {
     const char *strEnd = strBeg + segment_len;
     char       *strHead, *strMov;
-    WHEAD      *headStru;
+    WHEAD      *head;
     uLong      *pList;
-    int         wordSize, wBytes, nCnt, nOff;
+    int         wdsize, wBytes, nCnt, nOff;
 
     if (segment_len <= UTF8_WORD_LEN)
         return;
 
-    for (; segment_len > 0 && strBeg < strEnd; strBeg += wordSize) {
-        wordSize = ((segment_len > BYTE_CMP_MAX) ? 
+    for (; segment_len > 0 && strBeg < strEnd; strBeg += wdsize) {
+        wdsize = ((segment_len > BYTE_CMP_MAX) ? 
                    WORD_CMP_MAX : (segment_len / UTF8_WORD_LEN));
 
-        for (; wordSize > 1; wordSize--) {
-            if ((headStru = extbug_search_head(&charHeadSave, strBeg, wordSize))) {
-                strHead = (*((WDCB **)&charTermList + (wordSize - 2)))->wb_lterms;
-                strMov = strHead + headStru->dc_off;
-                wBytes = wordSize * UTF8_WORD_LEN;
+        for (; wdsize > 1; wdsize--) {
+            if ((head = extbug_search_head(&charHeadSave, strBeg, wdsize))) {
+                strHead = (*((WDCB **)&charTermList + (wdsize - 2)))->wb_lterms;
+                strMov = strHead + head->dc_off;
+                wBytes = wdsize * UTF8_WORD_LEN;
             
-                for (nCnt = 0; nCnt < headStru->dc_cnt; nCnt++, strMov += wBytes) {
+                for (nCnt = 0; nCnt < head->dc_cnt; nCnt++, strMov += wBytes) {
                     if (!strncmp(strMov, strBeg, wBytes))
                         break;
                 }
 
-                if (nCnt < headStru->dc_cnt) {
+                if (nCnt < head->dc_cnt) {
                     nOff = (strMov - strHead) / wBytes;
-                    pList = (*(((WDCB **)&charTermList + (wordSize - 2))))->wb_ltimes;
+                    pList = (*(((WDCB **)&charTermList + (wdsize - 2))))->wb_ltimes;
                     nCnt = (pList) ? *(pList + nOff) : 0;
                     break;
                 }
             }
         }
 
-        wordSize *= UTF8_WORD_LEN;
-        segment_len -= wordSize;
+        wdsize *= UTF8_WORD_LEN;
+        segment_len -= wdsize;
 
-        /* wordSize will be all Bytes */
-        exbug_word_add(pCnt, strBeg, wordSize, nCnt);
+        /* wdsize will be all Bytes */
+        exbug_word_add(pCnt, strBeg, wdsize, nCnt);
     }
 }
 
