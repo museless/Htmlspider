@@ -14,14 +14,12 @@
  *
  *       Part Zero:  Include
  *       Part One:   Data
- *       Part Two:   Local function
- *
- *       Part Three: 
+ *       Part Two:   Function
  *
 -*---------------------------------------------*/
 
 /*---------------------------------------------
- *             Part Zero: Include
+ *              Part One: Data
 -*---------------------------------------------*/
 
-
+extern char agentsList[];
