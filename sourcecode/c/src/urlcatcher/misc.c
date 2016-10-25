@@ -32,6 +32,19 @@
 
 
 /*---------------------------------------------
+ *          Part One: Local data
+-*---------------------------------------------*/
+
+static char helpTips[] =
+"urlcatcher - charge in catching url\n"
+"usage:\n\turlcatcher [options] parameters\n\n"
+"options:\n"
+"\t-c <configuration paths>    configuration's path\n"
+"\t-h                          helping\n\n";
+
+
+
+/*---------------------------------------------
  *          Part Four: Help tip
  *
  *          1. ubug_print_help
@@ -41,33 +54,7 @@
 /*-----ubug_print_help-----*/
 void ubug_print_help(void)
 {
-    STAT    stat_buf;
-    int     help_fd;
-
-    help_fd = open("../sourcecode/c/src/urlcatcher/urlbug.hlp", O_RDWR);
-
-    if (help_fd == FUN_RUN_FAIL) {
-        setmsg(LM6);
-        exit(FUN_RUN_FAIL);
-    }
-
-    if (fstat(help_fd, &stat_buf) == FUN_RUN_FAIL) {
-        setmsg(LM7);
-        exit(FUN_RUN_FAIL); 
-    }
-
-    char    help_content[stat_buf.st_size + 1];
-
-    if (readn(help_fd, help_content, stat_buf.st_size) == FUN_RUN_FAIL) {
-        setmsg(LM8);
-        exit(FUN_RUN_FAIL);
-    }
-
-    help_content[stat_buf.st_size] = 0;
-
-    printf("%s\n", help_content);
-    
-    close(help_fd);
+    printf(helpTips);
 }
 
 

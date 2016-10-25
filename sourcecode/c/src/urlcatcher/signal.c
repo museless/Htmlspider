@@ -81,7 +81,7 @@ void ubug_signal_handler(int nSign)
 
         mgc_all_clean(&objGc);
         
-        printf("UrlBug---> quitting...\n");
+        printf("UrlBug: quitting...\n");
         exit(FUN_RUN_FAIL);
     }
 

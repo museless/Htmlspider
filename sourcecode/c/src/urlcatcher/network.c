@@ -63,7 +63,7 @@ void ubug_ping(void)
     recv = sp_net_speed_ping(ubugPingInfo.p_host, ubugPingInfo.p_packnum);
 
     if (recv < (ubugPingInfo.p_packnum >> 1)) {
-        printf("Urlbug---> ping failed - use default\n");
+        printf("urlcatcher: ping failed - use default\n");
 
         ubugPingInfo.p_time.tv_sec = 0;
         ubugPingInfo.p_time.tv_usec = 80000;
@@ -73,7 +73,7 @@ void ubug_ping(void)
     ubugPingInfo.p_time.tv_sec = recv / MICSEC_PER_SEC;
     ubugPingInfo.p_time.tv_usec = (recv % MICSEC_PER_SEC) * 4.0;
 
-    printf("Urlbug---> network speed: %lums\n", recv);
+    printf("urlcatcher: network speed: %lums\n", recv);
 }
 
 

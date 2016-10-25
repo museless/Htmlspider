@@ -43,8 +43,6 @@ struct ubug_setting {
     fn_catch    ubs_catch;
     fn_locate   ubs_locate;
     fn_creat    ubs_creat;
- 
-    int         ubs_rtime;
 };
 
 /*---------------------------

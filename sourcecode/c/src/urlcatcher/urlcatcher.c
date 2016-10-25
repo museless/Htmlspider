@@ -1,10 +1,10 @@
 /*---------------------------------------------
- *     modification time: 2016-08-12 00:50:00
+ *     modification time: 2016.10.25 14:50:00
  *     mender: Muse
 -*---------------------------------------------*/
 
 /*---------------------------------------------
- *     creation time: 2015-06-01 
+ *     creation time: 2015.06.01 
  *     author: Muse 
 -*---------------------------------------------*/
 
@@ -16,11 +16,11 @@
  *       Part Two:   Local data
  *       Part Three: Local function
  *
- *       Part Four:  Urlbug main
+ *       Part Four:  urlcatcher main
  *       Part Five:  Initialization
  *       Part Six:   Running preparation
  *       Part Seven: Entrance
- *       Part Eight: Urlbug mainly work
+ *       Part Eight: urlcatcher mainly work
  *
  *---------------------------------------------*/
 
@@ -63,16 +63,15 @@ static  void    ubug_job(WEBIN *wPoint);
 
 
 /*---------------------------------------------
- *          Part Three: Define
+ *            Part Three: Define
 -*---------------------------------------------*/
 
-#define ubug_init_ubset(fInit, fEnt, fSt, fStf, fDway, rTime) { \
+#define ubug_init_ubset(fInit, fEnt, fSt, fStf, fDway) { \
     urlRunSet.ubs_init = fInit; \
     urlRunSet.ubs_fent = fEnt; \
     urlRunSet.ubs_fst = fSt; \
     urlRunSet.ubs_fstf = fStf; \
     urlRunSet.ubs_dway = fDway; \
-    urlRunSet.ubs_rtime = rTime; \
 }
 
 #define ubug_init_ubset_way(fun_catch, fun_locate, fun_creat) {\
@@ -83,7 +82,7 @@ static  void    ubug_job(WEBIN *wPoint);
 
 
 /*---------------------------------------------
- *          Part Four: Urlbug main
+ *          Part Four: urlcatcher main
  *
  *          1. main
  *          2. ubug_command_analyst
@@ -130,15 +129,14 @@ static void ubug_command_analyst(int nPara, char **pComm)
                 exit(FUN_RUN_OK);    
 
             default:
-                printf("Urlbug---> wrong command: %c\n \
-                    \rUrlbug--->please try \"-h\"\n\n", ch);
+                printf("urlcatcher: unexcepted opt: %c\n", ch);
                 exit(FRET_Z);
         }
     }
 
     if (config_flags != 1) {
-        printf("Urlbug---> must set [-c]\n");
-        exit(FUN_RUN_FAIL);    
+        printf("urlcatcher: must set [-c]\n");
+        exit(FUN_RUN_FAIL);
     }
 
     ubug_set_ubset();
@@ -161,7 +159,7 @@ static void ubug_command_analyst(int nPara, char **pComm)
 /*-----mainly_init-----*/
 int mainly_init(void)
 {
-    if (!frame("Urlbug"))
+    if (!frame("urlcatcher"))
         return  FRET_Z;
 
     mato_init(writeStoreLock, 1);
@@ -243,22 +241,22 @@ int ubug_init_dbuf(BUFF **pBuff)
 /*-----ubug_init_weblist-----*/
 void ubug_init_weblist(void)
 {
-    char    tabname[MIDDLE_BUF];
+    char    name[MIDDLE_BUF];
 
-    if (!mc_conf_read("urls_store_table_name", CONF_STR, tabname, MIDDLE_BUF)) {
+    if (!mc_conf_read("urls_store_table_name", CONF_STR, name, MIDDLE_BUF)) {
         setmsg(LM5, "urls_store_table_name");
         ubug_sig_error();
     }
 
     WEBIN **pList = &urlSaveList;
-    MSLRES *data_result = mysql_return_result(&urlDataBase, GET_DIRECTORY, tabname);
+    MSLRES *result = mysql_return_result(&urlDataBase, GET_DIRECTORY, name);
 
-    if (!data_result)
+    if (!result)
         ubug_db_seterror();
 
     MSLROW  data_row;
 
-    while ((data_row = mysql_fetch_row(data_result))) {
+    while ((data_row = mysql_fetch_row(result))) {
         if (!(*pList = ubug_list_entity_set(data_row)))
             continue;
 
@@ -266,7 +264,7 @@ void ubug_init_weblist(void)
         (*pList) = NULL;
     }
 
-    mysql_free_result(data_result);
+    mysql_free_result(result);
 
     (*pList) = NULL;
 
@@ -319,8 +317,8 @@ bool ubug_init_urllist(char *urlStr, WEB *webStu)
 /*-----ubug_set_ubset-----*/
 void ubug_set_ubset(void)
 {
-    ubug_init_ubset(NULL, ubug_text_abstract_cont, ubug_tran_db,
-        ubug_tran_db_whole, ubug_html_download, RUN_PERN);
+    ubug_init_ubset(NULL, ubug_text_abstract_cont,
+        ubug_tran_db, ubug_tran_db_whole, ubug_html_download);
 
     ubug_init_ubset_way(ubug_catch_default_rule, 
         ubug_locate_default_rule, ubug_set_tabname_by_date);
@@ -404,7 +402,7 @@ void ubug_main_entrance(void)
         urlRunSet.ubs_fstf();
         sleep(20);
 
-    } while (urlRunSet.ubs_rtime);
+    } while (true);
 
     ubug_sig_error();
 }
@@ -418,7 +416,7 @@ void ubug_text_abstract_cont(WEBIN *abPoint)
 
 
 /*---------------------------------------------
- *      Part Eight: Urlbug mainly work
+ *      Part Eight: urlcatcher mainly work
  *
  *      1. ubug_job
  *

@@ -43,7 +43,7 @@
 -*---------------------------------------------*/
 
 /* Part Five */
-static  int     sp_http_redict_check(WEB *dst, WEB *src);
+static int32_t  http_redict_check(WEB *dst, WEB *src);
 
 
 /*---------------------------------------------
@@ -182,7 +182,7 @@ int sp_net_html_download(WEBIN *web_stu)
                 break;
             }
 
-            redire_flags = sp_http_redict_check(&web_stu->w_ubuf, &webinfo_save);
+            redire_flags = http_redict_check(&web_stu->w_ubuf, &webinfo_save);
             close(web_stu->w_sock);
             continue;
         }
@@ -205,7 +205,8 @@ int sp_net_html_download(WEBIN *web_stu)
  *          4. sp_http_handle_request
  *          5. sp_http_handle_retcode
  *          6. sp_http_handle_30x
- *          7. sp_http_redict_check
+ *          7. http_redict_check
+ *          8. http_get
  *
 -*---------------------------------------------*/
 
@@ -219,7 +220,7 @@ int sp_http_interact(WEBIN *web_stu)
 
     WEB    *web_info = &web_stu->w_ubuf;
     short   strSize = sprintf(web_stu->w_conbuf, HTTP_GFILE_STR, 
-                web_info->web_path, web_info->web_file, web_info->web_host, rPac);
+            web_info->web_path, web_info->web_file, web_info->web_host, rPac);
    
     if (write(web_stu->w_sock, web_stu->w_conbuf, strSize) != strSize) 
         return  FUN_RUN_END;
@@ -239,18 +240,17 @@ int sp_http_interact(WEBIN *web_stu)
 /*-----sp_http_header_locate-----*/
 char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 {
-    char   *location, *locate_end;
+    char   *head, *tail;
 
-    if ((location = strnstr(data_buff, http_header, *data_size))) {
-        locate_end = 
-            strnstr(location, "\r\n", *data_size - (location - data_buff));
+    if ((head = strnstr(data_buff, http_header, *data_size))) {
+        tail = strnstr(head, "\r\n", *data_size - (head - data_buff));
 
-        if (!locate_end)
+        if (!tail)
             return  NULL;
 
-        *data_size = locate_end - location;
+        *data_size = tail - head;
 
-        return  location;
+        return  head;
     }
 
     return  NULL;
@@ -258,10 +258,9 @@ char *sp_http_header_locate(char *http_header, char *data_buff, int *data_size)
 
 
 /*-----sp_http_compare_latest-----*/
-char *sp_http_compare_latest(
-      const char *last_time, char *http_buff, int *buff_len)
+char *sp_http_compare_latest(const char *last, char *http_buff, int *len)
 {
-    int     string_size = *buff_len;
+    int     string_size = *len;
     char   *header = sp_http_header_locate(MATCH_LAMD, http_buff, &string_size);
 
     if (!header) {
@@ -273,10 +272,10 @@ char *sp_http_compare_latest(
         }
     }
 
-	if (!strncmp(header + string_size, last_time, string_size))
+	if (!strncmp(header + string_size, last, string_size))
 		return	NULL;
 
-    *buff_len = string_size;
+    *len = string_size;
 
     return  header;
 }
@@ -321,8 +320,8 @@ int sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info)
 }
 
 
-/*-----sp_http_redict_check-----*/
-static int sp_http_redict_check(WEB *dst, WEB *src)
+/*-----http_redict_check-----*/
+int32_t http_redict_check(WEB *dst, WEB *src)
 {
     if (!strcmp(src->web_path, dst->web_path) && 
         !strcmp(src->web_file, dst->web_file)) {
@@ -332,6 +331,18 @@ static int sp_http_redict_check(WEB *dst, WEB *src)
 
     return  REDIRECT_UNFINISH;
 }
+
+
+/*-----http_get-----*/
+void http_get()
+{
+    //short   strSize = sprintf(web_stu->w_conbuf, HTTP_GFILE_STR, 
+    //        web_info->web_path, web_info->web_file, web_info->web_host, rPac);
+   
+    //if (write(web_stu->w_sock, web_stu->w_conbuf, strSize) != strSize) 
+    //    return  FUN_RUN_END;
+}
+
 
 
 /*---------------------------------------------

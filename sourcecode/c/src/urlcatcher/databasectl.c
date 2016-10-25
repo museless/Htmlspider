@@ -74,20 +74,20 @@ void ubug_create_dbtable(void)
 
 
 /*-----ubug_tran_db-----*/
-void ubug_tran_db(void *pInfo, void *uData, char *pUrl, int uLen)
+void ubug_tran_db(void *pInfo, void *uData, char *url, int len)
 {
     WEBIN   *web_info = (WEBIN *)pInfo;
-    UDATA   *pData = (UDATA *)uData;
+    UDATA   *data = (UDATA *)uData;
         
     if (!buff_size_enough(web_info->w_buff, SQL_PERCOM_MLEN))
         ubug_tran_db_force(web_info->w_buff);
 
     buff_size_add(web_info->w_buff, ((buff_stru_empty(web_info->w_buff)) ? 
         sprintf(buff_place_start(web_info->w_buff), 
-            TRAN_URL_BEG, urlTabName, uLen, pUrl, pData->ud_poff, pData->ud_foff) : 
+            TRAN_URL_BEG, urlTabName, len, url, data->ud_poff, data->ud_foff) : 
 
         sprintf(buff_place_end(web_info->w_buff), 
-            TRAN_URL, uLen, pUrl, pData->ud_poff, pData->ud_foff)));
+            TRAN_URL, len, url, data->ud_poff, data->ud_foff)));
 }
 
 

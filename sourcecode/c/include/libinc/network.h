@@ -169,9 +169,7 @@ int     sp_http_handle_30x(char *http_buff, int buff_size, WEBIN *web_info);
 char   *sp_http_header_locate(
             char *http_header, char *data_buff, int *data_size);
 
-char   *sp_http_compare_latest(
-            const char *last_time, char *http_buff, int *buff_len);
-
+char   *sp_http_compare_latest(const char *last, char *http_buff, int *len);
 
 int     sp_url_seperate(char *url, int url_len, WEB *web_info);
 int     sp_url_path_count_nlayer(char *url);
