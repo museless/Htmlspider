@@ -2,15 +2,13 @@
 *.htm
 *.shtml
 sourcecode/python/See
-sourcecode/python/*.pyc
+*.pyc
 log/*
 bin/*
 *.log
 bin/newscatcher
 *.sh
 text/relation/unfinish.py
-*.sh
-*.sh
-*.sh
 scripts/update_words.sh
 *.pyc
+tags
