@@ -2,7 +2,7 @@
 Html spider. Working on news url and news content. And extracting data from news.
 
 ---
-##Build database
+## Build database
 
 1. enter Htmlspider/text/sql
 
@@ -15,7 +15,7 @@ Html spider. Working on news url and news content. And extracting data from news
 5. use Dictionary; source dictionary.sql
 
 ---
-##Build log
+## Build log
 
 1. enter Htmlspider/syslogconf.d
 
@@ -24,7 +24,7 @@ Html spider. Working on news url and news content. And extracting data from news
 3. cp urlcatcher.conf /etc/syslog-ng/conf.d/
 
 ---
-##Modify configuration
+## Modify configuration
 
 1. at Htmlspider/sourcecode/c/include/libinc/dbdef.h<br>
    make #define DBUSRKEY become your mysql root password
@@ -33,7 +33,7 @@ Html spider. Working on news url and news content. And extracting data from news
    UserPassword should be your mysql root password
    
 ---
-##Install
+## Install
 
 1. enter Htmlspider/sourcecode/c/
 
