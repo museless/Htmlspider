@@ -1,18 +1,12 @@
 #-*- coding:utf8 -*-
 
-#----------------------------------------------
-#                Code header
-#----------------------------------------------
+"""
+author: Muse
+creation: 2016.02.03 10:00
+modifiy: 2017.06.23 18:05
+intro: news catcher, 6 ~ 8 threads may run the best
+"""
 
-_author = "Muse"
-_creation = "2016.02.03 10:00"
-_modifiy = "2016.07.04 16:30"
-_intro = "news catcher, 6 ~ 8 threads may run the best"
-
-
-#----------------------------------------------
-#                  Import
-#----------------------------------------------
 
 import urllib
 import time
@@ -24,17 +18,9 @@ from datacatcher import DataCatcher
 from datacontrol import DataControl
 
 
-#----------------------------------------------
-#                  Data
-#----------------------------------------------
-
 URL_ID_INDEX = 0
 URL_INDEX = 1
 
-
-#----------------------------------------------
-#            catcher initialize
-#----------------------------------------------
 
 def catcher_initialize():
     url_receiver = DataControl("Url");
@@ -42,20 +28,10 @@ def catcher_initialize():
 
     return  url_receiver, news_uploader
 
-
-#----------------------------------------------
-#           get url, new table name  
-#----------------------------------------------
-
 def table_name_get():
     time_str = time.strftime("%Y%m%d")
 
     return  "U" + time_str, "N" + time_str
-
-
-#----------------------------------------------
-#             catch url's data
-#----------------------------------------------
 
 def url_data_get(url_receiver, url_tabname, url, url_id):
     url_data = None
@@ -77,11 +53,6 @@ def url_data_get(url_receiver, url_tabname, url, url_id):
 
     return  url_data
 
-
-#----------------------------------------------
-#             catch html content
-#----------------------------------------------
-
 def html_data_get(url_receiver, url_tabname, url_data, url_id):
     html = url_data.read()
 
@@ -91,11 +62,6 @@ def html_data_get(url_receiver, url_tabname, url_data, url_id):
 
     return  html 
 
-
-#----------------------------------------------
-#            catch html's charset 
-#----------------------------------------------
-
 def catch_html_charset(html):
     result = re.search("charset=\"?([^\"]*)\"", html)
 
@@ -104,11 +70,6 @@ def catch_html_charset(html):
 
     return  result.groups(0)[0]
 
-
-#----------------------------------------------
-#                html extract 
-#----------------------------------------------
-
 def html_extract(data_catcher, url, html, charset):
     if "qq.com" not in url:
         data_catcher.reading(html, decode = charset)
@@ -116,22 +77,12 @@ def html_extract(data_catcher, url, html, charset):
 
     data_catcher.reading(html, use_parser = "html.parser", decode = "gb2312")
 
-
-#----------------------------------------------
-#           upload news content
-#----------------------------------------------
-
 def upload_news(data_catcher, news_uploader, url_id, url, charset):
     title, source = data_catcher.title_and_data_source(charset)
 
     news_uploader.pre_insert(str(url_id), time.strftime("%H:%M"), \
         source, news_uploader.escaping(title), url, \
         news_uploader.escaping(data_catcher.news_content(charset)))
-
-
-#----------------------------------------------
-#             handle url result
-#----------------------------------------------
 
 def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
     data_catcher = DataCatcher()
@@ -159,11 +110,6 @@ def handle_url_result(data_row, url_receiver, news_uploader, url_tabname):
         upload_news(data_catcher, news_uploader, url_id, url, charset)
         url_receiver.update(1, url_tabname, 1, url_id)
 
-
-#----------------------------------------------
-#          datacatcher mainly job 
-#----------------------------------------------
-
 def catcher_work(url_receiver, news_uploader, 
         url_tabname, news_tabname, url_limit = 8):
 
@@ -183,16 +129,11 @@ def catcher_work(url_receiver, news_uploader,
 
         time.sleep(2)
 
-#==============================================
-#                   Main
-#==============================================
-
 def main(argv = sys.argv):
     url_receiver, news_uploader = catcher_initialize()
     url_table, news_table = table_name_get()
 
     catcher_work(url_receiver, news_uploader, url_table, news_table)
-
 
 if __name__ == "__main__":
     main()
