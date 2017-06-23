@@ -12,3 +12,4 @@ text/relation/unfinish.py
 scripts/update_words.sh
 *.pyc
 tags
+*swp
