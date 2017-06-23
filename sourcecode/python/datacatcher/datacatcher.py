@@ -1,18 +1,12 @@
 #-*- coding:utf8 -*-
 
-#----------------------------------------------
-#                Code header
-#----------------------------------------------
+"""
+author: Muse
+creation: 2016.01.13 01:10
+modification: 2017.06.23 18:00
+intro: a news content catcher module
+"""
 
-__author__ = "Muse"
-__creation_time__ = "2016.01.13 01:10"
-__modification_time__ = "2016.04.29 09:50"
-__intro__ = "a news content catcher"
-
-
-#----------------------------------------------
-#                  Import
-#----------------------------------------------
 
 import time
 
@@ -22,16 +16,13 @@ from bs4 import element
 from catcherconfig import *
 
 
-#----------------------------------------------
-#             class DataCatcher
-#----------------------------------------------
+class DataCatcher(object):
+    """
+    catch news from downloaded html document
 
-class DataCatcher:
-    #------------------------------------------
-    #              Class data 
-    #------------------------------------------
+    """
 
-    # Index
+    """ const index """
     WORD_COUNT_INDEX = 0
     TAG_LEN_INDEX = 1
     TAG_COUNT_INDEX = 2
@@ -39,33 +30,25 @@ class DataCatcher:
     P_NUMBER_INDEX = 0
     BR_NUMBER_INDEX = 1
 
-    # forbidden tag
+    """ forbiden tags for html """
     Forbid_tag = [
         'script',
         'style',
         'br',
     ]
 
-    # member data
-    charset = "utf-8"
+    """ using to cmp chinese word """
     ChineseCmp = chr(127)
 
-    # match tag
+    """ match tags """
     Brtag = "br"
     Ptag = "p"
 
-    #------------------------------------------
-    #              Constructor
-    #------------------------------------------
-
-    def __init__(self):
-        pass
-
-    #------------------------------------------
-    #            reading the html
-    #------------------------------------------
-
     def reading(self, html_content, use_parser = "lxml", decode = None):
+        """
+        reading html and parsing
+
+        """
         self.news_title = "Invaild title"
         self.news_source = "Invaild source"
 
@@ -79,28 +62,16 @@ class DataCatcher:
         self._text_tree_search(self.html_parser.body)
 
         self._select_tag()
-
-    #------------------------------------------
-    #         allocate a html parser
-    #------------------------------------------
    
     def alloc_parser(self, html_content, use_parser, decode):
         html_content = html_content.decode(decode, "ignore")
         self.html_parser = BeautifulSoup(html_content, use_parser)
-
-    #------------------------------------------
-    #         get title and news source
-    #------------------------------------------
 
     def title_and_data_source(self, charset):
         if self.html_parser.findChild("title"):
             self._splite_title(self.html_parser.title.stripped_strings)
 
         return  self.news_title, self.news_source
-
-    #------------------------------------------
-    # splite title string to title and source
-    #------------------------------------------
 
     def _splite_title(self, news_titles):
         # for title
@@ -127,10 +98,6 @@ class DataCatcher:
             if char in ["_", "|", "-", " "]:
                 self.news_source = string[-index: ]
                 break
-
-    #------------------------------------------
-    #            build text tree
-    #------------------------------------------
 
     def _text_tree_search(self, tag_object):
         tag_count_list, select = [0, 0], {}
@@ -159,20 +126,12 @@ class DataCatcher:
         return  self._tag_can_pass(chinese_words, tag_len), \
                 [chinese_words, tag_len, tag_count_list]
 
-    #------------------------------------------
-    #           check forbidden tag
-    #------------------------------------------
-
     def _check_forbid_tag(self, tag):
         if tag.name in self.Forbid_tag:
             tag.clear()
             return  True
 
         return  False
-
-    #------------------------------------------
-    #          counting chinese word
-    #------------------------------------------
 
     def _count_chinese(self, string):
         utf8_word_number = 0
@@ -183,10 +142,6 @@ class DataCatcher:
 
         return  utf8_word_number
 
-    #------------------------------------------
-    #   counting relate tag's appear times
-    #------------------------------------------
-
     def _relate_tag_count(self, child_name, tag_count_list):
         if child_name == self.Ptag:
             self.br_number += 1
@@ -196,37 +151,19 @@ class DataCatcher:
             self.p_number += 1
             tag_count_list[self.BR_NUMBER_INDEX] += 1
 
-    #------------------------------------------
-    #         can select this child
-    #------------------------------------------
-
     def _can_select(self, child_data):
         return  (child_data[self.WORD_COUNT_INDEX] > Chinese_minumum and \
                  sum(child_data[self.TAG_COUNT_INDEX]) > 0) and \
                     True or False
-
-    #------------------------------------------
-    #        compare the compare rate
-    #------------------------------------------
 
     def _add_node(self, total_word, child_dict):
         for key, values in child_dict.iteritems():
             if float(values[self.WORD_COUNT_INDEX]) / total_word >= Compare_rate:
                 self.fit_node_list[key] = values
 
-    #------------------------------------------
-    #       check the tag is pass or not
-    #------------------------------------------
-
     def _tag_can_pass(self, word_count, total_len):
-        if total_len == 0:
-            return  False
-
-        return  (float(word_count) / total_len > Chinese_has_rate)
-
-    #------------------------------------------
-    # start to select the perfect content tag
-    #------------------------------------------
+        if total_len:
+            return  (float(word_count) / total_len > Chinese_has_rate)
 
     def _select_tag(self):
         max_words, fit_key = 0, None
@@ -237,15 +174,6 @@ class DataCatcher:
                 fit_key = key
 
         self.content_tag = fit_key
-
-    #==========================================
-    #     the next function used to output 
-    #               new content
-    #==========================================
-
-    #------------------------------------------
-    #          get news content access
-    #------------------------------------------
 
     def news_content(self, charset = None):
         if not self.content_tag:
@@ -266,10 +194,6 @@ class DataCatcher:
         self.final_content = "".join(contents)
 
         return  self.final_content
-
-    #------------------------------------------
-    #      has start or end string or not
-    #------------------------------------------
 
     def _has_string(self, check_string, terms):
         for per_check in terms:
