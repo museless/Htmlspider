@@ -1,18 +1,12 @@
 # -*- coding:utf8 -*-
 
-#----------------------------------------------
-#                Code header
-#----------------------------------------------
+"""
+author: Muse
+creation: 2016.01.25 23:45
+modification: 2016.05.19 14:25
+intro: The mysql client
+"""
 
-__author__ = "Muse"
-__creation_time__ = "2016.01.25 23:45"
-__modification_time__ = "2016.05.19 14:25"
-__intro__ = "The mysql client"
-
-
-#----------------------------------------------
-#                  Import
-#----------------------------------------------
 
 import MySQLdb
 import thread
@@ -20,11 +14,7 @@ import thread
 from datacontrolconfig import * 
 
 
-#----------------------------------------------
-#             class DataCatcher
-#----------------------------------------------
-
-class DataControl:
+class DataControl(object):
     # insert data
     insert_buff = []
     insert_head = ""
@@ -46,48 +36,32 @@ class DataControl:
     UPDATE_SET_INDEX = 0
     UPDATE_LIMIT_INDEX = 1
 
-    #------------------------------------------
-    #               Constructor
-    #------------------------------------------
-
-    def __init__(self, database_name, charseting = "utf8", max_allow_packet = 0):
+    def __init__(self, database, charseting = "utf8", max_packet = 0):
         self.controler = \
             MySQLdb.connect(user = UserName, passwd = UserPassword,
-                db = database_name, charset = charseting, 
-                unix_socket="/tmp/mysql.sock")
+                db = database, charset = charseting, 
+                unix_socket = "/tmp/mysql.sock")
             
         self.cursor = self.controler.cursor()
 
         self.exec_lock = thread.allocate_lock()
         self.insert_lock = thread.allocate_lock()
 
-        self.__get_mysql_variables(max_allow_packet)
-
-    #------------------------------------------
-    #               Destructor 
-    #------------------------------------------
+        self._init_max_packet(max_packet)
 
     def __del__(self):
         self.insert_lock.acquire()
         self.final_insert()
         self.insert_lock.release()
 
-    #------------------------------------------
-    #        get mysql limited variables
-    #------------------------------------------
+    def _init_max_packet(self, max_packet):
+        self.max_packet = max_packet
 
-    def __get_mysql_variables(self, max_allow_packet):
-        self.max_allow_packet = max_allow_packet
-
-        if max_allow_packet == 0:
-            self.__execute("show variables like '%max_allowed_packet%'")
+        if max_packet == 0:
+            self._execute("show variables like '%max_allowed_packet%'")
             result = self.cursor.fetchall()
 
-            self.max_allow_packet = int(result[0][1])
-
-    #------------------------------------------
-    #        joint to the select string 
-    #------------------------------------------
+            self.max_packet = int(result[0][1])
 
     def select(self, operate_id, tabname_and_order, limit = -1, *parameters):
         if SelectSql.has_key(operate_id) == False:
@@ -105,11 +79,7 @@ class DataControl:
         if limit != -1:
             select += "limit %d" % limit
 
-        return  self.__execute(select)
-
-    #------------------------------------------
-    #        joint to the create string 
-    #------------------------------------------
+        return  self._execute(select)
 
     def create(self, operate_id, table_name):
         if CreateSql.has_key(operate_id) == False:
@@ -125,12 +95,8 @@ class DataControl:
         else:
             return  False
     
-        self.__execute(create)
+        self._execute(create)
         return  True
-
-    #------------------------------------------
-    #       joint to the insert sql head 
-    #------------------------------------------
 
     def insert_ready(self, operate_id, table_name):
         if InsertSql.has_key(operate_id) == False:
@@ -152,11 +118,12 @@ class DataControl:
         self.insert_total_len = 0
         self.insert_buff = []
 
-    #------------------------------------------
-    #          insert to insert list 
-    #------------------------------------------
-
     def pre_insert(self, *parameters):
+        """
+        use it insert many data, per data store in insert buffer
+        but if data bigger than max_packet, insert
+
+        """
         if self.insert_head == "" or self.insert_field == "":
             return  None
 
@@ -165,7 +132,7 @@ class DataControl:
 
         self.insert_lock.acquire()
 
-        if self.insert_total_len + length > self.max_allow_packet - 256:
+        if self.insert_total_len + length > self.max_packet - 256:
             self.final_insert()
             self.insert_total_len = 0
 
@@ -173,20 +140,16 @@ class DataControl:
         self.insert_total_len += length
         self.insert_lock.release()
  
-    #------------------------------------------
-    #        final insert to the mysql 
-    #------------------------------------------
- 
     def final_insert(self):
+        """
+        insert data store in insert buff
+
+        """
         if self.insert_buff == [] or "" or self.insert_field == "":
             return  None
 
-        self.__execute(u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
+        self._execute(u"%s%s" % (self.insert_head, ",".join(self.insert_buff)))
         self.insert_buff = []
-
-    #------------------------------------------
-    #        joint to the update string 
-    #------------------------------------------
 
     def update(self, operate_id, table_name, *parameters):
         if UpdateSql.has_key(operate_id) == False:
@@ -199,11 +162,7 @@ class DataControl:
             update_string += \
             "where %s" % UpdateSql[operate_id][self.UPDATE_LIMIT_INDEX]
 
-        self.__execute(update_string % parameters)
-
-    #------------------------------------------
-    #            delete the data
-    #------------------------------------------
+        self._execute(update_string % parameters)
 
     def delete(self, operate_id, table_name, *parameters):
         if DeleteSql.has_key(operate_id) == False or \
@@ -214,13 +173,9 @@ class DataControl:
         delete_string = "delete from %s where %s" % \
             (table_name, DeleteSql[operate_id])
 
-        self.__execute(delete_string % parameters)
+        self._execute(delete_string % parameters)
 
-    #------------------------------------------
-    #    execute the sql command by string
-    #------------------------------------------
-
-    def __execute(self, sql_string):
+    def _execute(self, sql_string):
         if len(sql_string) == 0:
             return  None
 
@@ -229,10 +184,6 @@ class DataControl:
         self.exec_lock.release()
 
         return  result 
-
-    #------------------------------------------
-    #             string escaping
-    #------------------------------------------
 
     def escaping(self, sql_string):
         sql_string = sql_string.replace('"', '\\"')
