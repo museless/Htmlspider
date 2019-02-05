@@ -1,34 +1,13 @@
-#-*- coding:utf8 -*-
-
-#----------------------------------------------
-#                Code header
-#----------------------------------------------
-
-_author = "Muse"
-_creation = "2016.08.03 17:10"
-_modify = "2016.08.23 10:10"
-_intro = "Parser for scel"
-
-
-#----------------------------------------------
-#                  Import
-#----------------------------------------------
+# -*- coding: utf8 -*-
 
 import sys
 import os
+
 from struct import pack, unpack
 
 
-#----------------------------------------------
-#                   const
-#----------------------------------------------
-
 SCEL_MINSIZE = 0x2628
 
-
-#----------------------------------------------
-#                   write
-#----------------------------------------------
 
 def word_format(word_list, dest):
     with open(dest, "w") as f:
@@ -39,18 +18,17 @@ def word_format(word_list, dest):
 
         f.write("]\n")
 
-#----------------------------------------------
-#                   parse
-#----------------------------------------------
 
 def make_utf8(word):
     result = bytes() 
 
     for idx in range(0, len(word), 2):
-        result += pack("BBB", 
+        result += pack(
+            "BBB",
             0xE0 | (word[idx + 1] >> 4), 
             0x80 | ((word[idx + 1] & 0xF) << 2) | (word[idx] >> 6),
-            (0x80 | (word[idx] & 0x3F)))
+            (0x80 | (word[idx] & 0x3F))
+        )
 
     return  result 
 
@@ -77,17 +55,18 @@ def parse_scel(src):
                 wsize = unpack("H", scel[offset: offset + 2])[0]
                 offset += 2
 
-                word = make_utf8(unpack("%ds" % wsize, 
-                    scel[offset: offset + wsize])[0])
+                word = make_utf8(
+                    unpack(
+                        "%ds" % wsize, 
+                        scel[offset: offset + wsize]
+                    )[0]
+                )
 
                 word_list.append(word.decode("utf8"))
                 offset += wsize + 0xc
 
     return  word_list
 
-#----------------------------------------------
-#                    main 
-#----------------------------------------------
 
 def main(argv = sys.argv):
     if len(argv) != 3: 
